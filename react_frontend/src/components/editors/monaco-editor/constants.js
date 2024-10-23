@@ -772,7 +772,7 @@ export const getAllSnippets = ({ monaco, range }) => {
     // RA
     {
       label: "import numpy as np",
-      kind: monaco.languages.CompletionItemKind.Class,
+      kind: monaco.languages.CompletionItemKind.Snippet,
       insertText: "import numpy as np",
       insertTextRules:
         monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -781,7 +781,7 @@ export const getAllSnippets = ({ monaco, range }) => {
     },
     {
       label: "import numpy",
-      kind: monaco.languages.CompletionItemKind.Class,
+      kind: monaco.languages.CompletionItemKind.Snippet,
       insertText: "import numpy",
       insertTextRules:
         monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -790,7 +790,7 @@ export const getAllSnippets = ({ monaco, range }) => {
     },
     {
       label: "import math",
-      kind: monaco.languages.CompletionItemKind.Class,
+      kind: monaco.languages.CompletionItemKind.Snippet,
       insertText: "import math",
       insertTextRules:
         monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -799,7 +799,7 @@ export const getAllSnippets = ({ monaco, range }) => {
     },
     {
       label: "import cv2",
-      kind: monaco.languages.CompletionItemKind.Class,
+      kind: monaco.languages.CompletionItemKind.Snippet,
       insertText: "import cv2",
       insertTextRules:
         monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
