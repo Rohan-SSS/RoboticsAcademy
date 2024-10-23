@@ -3,7 +3,6 @@ export const editorList = ["ace", "monaco"];
 export const monacoEditorThemeList = ["vs", "vs-dark", "hc-black"];
 export const defaultEditorSourceCode = `import GUI
 import HAL
-import numpy as np
 # Enter sequential code!
 
 while True:
@@ -2533,7 +2532,7 @@ while True:
         "def __next__(self):\n  x = self.a\n  self.a += 1\n  return x",
     },
     {
-      label: "import",
+      label: "import mymodule as mx",
       kind: monaco.languages.CompletionItemKind.Snippet,
       insertText: "import mymodule as mx",
       insertTextRules:
