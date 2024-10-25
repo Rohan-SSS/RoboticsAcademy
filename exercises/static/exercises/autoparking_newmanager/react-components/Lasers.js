@@ -77,7 +77,7 @@ const Lasers = (props) => {
               background: "repeating-linear-gradient(to right,rgb(112, 138, 255),rgb(112, 138, 255) 73px,rgb(100, 198, 255) 73px,rgb(100, 198, 255) 146px)",
               backgroundSize: "100% 1px",
               bottom: "50%",
-              left: "53%",
+              left: "52%",
               transformOrigin: "0% 0%",
               zIndex: "4"}}
             />
