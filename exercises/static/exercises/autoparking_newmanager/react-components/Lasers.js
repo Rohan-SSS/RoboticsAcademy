@@ -3,6 +3,8 @@ import "./css/GUICanvas.css";
 import Car from "../resources/images/car-top-view.svg";
 
 const Lasers = (props) => {
+    const meter = 73; // 1m = 73px
+
     const [laser, setLaser] = React.useState([])
     const [maxRange, setMaxRange] = React.useState([])
     const [laser1, setLaser1] = React.useState([])
@@ -14,6 +16,7 @@ const Lasers = (props) => {
         const callback = (message) => {
             if(message.data.update.map){
               const map_data = JSON.parse(message.data.update.map);
+              console.log(map_data)
               setLaser (map_data.lasers[0])
               setLaser1(map_data.lasers[1])
               setLaser2(map_data.lasers[2])
@@ -46,16 +49,16 @@ const Lasers = (props) => {
         <img src={Car} id="car"/>
         {laser.map(element => {
           var ang = -element[1]
-          var length = (element[0] / maxRange)*20;
+          var length = (element[0] / 75) * meter;
           return (
             <hr className="laser-beam" 
               style={{
               rotate: "z "+ ang +"rad",
-              width: "calc("+length + "%)",
+              width: length + "px",
               position: "absolute",
               background: "repeating-linear-gradient(to right,rgb(255, 112, 112),rgb(255, 112, 112) 73px,rgb(175, 29, 29)  73px,rgb(175, 29, 29) 146px)",
               backgroundSize: "100% 1px",
-              bottom: "55%",
+              bottom: "59%",
               left: "50%",
               transformOrigin: "0% 0%",
               zIndex: "3"}}
@@ -64,17 +67,17 @@ const Lasers = (props) => {
         }
         {laser1.map(element => {
           var ang = -element[1] + Math.PI/2
-          var length = (element[0] / maxRange1)*20;
+          var length = (element[0] / 75) * meter;
           return (
             <hr className="laser-beam" 
               style={{
               rotate: "z "+ ang +"rad",
-              width: "calc("+length + "%)",
+              width: length + "px",
               position: "absolute",
               background: "repeating-linear-gradient(to right,rgb(112, 138, 255),rgb(112, 138, 255) 73px,rgb(100, 198, 255) 73px,rgb(100, 198, 255) 146px)",
               backgroundSize: "100% 1px",
               bottom: "50%",
-              left: "51%",
+              left: "52%",
               transformOrigin: "0% 0%",
               zIndex: "4"}}
             />
@@ -82,16 +85,16 @@ const Lasers = (props) => {
         }
         {laser2.map(element => {
           var ang = -element[1] + Math.PI
-          var length = (element[0] / maxRange2)*20;
+          var length = (element[0] / 75) * meter;
           return (
             <hr className="laser-beam" 
               style={{
               rotate: "z "+ ang +"rad",
-              width: "calc("+length + "%)",
+              width: length + "px",
               position: "absolute",
               background: "repeating-linear-gradient(to right,rgb(112, 255, 119),rgb(112, 255, 119) 73px,rgb(18, 138, 14) 73px,rgb(18, 138, 14) 146px)",
               backgroundSize: "100% 1px",
-              bottom: "45%",
+              bottom: "41%",
               left: "50%",
               transformOrigin: "0% 0%",
               zIndex: "3"}}
