@@ -7,6 +7,38 @@ import {
   renderGlyphs,
 } from "../components/editors/monaco-editor";
 
+export const useMonacoEditorLoaderEffect = ({
+  loader,
+  dispatch,
+  monacoEditorTheme,
+}) => {
+  useEffect(() => {
+    // get local storage theme data
+    const local_theme = localStorage.getItem("editor-theme");
+
+    if (!local_theme) {
+      localStorage.setItem("editor-theme", monacoEditorTheme);
+    } else {
+      dispatch({
+        type: "updateMonacoEditorTheme",
+        payload: { theme: local_theme },
+      });
+    }
+
+    //
+    loader
+      .init()
+      .then(() => {
+        setTimeout(() => {
+          dispatch({ type: "updateEditorState", payload: { loading: false } });
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+};
+
 // Code Analysis (with pylint)
 export const useMonacoEditorCodeAnalysisEffect = ({
   baseUrl,

@@ -1,5 +1,7 @@
 // Monaco Editor
 export { default as MonacoEditor } from "./MonacoEditor";
+// Monaco Editor Loader
+export { default as MonacoEditorLoader } from "./MonacoEditorLoader";
 
 // Editor Tabs
 export { default as EditorTabs } from "./../EditorTabs";
@@ -13,20 +15,28 @@ export {
   renderGlyphs,
 } from "./helper/monacoEditorGlyph";
 
-// import snippets
-export {
-  snippetsBuilder,
-  extractPythonImports,
-  importSnippetsObj,
-} from "./helper/importSnippets";
+// autocomplete-snippets
+export { basic_snippets } from "./autocomplete-snippets/basic_snippets";
+export { guiAndHalAutoCompleteObj } from "./autocomplete-snippets/hal_gui_snippets";
+export { importSnippetsObj } from "./autocomplete-snippets/import_snippets";
+
 // helper
 export {
   fetchAnalysisCode,
   fetchFormatCode,
   getMarkerSeverity,
   getHalGuiMethods,
+  snippetsBuilderV2,
 } from "./helper/helpers";
 
+// text extractor helper
+export {
+  getEditorVariables,
+  getEditorFunctions,
+  extractClassesAndMembers,
+  findClassNameByInstance,
+  extractPythonImports,
+} from "./helper/text_extractor_helper";
 // constants
 export {
   resizeList,
@@ -39,6 +49,4 @@ export {
   pylint_convention,
   pylint_refactor,
   pylint_fatal,
-  guiAndHalAutoCompleteObj,
-  getAllSnippets,
 } from "./constants";

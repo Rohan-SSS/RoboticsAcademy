@@ -1,10 +1,12 @@
 import {
-  getAllSnippets,
-  getHalGuiMethods,
   listed_python_packages,
-  snippetsBuilder,
+  snippetsBuilderV2,
+  getEditorVariables,
+  getEditorFunctions,
+  extractClassesAndMembers,
+  findClassNameByInstance,
+  extractPythonImports,
 } from "./../index";
-import { extractPythonImports } from "./helpers";
 
 // Main Editor Snippets
 export const monacoEditorSnippet = ({ monaco }) => {
@@ -31,7 +33,7 @@ export const monacoEditorSnippet = ({ monaco }) => {
       // get all text data in editor
       const text = model.getValue();
 
-      //! test import start
+      // import extract
       const allLines = text.split("\n").filter(Boolean);
       const allImports = [];
       allLines.forEach((line) => {
@@ -44,7 +46,7 @@ export const monacoEditorSnippet = ({ monaco }) => {
         }
       });
 
-      // check
+      // check valid import
       if (allImports.length) {
         const importMatch = allImports.find((imp) => {
           const match = textUntilPosition.match(
@@ -53,33 +55,33 @@ export const monacoEditorSnippet = ({ monaco }) => {
           if (match) return imp;
         });
 
+        // match with listed import
         if (importMatch) {
-          const { importName, alias } = importMatch;
+          const { importName } = importMatch;
+
+          // HAL & GUI
           if (importName === "GUI" || importName === "HAL") {
-            const { guiAutoComplete, halAutoComplete } = getHalGuiMethods({
-              monaco,
-              importName,
-            });
-
-            const suggestions =
-              importName === "GUI"
-                ? guiAutoComplete
-                : importName === "HAL"
-                ? halAutoComplete
-                : [];
-
-            return { suggestions };
-          } else {
-            const suggestions = snippetsBuilder({
+            const suggestions = snippetsBuilderV2({
+              snippetName: "hal_gui",
               monaco,
               range,
               importName,
             });
+
+            return { suggestions };
+          } else {
+            // Other Imports (ex: Numpy, Math)
+            const suggestions = snippetsBuilderV2({
+              snippetName: "import",
+              monaco,
+              range,
+              importName,
+            });
+
             return { suggestions };
           }
         }
       }
-      //! test import end
 
       //* Class & Objects
       const classes = extractClassesAndMembers(text);
@@ -134,7 +136,12 @@ export const monacoEditorSnippet = ({ monaco }) => {
         const variables = getEditorVariables({ lines, monaco, range });
 
         // Get all pre-defined snippets
-        const preDefinedSnippets = getAllSnippets({ monaco, range });
+        const preDefinedSnippets = snippetsBuilderV2({
+          snippetName: "basic_snippets",
+          monaco,
+          range,
+          importName: "",
+        });
 
         let suggestions = [
           // import snippet
@@ -161,110 +168,4 @@ export const monacoEditorSnippet = ({ monaco }) => {
       }
     },
   });
-};
-
-// Extract Variables
-const getEditorVariables = ({ lines, monaco, range }) => {
-  const variablesSet = new Set();
-
-  lines.forEach((line) => {
-    const matches = line.match(/(\w+)\s*=/);
-    if (matches) {
-      variablesSet.add(matches[1]);
-    }
-  });
-
-  return Array.from(variablesSet).map((variable) => ({
-    label: variable,
-    kind: monaco.languages.CompletionItemKind.Variable,
-    insertText: variable,
-    range: range,
-  }));
-};
-
-// Extract functions
-const getEditorFunctions = ({ lines, monaco, range }) => {
-  const functionsSet = new Set();
-  lines.forEach((line) => {
-    const matches = line.match(/def\s+(\w+)\s*\(/);
-    if (matches) {
-      functionsSet.add(matches[1]);
-    }
-  });
-
-  return Array.from(functionsSet).map((func) => ({
-    label: func,
-    kind: monaco.languages.CompletionItemKind.Function,
-    insertText: func,
-    range: range,
-  }));
-};
-
-// Class Object
-const extractClassesAndMembers = (code) => {
-  const classPattern = /class (\w+)\s*:/g;
-  const methodPattern = /def (\w+)\(/g;
-  const attributePattern = /(\w+)\s*=/;
-
-  const classes = {};
-  let currentClass = null;
-
-  const lines = code.split("\n");
-
-  lines.forEach((line) => {
-    let classMatch = classPattern.exec(line);
-    let left_space = line.match(/^\s*/)[0].length;
-
-    if (classMatch) {
-      currentClass = classMatch[1];
-      classes[currentClass] = {
-        attributes: [],
-        methods: [],
-        spaceSize: left_space,
-      };
-    } else if (currentClass) {
-      let methodMatch = methodPattern.exec(line);
-      let spaceSize = classes[currentClass].spaceSize;
-
-      // if line has more left space and current class
-      if (spaceSize < left_space) {
-        // method match
-        if (methodMatch) {
-          classes[currentClass].methods.push(methodMatch[1]);
-        } else {
-          // variable match
-
-          // trim the variable
-          let tmp_line = line;
-          tmp_line.trim();
-          const equalIndex = tmp_line.indexOf("=");
-
-          // Extract the substring from the start to the equal sign
-          tmp_line =
-            equalIndex !== -1
-              ? tmp_line.substring(0, equalIndex + 1).trim()
-              : null;
-
-          if (tmp_line === null) return;
-          // check valid regex variable
-          const regex = /^[a-zA-Z_][a-zA-Z0-9_]*\s*=$/;
-          const testLine = regex.test(tmp_line);
-          if (!testLine) return;
-
-          // exec
-          let attributeMatch = attributePattern.exec(tmp_line);
-
-          if (attributeMatch) {
-            classes[currentClass].attributes.push(attributeMatch[1].trim());
-          }
-        }
-      }
-    }
-  });
-  return classes;
-};
-const findClassNameByInstance = (code, instanceName) => {
-  const instancePattern = new RegExp(`${instanceName}\\s*=\\s*(\\w+)\\(`);
-  const match = instancePattern.exec(code);
-  return match ? match[1] : null;
 };

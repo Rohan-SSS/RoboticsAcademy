@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 // monaco editor loader
 export const theme_colors = {
@@ -144,3 +145,7 @@ const MonacoEditorLoader = ({ theme }) => {
 };
 
 export default MonacoEditorLoader;
+
+MonacoEditorLoader.prototype = {
+  theme: PropTypes.string.isRequired,
+};

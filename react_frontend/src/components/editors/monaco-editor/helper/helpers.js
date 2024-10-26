@@ -1,10 +1,14 @@
 import {
+  basic_snippets,
+  guiAndHalAutoCompleteObj,
+  importSnippetsObj,
+} from "./../index";
+import {
   pylint_error,
   pylint_warning,
   pylint_convention,
   pylint_refactor,
   pylint_fatal,
-  guiAndHalAutoCompleteObj,
 } from "../constants";
 
 // post and response code format
@@ -89,62 +93,79 @@ export const getMarkerSeverity = ({ type, monaco }) => {
   }
 };
 
+// Snippets Builder
+export const snippetKind = ({ kind, monaco }) => {
+  switch (kind) {
+    case "variable":
+      return monaco.languages.CompletionItemKind.Variable;
+    case "method":
+      return monaco.languages.CompletionItemKind.Method;
+    case "snippet":
+      return monaco.languages.CompletionItemKind.Snippet;
+    case "keyword":
+      return monaco.languages.CompletionItemKind.Keyword;
+    case "function":
+      return monaco.languages.CompletionItemKind.Function;
+    default:
+      return monaco.languages.CompletionItemKind.Variable;
+  }
+};
+
 // hal & gui auto complete
-export const getHalGuiMethods = ({ monaco, importName }) => {
+export const getHalGuiMethods = ({ importName }) => {
   const pathName = window.location.pathname;
   let exerciseName = pathName.split("/").filter(Boolean);
   exerciseName = exerciseName[exerciseName.length - 1];
   exerciseName = `_${exerciseName}`;
 
-  let guiAutoComplete = [];
-  let halAutoComplete = [];
-
   // if no object found by exercise name
   if (!guiAndHalAutoCompleteObj[exerciseName]) {
-    return { guiAutoComplete, halAutoComplete };
+    return [];
   }
 
   if (importName === "GUI") {
-    guiAutoComplete = guiAndHalAutoCompleteObj[exerciseName].gui.map((g, i) => {
-      return {
-        label: g.label,
-        kind:
-          g.type === "method"
-            ? monaco.languages.CompletionItemKind.Method
-            : monaco.languages.CompletionItemKind.Variable,
-        insertText: g.code,
-        documentation: g.descriptions,
-      };
-    });
+    return guiAndHalAutoCompleteObj[exerciseName].gui;
   } else if (importName === "HAL") {
-    halAutoComplete = guiAndHalAutoCompleteObj[exerciseName].hal.map((h, i) => {
-      return {
-        label: h.label,
-        kind:
-          h.type === "method"
-            ? monaco.languages.CompletionItemKind.Method
-            : monaco.languages.CompletionItemKind.Variable,
-        insertText: h.code,
-        documentation: h.descriptions,
-      };
-    });
+    return guiAndHalAutoCompleteObj[exerciseName].hal;
   }
 
-  return { guiAutoComplete, halAutoComplete };
+  return [];
 };
 
-export const extractPythonImports = (code) => {
-  const importRegex =
-    /\bimport\s+([a-zA-Z_][\w]*)(?:\s+as\s+([a-zA-Z_][\w]*))?/g;
+export const snippetsBuilderV2 = ({
+  snippetName,
+  monaco,
+  range,
+  importName,
+}) => {
+  const snippets = [];
+  let importSnippets;
 
-  let imports = [];
-  let match;
-
-  while ((match = importRegex.exec(code)) !== null) {
-    const importName = match[1];
-    const alias = match[2] ? match[2] : importName;
-    imports.push({ importName, alias });
+  // basic_snippets
+  if (snippetName === "basic_snippets") {
+    importSnippets = basic_snippets;
+  } else if (snippetName === "hal_gui") {
+    // hal_gui
+    importSnippets = getHalGuiMethods({ importName });
+  } else if (snippetName === "import") {
+    // import
+    importSnippets = importSnippetsObj[`_${importName}`];
   }
 
-  return imports;
+  if (!importSnippets || !importSnippets.length) return [];
+
+  importSnippets.forEach((snippet) => {
+    if (snippet.label && snippet.code) {
+      snippets.push({
+        label: snippet.label,
+        kind: snippetKind({ kind: snippet.type, monaco }),
+        insertText: snippet.code,
+        insertTextRules:
+          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        range: range,
+      });
+    }
+  });
+
+  return snippets;
 };

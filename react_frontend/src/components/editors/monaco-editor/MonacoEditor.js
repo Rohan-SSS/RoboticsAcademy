@@ -1,16 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import Editor, { loader } from "@monaco-editor/react";
 import PropTypes from "prop-types";
-import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { monacoEditorScroll } from "./helper/monacoEditorScroll";
-import { monacoEditorSnippet } from "./helper/monacoEditorSnippet";
-import "./../../../styles/editors/MonacoEditor.css";
-import { monacoEditorGlyph } from "./index";
 import {
+  MonacoEditorLoader,
+  monacoEditorSnippet,
+  monacoEditorGlyph,
+  monacoEditorScroll,
+} from "./index";
+import {
+  useMonacoEditorLoaderEffect,
   useMonacoEditorCodeAnalysisEffect,
   useMonacoEditorCodeFormatEffect,
   useMonacoEditorLineNumberDecorationsEffect,
 } from "../../../hooks/useMonacoEditorEffect";
-import MonacoEditorLoader from "./MonacoEditorLoader";
+import "./../../../styles/editors/MonacoEditor.css";
 
 const MonacoEditor = ({
   state,
@@ -32,35 +35,11 @@ const MonacoEditor = ({
   const [maxEditorRows, setMaxEditorRows] = useState(-1);
 
   // USE Effects
+
   // editor loading
-  useEffect(() => {
-    // get local storage theme data
-    const local_theme = localStorage.getItem("editor-theme");
-
-    if (!local_theme) {
-      localStorage.setItem("editor-theme", monacoEditorTheme);
-    } else {
-      dispatch({
-        type: "updateMonacoEditorTheme",
-        payload: { theme: local_theme },
-      });
-    }
-
-    //
-    loader
-      .init()
-      .then(() => {
-        setTimeout(() => {
-          dispatch({ type: "updateEditorState", payload: { loading: false } });
-        }, 2000);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  useMonacoEditorLoaderEffect({ loader, dispatch, monacoEditorTheme });
 
   // UseEffect for Line Number Decorations
-
   useMonacoEditorLineNumberDecorationsEffect({
     editorRef,
     lineNumberDecorationRef,
@@ -129,7 +108,6 @@ const MonacoEditor = ({
           onChange={(code) => handleMonacoEditorCodeChange(code)}
           beforeMount={handleEditorWillMount}
           onMount={handleEditorDidMount}
-          // onValidate={handleEditorValidation}
           // Editor Options
           options={editorOptions}
           className=""
