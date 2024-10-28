@@ -8,9 +8,7 @@ const SaveFileButton = (props) => {
   const [fileName, setFileName] = React.useState("myCode");
   const saveFile = () => {
     let userCode = "";
-    if (RoboticsReactComponentsMonaco.CodeEditor.getActive()) {
-      userCode = RoboticsReactComponentsMonaco.CodeEditor.getCode();
-    } else userCode = RoboticsReactComponents.CodeEditor.getCode();
+    userCode = RoboticsReactComponents.CodeEditor.getCode();
     saveCode(fileName, userCode);
   };
   return (

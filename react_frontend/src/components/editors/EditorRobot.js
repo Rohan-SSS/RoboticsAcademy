@@ -42,46 +42,6 @@ window.RoboticsReactComponents.CodeEditor = (function () {
   };
 })();
 
-// Rect Components for Monaco
-window.RoboticsReactComponentsMonaco =
-  window.RoboticsReactComponentsMonaco || {};
-
-window.RoboticsReactComponentsMonaco.CodeEditor = (function () {
-  let editorCode = "";
-  const editorCodeChangeSuscribers = [];
-
-  //
-  let isActive = true;
-  const setActive = (active) => (isActive = active);
-  const getActive = () => isActive;
-  //
-  const setCode = (code) => {
-    editorCode = code;
-    for (
-      let i = 0, length = editorCodeChangeSuscribers.length;
-      i < length;
-      ++i
-    ) {
-      editorCodeChangeSuscribers[i](code);
-    }
-  };
-
-  const OnEditorCodeChanged = (handler) => {
-    editorCodeChangeSuscribers.push(handler);
-  };
-
-  const getCode = () => editorCode;
-
-  return {
-    setCode: setCode,
-    getCode: getCode,
-    OnEditorCodeChanged: OnEditorCodeChanged,
-    //
-    setActive: setActive,
-    getActive: getActive,
-  };
-})();
-
 export default function EditorRobot(props) {
   const [monacoEditorSourceCode, setMonacoEditorSourceCode] = React.useState(
     defaultEditorSourceCode
@@ -89,8 +49,8 @@ export default function EditorRobot(props) {
 
   React.useEffect(() => {
     // monaco
-    RoboticsReactComponentsMonaco.CodeEditor.setCode(monacoEditorSourceCode);
-    RoboticsReactComponentsMonaco.CodeEditor.OnEditorCodeChanged((code) => {
+    RoboticsReactComponents.CodeEditor.setCode(monacoEditorSourceCode);
+    RoboticsReactComponents.CodeEditor.OnEditorCodeChanged((code) => {
       setMonacoEditorSourceCode(code);
     });
   }, []);
@@ -98,14 +58,11 @@ export default function EditorRobot(props) {
   //! Monaco Code Editor
 
   const [state, dispatch] = useEditorReudcer();
-  React.useEffect(() => {
-    RoboticsReactComponentsMonaco.CodeEditor.setActive(true);
-  }, [state.activeEditor]);
 
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
     setMonacoEditorSourceCode(code);
-    RoboticsReactComponentsMonaco.CodeEditor.setCode(code);
+    RoboticsReactComponents.CodeEditor.setCode(code);
   };
 
   return (

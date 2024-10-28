@@ -8,10 +8,7 @@ const LoadFileButton = (props) => {
     event.preventDefault();
     var fr = new FileReader();
     fr.onload = () => {
-      // if Monaco Editor active
-      if (RoboticsReactComponentsMonaco.CodeEditor.getActive()) {
-        RoboticsReactComponentsMonaco.CodeEditor.setCode(fr.result);
-      } else RoboticsReactComponents.CodeEditor.setCode(fr.result);
+      RoboticsReactComponents.CodeEditor.setCode(fr.result);
     };
     fr.readAsText(event.target.files[0]);
   };

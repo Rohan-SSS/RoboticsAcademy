@@ -45,10 +45,7 @@ const PlayPause = (props) => {
   const play = () => {
     setLoading(true);
     let editorCode = "";
-    // when monaco editor active
-    if (RoboticsReactComponentsMonaco.CodeEditor.getActive()) {
-      editorCode = RoboticsReactComponentsMonaco.CodeEditor.getCode();
-    } else editorCode = RoboticsReactComponents.CodeEditor.getCode();
+    editorCode = RoboticsReactComponents.CodeEditor.getCode();
 
     if (!editorChanged && applicationPaused) {
       commsManager.resume();
