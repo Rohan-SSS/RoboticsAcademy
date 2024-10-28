@@ -3,9 +3,6 @@ export { default as MonacoEditor } from "./MonacoEditor";
 // Monaco Editor Loader
 export { default as MonacoEditorLoader } from "./MonacoEditorLoader";
 
-// Editor Tabs
-export { default as EditorTabs } from "./../EditorTabs";
-
 // helper
 export { monacoEditorSnippet } from "./helper/monacoEditorSnippet";
 export { monacoEditorScroll } from "./helper/monacoEditorScroll";
@@ -40,7 +37,6 @@ export {
 // constants
 export {
   resizeList,
-  editorList,
   monacoEditorThemeList,
   defaultEditorSourceCode,
   listed_python_packages,

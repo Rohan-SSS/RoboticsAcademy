@@ -1,14 +1,12 @@
 import { useReducer } from "react";
 import {
-  editorList,
   monacoEditorThemeList,
   resizeList,
 } from "../components/editors/monaco-editor";
 
 const editorInitialState = {
   isLoading: true,
-  activeEditor: editorList[1], // monaco
-  monacoEditorTheme: monacoEditorThemeList[1], // vs-dark
+  monacoEditorTheme: monacoEditorThemeList[0], // 
   resizeEditor: resizeList[0],
   baseUrl: `${document.location.protocol}//${document.location.hostname}:7164`,
   editorOptions: {
@@ -17,7 +15,6 @@ const editorInitialState = {
     lineNumbers: "on",
     roundedSelection: false,
     scrollBeyondLastLine: true,
-    readOnly: false,
     // word warp
     wordWrap: "wordWrapColumn",
     wordWrapColumn: 100,
@@ -26,7 +23,7 @@ const editorInitialState = {
     minimap: { enabled: false },
     automaticLayout: true,
     tabSize: 4,
-    rulers: [],
+    rulers: [80],
     suggestOnTriggerCharacters: true,
     quickSuggestions: true,
     wordBasedSuggestions: true,
@@ -65,14 +62,6 @@ const reducer = (state, action) => {
         editorOptions: {
           ...state.editorOptions,
           minimap: { enabled: state.resizeEditor === "min" },
-        },
-      };
-    case "updateLockEditor":
-      return {
-        ...state,
-        editorOptions: {
-          ...state.editorOptions,
-          readOnly: !state.editorOptions.readOnly,
         },
       };
     case "updateMonacoEditorTheme":
