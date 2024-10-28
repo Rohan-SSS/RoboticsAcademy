@@ -53,6 +53,11 @@ export default function EditorRobot(props) {
     RoboticsReactComponents.CodeEditor.OnEditorCodeChanged((code) => {
       setMonacoEditorSourceCode(code);
     });
+
+    const codeLoadedEvent = new CustomEvent("codeLoaded", {
+      detail: { isLoading: false },
+    });
+    window.dispatchEvent(codeLoadedEvent);
   }, []);
 
   //! Monaco Code Editor
