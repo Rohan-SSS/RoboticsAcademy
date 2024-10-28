@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  my-postgres:
+    image: postgres:latest
+    container_name: universe_db
+    environment:
+      POSTGRES_DB: academy_db 
+      POSTGRES_USER: user-dev 
+      POSTGRES_PASSWORD: robotics-academy-dev
+    volumes:
+      - ./RoboticsInfrastructure/universes.sql:/docker-entrypoint-initdb.d/universes.sql
+
   robotics-academy:
     image: jderobot/robotics-backend:latest
     container_name: developer-container
@@ -26,3 +36,5 @@ services:
         target: /RoboticsAcademy
     tty: true
     stdin_open: true
+    depends_on: 
+      - my-postgres

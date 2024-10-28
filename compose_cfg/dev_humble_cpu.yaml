@@ -8,16 +8,17 @@ services:
       POSTGRES_DB: academy_db 
       POSTGRES_USER: user-dev 
       POSTGRES_PASSWORD: robotics-academy-dev
+    volumes:
+      - ./RoboticsInfrastructure/universes.sql:/docker-entrypoint-initdb.d/universes.sql
 
   robotics-academy:
-    image: jderobot/robotics-backend:test
+    image: jderobot/robotics-backend:latest
     container_name: developer-container
     ports:
       - "7164:7164"
       - "7163:7163"
       - "6080:6080"
       - "1108:1108"
-      - "5432:5432"
     volumes:
       - type: bind
         source: ./
