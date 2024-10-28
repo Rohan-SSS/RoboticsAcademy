@@ -58,6 +58,7 @@ export default function EditorRobot(props) {
       detail: { isLoading: false },
     });
     window.dispatchEvent(codeLoadedEvent);
+    console.log("event")
   }, []);
 
   //! Monaco Code Editor
