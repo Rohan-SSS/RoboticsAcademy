@@ -92,10 +92,6 @@ WSGI_APPLICATION = 'academy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
-    },
-    'universes': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'academy_db' ,
         'USER': 'user-dev',
