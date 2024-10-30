@@ -1,9 +1,9 @@
 #car {
   position: absolute;
-  width: 80px;
-  height: 75px;
-  top: calc(50% - 57px);
-  left: calc(50% - 40px);
+  width: 91px;
+  height: 100px;
+  top: calc(50% - 68px);
+  left: calc(50% - 45.5px);
   z-index: 2
 }
 
