@@ -439,6 +439,7 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+1	pbkdf2_sha256$390000$KHBFi2p9gqgJqomoJgAN3M$+QtecWBzO0EqCTGWKO4TYIEIkQAeotHujzhr1YpZGqk=	2024-09-10 17:51:31.559008	1	user	""	""	mail@mail.com	1	1	2021-04-25 16:00:37.424859
 \.
 
 
