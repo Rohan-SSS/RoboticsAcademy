@@ -549,15 +549,15 @@ COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 --
 
 COPY public.exercises (id, exercise_id, name, description, tags, status, template) FROM stdin;
-50	follow_line_newmanager	Follow Line	The goal of this exercise is to perform a PID reactive control capable of following the line painted on the racing circuit.	{"tags": ["ROS1", "ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_line_newmanager/python_template/
+50	follow_line_newmanager	Follow Line	The goal of this exercise is to perform a PID reactive control capable of following the line painted on the racing circuit.	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_line_newmanager/python_template/
 51	vacuum_cleaner_newmanager	Vacum Cleaner	Vacuum Cleaner exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner_newmanager/python_template/
-52	autoparking_newmanager	Autoparking	Autoparking exercise testing	{"tags": ["ROS1", "AUTONOMOUS DRIVING","SERVICE ROBOTS","ROS2"] }	ACTIVE	RoboticsAcademy/exercises/static/exercises/autoparking_newmanager/python_template/
+52	autoparking_newmanager	Autoparking	Autoparking exercise testing	{"tags": ["AUTONOMOUS DRIVING","SERVICE ROBOTS","ROS2"] }	ACTIVE	RoboticsAcademy/exercises/static/exercises/autoparking_newmanager/python_template/
 55	follow_person_newmanager	Follow Person	Follow a person with kobuki robot	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_person_newmanager/python_template/
 56	vacuum_cleaner_loc_newmanager	Localized Vacuum Cleaner	Localiized vauum clenaer	{"tags": ["ROS2", "MOBILE ROBOTS", "SERVICE ROBOTS"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner_loc_newmanager/python_template/
 57	global_navigation_newmanager	Global Navigation	Global navigation exercise using REACT and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/global_navigation_newmanager/python_template/
-58	rescue_people_newmanager	Rescue People	Rescue People exercise using React and RAM	{"tags": ["ROS1", "ROS2"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/rescue_people_newmanager/python_template/
+58	rescue_people_newmanager	Rescue People	Rescue People exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/rescue_people_newmanager/python_template/
 59	obstacle_avoidance_newmanager	Obstacle Avoidance	Obstacle Avoidance exercise using React and RAM	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/obstacle_avoidance_newmanager/python_template/
-61	3d_reconstruction_newmanager	3D Reconstruction	3D Reconstruction exercise using React and RAM	{"tags": ["ROS1","ROS2","COMPUTER VISION"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/3d_reconstruction_newmanager/python_template/
+61	3d_reconstruction_newmanager	3D Reconstruction	3D Reconstruction exercise using React and RAM	{"tags": ["ROS2","COMPUTER VISION"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/3d_reconstruction_newmanager/python_template/
 69	amazon_warehouse_newmanager	Amazon Warehouse	Control an amazon-like robot to organize a warehouse	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/amazon_warehouse_newmanager/python_template/
 71	montecarlo_laser_loc	Montecarlo Laser Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_laser_loc/python_template/
 \.
@@ -567,14 +567,12 @@ COPY public.exercises (id, exercise_id, name, description, tags, status, templat
 --
 
 COPY public.exercises_universes (id, exercise_id, world_id) FROM stdin;
-1	52	1
 3	51	2
 5	56	4
 6	57	5
 8	58	7
 10	69	8
 13	50	10
-14	50	9
 15	50	11
 16	55	12
 17	55	13
