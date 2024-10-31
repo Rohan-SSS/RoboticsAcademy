@@ -13,6 +13,7 @@ services:
     volumes:
       - ./RoboticsInfrastructure/database:/universes
       - ./database:/docker-entrypoint-initdb.d
+      - ./scripts:/scripts
 
   robotics-academy:
     image: jderobot/robotics-backend:latest
