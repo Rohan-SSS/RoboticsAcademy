@@ -521,17 +521,17 @@ COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 --
 
 COPY public.exercises (id, exercise_id, name, description, tags, status, template) FROM stdin;
-50	follow_line_newmanager	Follow Line	The goal of this exercise is to perform a PID reactive control capable of following the line painted on the racing circuit.	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_line_newmanager/python_template/
-51	vacuum_cleaner_newmanager	Vacum Cleaner	Vacuum Cleaner exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner_newmanager/python_template/
-52	autoparking_newmanager	Autoparking	Autoparking exercise testing	{"tags": ["AUTONOMOUS DRIVING","SERVICE ROBOTS","ROS2"] }	ACTIVE	RoboticsAcademy/exercises/static/exercises/autoparking_newmanager/python_template/
-55	follow_person_newmanager	Follow Person	Follow a person with kobuki robot	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_person_newmanager/python_template/
-56	vacuum_cleaner_loc_newmanager	Localized Vacuum Cleaner	Localiized vauum clenaer	{"tags": ["ROS2", "MOBILE ROBOTS", "SERVICE ROBOTS"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner_loc_newmanager/python_template/
-57	global_navigation_newmanager	Global Navigation	Global navigation exercise using REACT and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/global_navigation_newmanager/python_template/
-58	rescue_people_newmanager	Rescue People	Rescue People exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/rescue_people_newmanager/python_template/
-59	obstacle_avoidance_newmanager	Obstacle Avoidance	Obstacle Avoidance exercise using React and RAM	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/obstacle_avoidance_newmanager/python_template/
-61	3d_reconstruction_newmanager	3D Reconstruction	3D Reconstruction exercise using React and RAM	{"tags": ["ROS2","COMPUTER VISION"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/3d_reconstruction_newmanager/python_template/
-69	amazon_warehouse_newmanager	Amazon Warehouse	Control an amazon-like robot to organize a warehouse	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/amazon_warehouse_newmanager/python_template/
-71	montecarlo_laser_loc	Montecarlo Laser Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_laser_loc/python_template/
+1	follow_line	Follow Line	The goal of this exercise is to perform a PID reactive control capable of following the line painted on the racing circuit.	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_line/python_template/
+2	vacuum_cleaner	Vacum Cleaner	Vacuum Cleaner exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner/python_template/
+3	autoparking	Autoparking	Autoparking exercise testing	{"tags": ["AUTONOMOUS DRIVING","SERVICE ROBOTS","ROS2"] }	ACTIVE	RoboticsAcademy/exercises/static/exercises/autoparking/python_template/
+4	follow_person	Follow Person	Follow a person with kobuki robot	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/follow_person/python_template/
+5	vacuum_cleaner_loc	Localized Vacuum Cleaner	Localiized vauum clenaer	{"tags": ["ROS2", "MOBILE ROBOTS", "SERVICE ROBOTS"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/vacuum_cleaner_loc/python_template/
+6	global_navigation	Global Navigation	Global navigation exercise using REACT and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/global_navigation/python_template/
+7	rescue_people	Rescue People	Rescue People exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/rescue_people/python_template/
+8	obstacle_avoidance	Obstacle Avoidance	Obstacle Avoidance exercise using React and RAM	{"tags": ["ROS2","AUTONOMOUS DRIVING"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/obstacle_avoidance/python_template/
+9	3d_reconstruction	3D Reconstruction	3D Reconstruction exercise using React and RAM	{"tags": ["ROS2","COMPUTER VISION"]}	ACTIVE	RoboticsAcademy/exercises/static/exercises/3d_reconstruction/python_template/
+10	amazon_warehouse	Amazon Warehouse	Control an amazon-like robot to organize a warehouse	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/amazon_warehouse/python_template/
+11	montecarlo_laser_loc	Montecarlo Laser Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_laser_loc/python_template/
 \.
 
 
@@ -540,32 +540,32 @@ COPY public.exercises (id, exercise_id, name, description, tags, status, templat
 --
 
 COPY public.exercises_universes (id, exercise_id, world_id) FROM stdin;
-3	51	2
-5	56	4
-6	57	5
-8	58	7
-10	69	8
-13	50	10
-15	50	11
-16	55	12
-17	55	13
-18	52	14
-19	71	15
-20	59	16
-21	61	18
-22	52	19
-23	52	20
-24	52	21
-25	52	22
-26	69	24
-27	69	25
-28	69	23
-29	50	26
-30	50	27
-31	50	28
-32	50	29
-33	50	30
-34	50	31
+1	2	2
+2	5	4
+3	6	5
+4	7	7
+5	10	8
+6	1	10
+7	1	11
+8	4	12
+9	4	13
+10	3	14
+11	11	15
+12	8	16
+13	9	18
+14	3	19
+15	3	20
+16	3	21
+17	3	22
+18	10	24
+19	10	25
+20	10	23
+21	1	26
+22	1	27
+23	1	28
+24	1	29
+25	1	30
+26	1	31
 \.
 
 
