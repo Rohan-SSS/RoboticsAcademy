@@ -57,6 +57,9 @@ class World(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    class Meta:
+        db_table = '"universes"'
 
 # Create your models here.
 
@@ -77,7 +80,7 @@ class Exercise(models.Model):
         choices=StatusChoice,
         default="ACTIVE"
     )
-    worlds = models.ManyToManyField(World, default=None)
+    worlds = models.ManyToManyField(World, default=None, db_table='"exercises_universes"')
     template = models.CharField(max_length=200, blank=True, default="")
 
     def __str__(self):
@@ -115,4 +118,8 @@ class Exercise(models.Model):
             'exercise_id': self.exercise_id,
             'exercise_config': configurations,
         }
+        print(context)
         return context
+    
+    class Meta:
+        db_table = '"exercises"'

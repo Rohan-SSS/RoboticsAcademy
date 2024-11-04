@@ -1,6 +1,6 @@
 // HAL & GUI Auto Complete Objects
 export const guiAndHalAutoCompleteObj = {
-  _follow_line_newmanager: {
+  _follow_line: {
     hal: [
       {
         type: "method",
@@ -31,7 +31,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _vacuum_cleaner_newmanager: {
+  _vacuum_cleaner: {
     hal: [
       {
         type: "method",
@@ -89,7 +89,7 @@ export const guiAndHalAutoCompleteObj = {
     ],
     gui: [],
   },
-  _autoparking_newmanager: {
+  _autoparking: {
     hal: [
       {
         type: "method",
@@ -152,7 +152,7 @@ export const guiAndHalAutoCompleteObj = {
     ],
     gui: [],
   },
-  _follow_person_newmanager: {
+  _follow_person: {
     hal: [
       {
         type: "method",
@@ -215,7 +215,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _vacuum_cleaner_loc_newmanager: {
+  _vacuum_cleaner_loc: {
     hal: [
       {
         type: "method",
@@ -285,7 +285,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _global_navigation_newmanager: {
+  _global_navigation: {
     hal: [
       {
         type: "method",
@@ -345,7 +345,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _rescue_people_newmanager: {
+  _rescue_people: {
     hal: [
       {
         type: "method",
@@ -463,7 +463,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _obstacle_avoidance_newmanager: {
+  _obstacle_avoidance: {
     hal: [
       {
         type: "method",
@@ -532,7 +532,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _3d_reconstruction_newmanager: {
+  _3d_reconstruction: {
     hal: [
       {
         type: "method",
@@ -626,7 +626,7 @@ export const guiAndHalAutoCompleteObj = {
       },
     ],
   },
-  _amazon_warehouse_newmanager: {
+  _amazon_warehouse: {
     hal: [
       {
         type: "method",
