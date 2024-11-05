@@ -16,7 +16,7 @@ services:
       - ./scripts:/scripts
 
     robotics-academy:
-        image: jderobot/robotics-backend:latest
+        image: jderobot/robotics-backend:test
         container_name: developer-container
         deploy:
             resources:
