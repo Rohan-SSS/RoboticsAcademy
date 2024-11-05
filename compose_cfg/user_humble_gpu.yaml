@@ -11,9 +11,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./RoboticsInfrastructure/database:/universes
-      - ./database:/docker-entrypoint-initdb.d
+      - ./RoboticsInfrastructure/database/universes.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./database/exercises/db.sql:/docker-entrypoint-initdb.d/2.sql
       - ./scripts:/scripts
+    healthcheck:
+      test: pg_isready -U user-dev -d academy_db
+      interval: 1s
+      timeout: 1s
+      retries: 20
   
   robotics-academy:
     image: jderobot/robotics-backend:test
@@ -33,4 +38,5 @@ services:
     tty: true
     stdin_open: true
     depends_on: 
-      - my-postgres
+      my-postgres:
+        condition: service_healthy
