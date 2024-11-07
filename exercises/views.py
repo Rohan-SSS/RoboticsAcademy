@@ -1,6 +1,10 @@
 import json
+import mimetypes
+import os
+import shutil
 import tempfile
 import subprocess
+import zipfile
 import pylint as lint
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -41,39 +45,6 @@ def launch_files(request, exercise_id):
     exercise = Exercise.objects.get(exercise_id=exercise_id)
     return JsonResponse(data)
 
-@csrf_exempt
-def evaluate_style(request):
-    print("1º")
-    try:
-        python_code = get_python_code(request)
-        code_file = tempfile.NamedTemporaryFile(delete=False)
-        code_file.write(python_code.encode())
-        code_file.seek(0)
-        options = code_file.name + ' --enable=similarities' + " --disable=C0114,C0116" + " --ignore-imports=yes"
-        (stdout, stderr) = lint.run_pylint(options, return_std=True)
-        code_file.seek(0)
-        code_file.close()
-        result = stdout.getvalue()
-        name = code_file.name.split('/')[-1]
-        result = result[(result.find(name) + len(name) - 1):]
-        result = result.replace(code_file.name, 'mycode')
-        result = result[result.find('\n'):]
-        init_index = result.find('rated at ')
-        score = -1
-        if init_index != -1:
-            init_index += len('rated at ')
-            final_index = result.find('/10', init_index)
-            score = round(float(result[init_index:final_index]), 2)
-        response = HttpResponse(result+"\n"+str(score),
-                                content_type="text/plain")
-        return response
-    except Exception as ex:
-        print("2º")
-        print(ex)
-        response = HttpResponse("Error", content_type="text/plain")
-        return response
-
-
 # TODO: Too many hardcoded strings, review
 def index(request):
     exercises = Exercise.objects.all()
@@ -100,3 +71,48 @@ def request_code(request, exercise_id):
     if difficulty is not None:
         print('EXERCISE: ', exercise_id, 'DIFFICULTY: ', difficulty)
         return HttpResponse(data, content_type="text/plain")
+
+@csrf_exempt  
+def generate_user_zip(request):
+    
+    exercise_id = request.data.get("exercise_id")
+
+    path = f'/exercises/static/exercises/{exercise_id}/python_template/ros2_humble'
+    common_path = f'/RoboticsAcademy/common'
+
+    working_folder = "/tmp/ra/wf"
+
+    try:
+        # 1. Create the working folder
+        if os.path.exists(working_folder):
+            shutil.rmtree(working_folder)
+        os.mkdir(working_folder)
+
+        # 2. Copy necessary files
+        shutil.copytree(common_path, working_folder, dirs_exist_ok=True)
+        shutil.copytree(path, working_folder, dirs_exist_ok=True)
+
+        # 3. Generate the zip
+        zip_path = working_folder + ".zip"
+        with zipfile.ZipFile(zip_path, "w") as zipf:
+            for root, dirs, files in os.walk(working_folder):
+                for file in files:
+                    zipf.write(
+                        os.path.join(root, file),
+                        os.path.relpath(os.path.join(root, file), working_folder),
+                    )
+
+        # 4. Return the zip
+        zip_file = open(zip_path, "rb")
+        mime_type, _ = mimetypes.guess_type(zip_path)
+        response = HttpResponse(zip_file, content_type=mime_type)
+        response["Content-Disposition"] = (
+            f"attachment; filename={os.path.basename(zip_path)}"
+        )
+
+        return response
+    except Exception as e:
+        return HttpResponse(
+            {"success": False, "message": str(e)}, status=400
+        )
+

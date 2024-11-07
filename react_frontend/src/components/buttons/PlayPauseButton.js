@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import axios from 'axios';
 
 const PlayPause = (props) => {
   const [loading, setLoading] = useState(false);
@@ -60,10 +61,26 @@ const PlayPause = (props) => {
     setLoading(true);
     const errorMessage =
       "Syntax or dependency error, check details on the console.\n";
+    
+    const serverBase = `${document.location.protocol}//${document.location.hostname}:7164`;
+    let requestUrl = `${serverBase}/exercises/exercise/${config[0].exercise_id}/user_code_zip`;
+
+    axios.post(requestUrl, {
+      exercise_id: config[0].exercise_id
+    })
+      .then((response) => {console.log(response);response.json()})
+      .then((data) => {    
+        console.log(data)
+      })
+      .catch((error) => {
+          console.log("Error fetching circuit options:", error);
+      });
 
     window.RoboticsExerciseComponents.commsManager
       .terminate_application()
       .then(() => {
+        // TODO: zip also common and exercise
+
         window.RoboticsExerciseComponents.commsManager
           .run({
             code: code,
