@@ -21,7 +21,7 @@ VisualizationType = (
     ('physic_rae', "Physic RAE")
 )
 
-WorldType = (
+UniverseType = (
     ('none', "None"),
     ('gazebo', "Gazebo"),
     ('drones', "Gazebo Drones"),
@@ -34,9 +34,9 @@ RosVersion = (
 )
 
 
-class World(models.Model):
+class Universe(models.Model):
     """
-    Modelo World para RoboticsCademy
+    Modelo Universe para RoboticsCademy
     """
     name = models.CharField(max_length=100, blank=False, unique=True)
     launch_file_path = models.CharField(max_length=200, blank=False)
@@ -50,7 +50,7 @@ class World(models.Model):
     )
     world = models.CharField(
         max_length=50,
-        choices=WorldType,
+        choices=UniverseType,
         default="none",
         blank=False
     )
@@ -80,7 +80,7 @@ class Exercise(models.Model):
         choices=StatusChoice,
         default="ACTIVE"
     )
-    worlds = models.ManyToManyField(World, default=None, db_table='"exercises_universes"')
+    worlds = models.ManyToManyField(Universe, default=None, db_table='"exercises_universes"')
     template = models.CharField(max_length=200, blank=True, default="")
 
     def __str__(self):
