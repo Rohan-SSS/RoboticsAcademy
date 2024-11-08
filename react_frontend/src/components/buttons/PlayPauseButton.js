@@ -63,6 +63,7 @@ const PlayPause = (props) => {
     
     const serverBase = `${document.location.protocol}//${document.location.hostname}:7164`;
     let requestUrl = `${serverBase}/exercises/exercise/${config[0].exercise_id}/user_code_zip`;
+
     try {
       const response = await fetch(requestUrl, {
         method: "POST",
@@ -74,41 +75,43 @@ const PlayPause = (props) => {
         }),
       });
 
-      const data = await response.blob();
-      console.log(data)
+      const zipBlob = await response.blob();
+      console.log(zipBlob)
 
-      if (response.ok) {
-        console.log(data)
-      } else {
-        console.error("Error formatting code:", data.error);
+      if (!response.ok) {
+        console.error("Error formatting code:", zip.error);
+        return 
       }
+      var reader = new FileReader();
+      reader.readAsDataURL(zipBlob);
+      reader.onloadend = async function () {
+        // Get the zip in base64
+        var base64data = reader.result;
+        console.log(base64data)
+        window.RoboticsExerciseComponents.commsManager
+          .terminate_application()
+          .then(() => {
+            window.RoboticsExerciseComponents.commsManager
+              .run({
+                code: base64data
+              })
+              .then(() => {})
+              .catch((response) => {
+                let linterMessage = JSON.stringify(response.data.message).split(
+                  "\\n"
+                );
+                RoboticsReactComponents.MessageSystem.Alert.showAlert(
+                  errorMessage,
+                  "error"
+                );
+                console.log(`Received linter message ·${linterMessage}`);
+              });
+          });
+      };
     } catch (error) {
       console.log(error);
+      return 
     }
-
-    window.RoboticsExerciseComponents.commsManager
-      .terminate_application()
-      .then(() => {
-        // TODO: zip also common and exercise
-
-        window.RoboticsExerciseComponents.commsManager
-          .run({
-            code: code,
-            template: config[0].template,
-            exercise_id: config[0].exercise_id,
-          })
-          .then(() => {})
-          .catch((response) => {
-            let linterMessage = JSON.stringify(response.data.message).split(
-              "\\n"
-            );
-            RoboticsReactComponents.MessageSystem.Alert.showAlert(
-              errorMessage,
-              "error"
-            );
-            console.log(`Received linter message ·${linterMessage}`);
-          });
-      });
   };
 
   const pause = () => {
