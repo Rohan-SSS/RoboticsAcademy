@@ -77,9 +77,8 @@ def request_code(request, exercise_id):
 @csrf_exempt  
 def user_code_zip(request, exercise_id):
         
+    code = json.loads(request.body)["code"]
     working_folder = "/tmp/ra"
-
-    print(exercise_id)
 
     exercise_path = os.path.join(settings.BASE_DIR, f"exercises/static/exercises/{exercise_id}/python_template/ros2_humble")
     common_path = os.path.join(settings.BASE_DIR, "common")
@@ -99,7 +98,7 @@ def user_code_zip(request, exercise_id):
 
         # 3. Copy user code
         f = open(user_path, "w")
-        f.write("user_code")
+        f.write(code)
         f.close()
 
         # 3. Generate the zip
