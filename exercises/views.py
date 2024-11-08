@@ -12,6 +12,8 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import Exercise
+from rest_framework.response import Response
+from rest_framework import status
 
 
 def get_python_code(request):
@@ -73,14 +75,12 @@ def request_code(request, exercise_id):
         return HttpResponse(data, content_type="text/plain")
 
 @csrf_exempt  
-def generate_user_zip(request):
-    
-    exercise_id = request.data.get("exercise_id")
-
-    path = f'/exercises/static/exercises/{exercise_id}/python_template/ros2_humble'
+def user_code_zip(request, exercise_id):
+        
+    path = f'/RoboticsAcademy/exercises/static/exercises/{exercise_id}/python_template/ros2_humble'
     common_path = f'/RoboticsAcademy/common'
 
-    working_folder = "/tmp/ra/wf"
+    working_folder = "/tmp/ra"
 
     try:
         # 1. Create the working folder
@@ -112,7 +112,4 @@ def generate_user_zip(request):
 
         return response
     except Exception as e:
-        return HttpResponse(
-            {"success": False, "message": str(e)}, status=400
-        )
-
+        return Response({"success": False, "message": str(e)}, status=status.HTTP_400_BAD_REQUEST)

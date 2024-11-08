@@ -57,24 +57,34 @@ const PlayPause = (props) => {
     setEditorChanged(false);
   };
 
-  const runCode = (code) => {
+  const runCode = async (code) => {
     setLoading(true);
     const errorMessage =
       "Syntax or dependency error, check details on the console.\n";
     
     const serverBase = `${document.location.protocol}//${document.location.hostname}:7164`;
     let requestUrl = `${serverBase}/exercises/exercise/${config[0].exercise_id}/user_code_zip`;
-
-    axios.post(requestUrl, {
-      exercise_id: config[0].exercise_id
-    })
-      .then((response) => {console.log(response);response.json()})
-      .then((data) => {    
-        console.log(data)
-      })
-      .catch((error) => {
-          console.log("Error fetching circuit options:", error);
+    try {
+      const response = await fetch(requestUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          exercise_id: config[0].exercise_id
+        }),
       });
+
+      const data = await response.blob();
+
+      if (response.ok) {
+        console.log(data)
+      } else {
+        console.error("Error formatting code:", data.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     window.RoboticsExerciseComponents.commsManager
       .terminate_application()
