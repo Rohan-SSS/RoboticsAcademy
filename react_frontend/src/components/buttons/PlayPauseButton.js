@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import axios from 'axios';
 
 const PlayPause = (props) => {
   const [loading, setLoading] = useState(false);
@@ -69,13 +68,11 @@ const PlayPause = (props) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          exercise_id: config[0].exercise_id
-        }),
+        }
       });
 
       const data = await response.blob();
+      console.log(data)
 
       if (response.ok) {
         console.log(data)

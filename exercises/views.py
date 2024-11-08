@@ -77,10 +77,15 @@ def request_code(request, exercise_id):
 @csrf_exempt  
 def user_code_zip(request, exercise_id):
         
-    path = f'/RoboticsAcademy/exercises/static/exercises/{exercise_id}/python_template/ros2_humble'
-    common_path = f'/RoboticsAcademy/common'
-
     working_folder = "/tmp/ra"
+
+    print(exercise_id)
+
+    exercise_path = os.path.join(settings.BASE_DIR, f"exercises/static/exercises/{exercise_id}/python_template/ros2_humble")
+    common_path = os.path.join(settings.BASE_DIR, "common")
+    user_path = os.path.join(working_folder, "user_code.py")
+
+    print(exercise_path, common_path)
 
     try:
         # 1. Create the working folder
@@ -90,7 +95,12 @@ def user_code_zip(request, exercise_id):
 
         # 2. Copy necessary files
         shutil.copytree(common_path, working_folder, dirs_exist_ok=True)
-        shutil.copytree(path, working_folder, dirs_exist_ok=True)
+        shutil.copytree(exercise_path, working_folder, dirs_exist_ok=True)
+
+        # 3. Copy user code
+        f = open(user_path, "w")
+        f.write("user_code")
+        f.close()
 
         # 3. Generate the zip
         zip_path = working_folder + ".zip"
