@@ -82,7 +82,7 @@ def user_code_zip(request, exercise_id):
 
     exercise_path = os.path.join(settings.BASE_DIR, f"exercises/static/exercises/{exercise_id}/python_template/ros2_humble")
     common_path = os.path.join(settings.BASE_DIR, "common")
-    user_path = os.path.join(working_folder, "user_code.py")
+    user_path = os.path.join(working_folder, "academy.py")
 
     print(exercise_path, common_path)
 
