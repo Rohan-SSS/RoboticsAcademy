@@ -36,7 +36,7 @@ RUN /bin/bash -c "source /home/drones_ws/install/setup.bash; rosdep install --fr
 RUN /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --symlink-install"
 
 # Relocate RAM
-# RUN mv /RoboticsApplicationManager /src
+# RUN mkdir /RoboticsAcademy/src && mv /RoboticsApplicationManager/* /RoboticsAcademy/src
 
 # build react_fronted
 # RUN cd /RoboticsAcademy/react_frontend/ && yarn install && yarn run build
