@@ -6,7 +6,7 @@ import rclpy
 from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
 from console_interfaces.general.console import start_console
 from hal_interfaces.general.odometry import OdometryNode
-from src.manager.ram_logging.log_manager import LogManager
+from manager.ram_logging.log_manager import LogManager
 from lap import Lap
 
 # Graphical User Interface Class
