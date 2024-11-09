@@ -76,7 +76,6 @@ const PlayPause = (props) => {
       });
 
       const zipBlob = await response.blob();
-      console.log(zipBlob)
 
       if (!response.ok) {
         console.error("Error formatting code:", zip.error);
@@ -87,7 +86,6 @@ const PlayPause = (props) => {
       reader.onloadend = async function () {
         // Get the zip in base64
         var base64data = reader.result;
-        console.log(base64data)
         window.RoboticsExerciseComponents.commsManager
           .terminate_application()
           .then(() => {

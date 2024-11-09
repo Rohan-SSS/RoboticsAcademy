@@ -91,8 +91,6 @@ def user_code_zip(request, exercise_id):
     gui_working_path = os.path.join(working_folder, "gui_interfaces")
     hal_working_path = os.path.join(working_folder, "hal_interfaces")
 
-    print(exercise_path, common_path)
-
     try:
         # 1. Create the working folder
         if os.path.exists(working_folder):
