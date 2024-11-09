@@ -82,7 +82,14 @@ def user_code_zip(request, exercise_id):
 
     exercise_path = os.path.join(settings.BASE_DIR, f"exercises/static/exercises/{exercise_id}/python_template/ros2_humble")
     common_path = os.path.join(settings.BASE_DIR, "common")
+    console_interfaces_path = os.path.join(common_path, "console_interfaces/console_interfaces")
+    gui_interfaces_path = os.path.join(common_path, "gui_interfaces/gui_interfaces")
+    hal_interfaces_path = os.path.join(common_path, "hal_interfaces/hal_interfaces")
     user_path = os.path.join(working_folder, "academy.py")
+
+    console_working_path = os.path.join(working_folder, "console_interfaces")
+    gui_working_path = os.path.join(working_folder, "gui_interfaces")
+    hal_working_path = os.path.join(working_folder, "hal_interfaces")
 
     print(exercise_path, common_path)
 
@@ -93,7 +100,9 @@ def user_code_zip(request, exercise_id):
         os.mkdir(working_folder)
 
         # 2. Copy necessary files
-        shutil.copytree(common_path, working_folder, dirs_exist_ok=True)
+        shutil.copytree(console_interfaces_path, console_working_path, dirs_exist_ok=True)
+        shutil.copytree(gui_interfaces_path, gui_working_path, dirs_exist_ok=True)
+        shutil.copytree(hal_interfaces_path, hal_working_path, dirs_exist_ok=True)
         shutil.copytree(exercise_path, working_folder, dirs_exist_ok=True)
 
         # 3. Copy user code
