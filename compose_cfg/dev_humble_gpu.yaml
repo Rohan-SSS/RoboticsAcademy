@@ -36,6 +36,9 @@ services:
       - type: bind
         source: ./
         target: /RoboticsAcademy
+      - type: bind
+        source: ./src
+        target: /RoboticsApplicationManager
     tty: true
     stdin_open: true
     depends_on: 
