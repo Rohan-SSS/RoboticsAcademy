@@ -6,8 +6,13 @@ import rclpy
 from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
 from console_interfaces.general.console import start_console
 from hal_interfaces.general.odometry import OdometryNode
-from manager.ram_logging.log_manager import LogManager
 from lap import Lap
+
+import sys
+
+sys.path.insert(0, '/RoboticsApplicationManager')
+
+from manager.ram_logging.log_manager import LogManager
 
 # Graphical User Interface Class
 
