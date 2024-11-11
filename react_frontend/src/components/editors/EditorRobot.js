@@ -64,6 +64,13 @@ export default function EditorRobot(props) {
 
   const [state, dispatch] = useEditorReudcer();
 
+  try {
+    let unibotics = props.props.unibotics;
+    if (unibotics) {
+      state.baseUrl = "";
+    }
+  } catch {}
+
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
     setMonacoEditorSourceCode(code);
