@@ -22,6 +22,7 @@ export const fetchFormatCode = async ({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": context.csrf,
       },
       body: JSON.stringify({
         code: monacoEditorSourceCode,
@@ -50,6 +51,7 @@ export const fetchAnalysisCode = async ({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": context.csrf 
       },
       body: JSON.stringify({
         code: monacoEditorSourceCode,
