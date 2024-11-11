@@ -66,12 +66,12 @@ export default function EditorRobot(props) {
 
   try {
     let unibotics = props.props.unibotics;
-    console.log(unibotics)
     if (unibotics) {
-      console.log("Remove url")
       state.baseUrl = "";
     }
   } catch {}
+
+  console.log(state)
 
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
