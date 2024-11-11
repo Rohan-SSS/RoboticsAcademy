@@ -5,6 +5,11 @@ import rclpy
 import threading
 import time
 import websocket
+
+import sys
+
+sys.path.insert(0, '/RoboticsApplicationManager')
+
 from manager.ram_logging.log_manager import LogManager
 
 
