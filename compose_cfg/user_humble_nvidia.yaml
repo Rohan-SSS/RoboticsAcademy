@@ -24,6 +24,7 @@ services:
   robotics-academy:
     image: jderobot/robotics-backend:test
     container_name: developer-container
+    command:  "-s"
     deploy:
       resources:
         reservations:
