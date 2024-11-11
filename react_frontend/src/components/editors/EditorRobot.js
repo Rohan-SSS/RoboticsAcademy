@@ -64,18 +64,14 @@ export default function EditorRobot(props) {
 
   const [state, dispatch] = useEditorReudcer();
 
-  console.log(props.props)
-
   try {
-    let unibotics = props.unibotics;
+    let unibotics = props.props.unibotics;
     console.log(unibotics)
     if (unibotics) {
       console.log("Remove url")
       state.baseUrl = "";
     }
   } catch {}
-
-  console.log(state)
 
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
