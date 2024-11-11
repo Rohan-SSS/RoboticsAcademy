@@ -24,6 +24,7 @@ services:
   robotics-academy:
     image: jderobot/robotics-backend:test
     container_name: developer-container
+    command:  "-s"
     devices:
       - /dev/dri/card0:/dev/dri/card0
       - /dev/dri/renderD128:/dev/dri/renderD128
