@@ -68,7 +68,9 @@ export default function EditorRobot(props) {
 
   try {
     let unibotics = props.unibotics;
+    console.log(unibotics)
     if (unibotics) {
+      console.log("Remove url")
       state.baseUrl = "";
     }
   } catch {}
