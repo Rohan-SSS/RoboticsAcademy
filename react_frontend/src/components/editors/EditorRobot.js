@@ -68,10 +68,12 @@ export default function EditorRobot(props) {
 
   try {
     let unibotics = props.unibotics;
-    if (unibotics !== undefined && unibotics !== null && unibotics) {
+    if (unibotics) {
       state.baseUrl = "";
     }
   } catch {}
+
+  console.log(state)
 
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
