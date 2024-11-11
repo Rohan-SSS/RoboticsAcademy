@@ -27,8 +27,8 @@ WORKDIR /
 RUN chmod +x /start_vnc.sh /kill_all.sh /entrypoint.sh /start_vnc_gpu.sh /set_dri_name.sh
 
 # RoboticsAcademy
-# ARG ROBOTICS_ACADEMY=$ROBOTICS_ACADEMY
-# RUN git clone --depth 1 https://github.com/JdeRobot/RoboticsAcademy.git -b $ROBOTICS_ACADEMY /RoboticsAcademy/
+ARG ROBOTICS_ACADEMY=$ROBOTICS_ACADEMY
+RUN git clone --depth 1 https://github.com/JdeRobot/RoboticsAcademy.git -b $ROBOTICS_ACADEMY /RoboticsAcademy/
 
 # Compiling and sourcing the workspace
 WORKDIR /home/ws
@@ -39,7 +39,7 @@ RUN /bin/bash -c "source /opt/ros/humble/setup.bash; colcon build --symlink-inst
 # RUN mkdir /RoboticsAcademy/src && mv /RoboticsApplicationManager/* /RoboticsAcademy/src
 
 # build react_fronted
-# RUN cd /RoboticsAcademy/react_frontend/ && yarn install && yarn run build
+RUN cd /RoboticsAcademy/react_frontend/ && yarn install && yarn run build
 
 # Django server
 EXPOSE 7164
