@@ -28,6 +28,7 @@ const MonacoEditor = ({
   const lineNumberDecorationRef = useRef(null);
   // Rducer state
   const { isLoading, monacoEditorTheme, editorOptions, baseUrl } = state;
+  console.log(baseUrl)
   // USE STATE
   const [lineNumber, setLineNumber] = useState(-1);
   const [lineNumberDecorations, setLineNumberDecorations] = useState([]);
