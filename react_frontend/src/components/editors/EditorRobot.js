@@ -64,6 +64,8 @@ export default function EditorRobot(props) {
 
   const [state, dispatch] = useEditorReudcer();
 
+  console.log(props)
+
   try {
     let unibotics = props.unibotics;
     if (unibotics !== undefined && unibotics !== null && unibotics) {
