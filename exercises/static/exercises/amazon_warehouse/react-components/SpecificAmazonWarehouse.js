@@ -127,8 +127,8 @@ function SpecificAmazonWarehouse(props) {
       console.log(message);
       if (message.data.state === "visualization_ready") {
         let world = context.mapSelected;
-        //TODO: check if it works on Unibotics
-        if (world === "amazon_warehouse_ros2_world2_ackermann" || world === "amazon_warehouse_ros2_world2" || world === "World 2") {
+        
+        if (world.includes("2")) {
           setMap(Map2)
           setMapSize(Map2Size)
         } else {
@@ -136,7 +136,7 @@ function SpecificAmazonWarehouse(props) {
           setMapSize(Map1Size)
         }
 
-        if (world.includes("ackermann")) {
+        if (world.includes("Ackermann")) {
           setVehicleType(1)
         } else {
           setVehicleType(0)
