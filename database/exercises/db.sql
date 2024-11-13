@@ -104,7 +104,7 @@ COPY public.exercises (id, exercise_id, name, description, tags, status, templat
 
 COPY public.exercises_universes (id, exercise_id, universe_id) FROM stdin;
 1	2	1
-2	5	2
+2	5	1
 3	6	3
 4	7	4
 5	10	5
@@ -113,7 +113,7 @@ COPY public.exercises_universes (id, exercise_id, universe_id) FROM stdin;
 8	4	8
 9	4	9
 10	3	10
-11	11	11
+11	11	1
 12	8	12
 13	9	14
 14	3	15
