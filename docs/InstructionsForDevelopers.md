@@ -23,7 +23,7 @@ We provide an sh script that configures and runs automatically a developing envi
 
 1) Clone RA repo
 ```
-git clone https://github.com/JdeRobot/RoboticsAcademy.git -b <src-branch>
+git clone --recurse-submodules https://github.com/JdeRobot/RoboticsAcademy.git -b <src-branch>
 cd RoboticsAcademy/
 ```
 
@@ -99,7 +99,7 @@ sudo apt install docker-compose
 
 2) Clone RoboticsAcademy repo (or your fork) and create src folder
 ```
-git clone https://github.com/JdeRobot/RoboticsAcademy.git -b <src-branch>
+git clone --recurse-submodules https://github.com/JdeRobot/RoboticsAcademy.git -b <src-branch>
 cd RoboticsAcademy/
 ```
 
