@@ -42,29 +42,74 @@ const PlayPause = (props) => {
     });
   }, []);
 
-  const play = () => {
+  const play = async () => {
     setLoading(true);
     let editorCode = "";
     editorCode = RoboticsReactComponents.CodeEditor.getCode();
 
     if (applicationPaused) {
       if (editorChanged) {
-        commsManager.terminate_application()
-          .then(() => {
-            runCode(editorCode);
-            setLoading(false);
-            setEditorChanged(false);
-          })
-          .catch((response) => console.log(response));
-      } else {
-        commsManager.resume();
+        await resetCode(editorCode);
       }
+      commsManager.resume();
     } else {
       runCode(editorCode);
     }
     setLoading(false);
     setEditorChanged(false);
   };
+
+  const resetCode = async (code) => {
+    setLoading(true);
+    const errorMessage =
+      "Syntax or dependency error, check details on the console.\n";
+    
+    const serverBase = `${document.location.protocol}//${document.location.hostname}:7164`;
+    let requestUrl = `${serverBase}/exercises/exercise/${config[0].exercise_id}/user_code_zip`;
+
+    try {
+      const response = await fetch(requestUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code: code
+        }),
+      });
+
+      const zipBlob = await response.blob();
+
+      if (!response.ok) {
+        console.error("Error formatting code:", zip.error);
+        return 
+      }
+      var reader = new FileReader();
+      reader.readAsDataURL(zipBlob);
+      reader.onloadend = async function () {
+        // Get the zip in base64
+        var base64data = reader.result;
+        window.RoboticsExerciseComponents.commsManager
+          .run({
+            code: base64data
+          })
+          .then(() => {})
+          .catch((response) => {
+            let linterMessage = JSON.stringify(response.data.message).split(
+              "\\n"
+            );
+            RoboticsReactComponents.MessageSystem.Alert.showAlert(
+              errorMessage,
+              "error"
+            );
+            console.log(`Received linter message ·${linterMessage}`);
+          });
+      };
+    } catch (error) {
+      console.log(error);
+      return 
+    }
+  }
 
   const runCode = async (code) => {
     setLoading(true);
