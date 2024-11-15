@@ -49,26 +49,6 @@ export const guiAndHalAutoCompleteObj = {
       },
       {
         type: "method",
-        label: "getPose3d().x",
-        code: "getPose3d().x",
-        descriptions: "Get the position of the robot (x coordinate).",
-      },
-      {
-        type: "method",
-        label: "getPose3d().y",
-        code: "getPose3d().y",
-        descriptions: "Obtain the position of the robot (y coordinate).",
-      },
-      {
-        type: "method",
-        label: "getPose3d().yaw",
-        code: "getPose3d().yaw",
-        descriptions:
-          "Get the orientation of the robot with regarding the map.",
-      },
-
-      {
-        type: "method",
         label: "getLaserData()",
         code: "getLaserData()",
         descriptions:
@@ -680,6 +660,12 @@ export const guiAndHalAutoCompleteObj = {
         code: "getMap(url)",
         descriptions:
           "Returns a numpy array with the image data in a 3 dimensional array (R, G, B, A).",
+      },
+      {
+        type: "method",
+        label: "showNumpy(mat)",
+        code: "showNumpy(mat)",
+        descriptions: "Displays the matrix sent.",
       },
     ],
   },

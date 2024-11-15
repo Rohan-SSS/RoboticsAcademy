@@ -47,8 +47,18 @@ const PlayPause = (props) => {
     let editorCode = "";
     editorCode = RoboticsReactComponents.CodeEditor.getCode();
 
-    if (!editorChanged && applicationPaused) {
-      commsManager.resume();
+    if (applicationPaused) {
+      if (editorChanged) {
+        commsManager.terminate_application()
+          .then(() => {
+            runCode(editorCode);
+            setLoading(false);
+            setEditorChanged(false);
+          })
+          .catch((response) => console.log(response));
+      } else {
+        commsManager.resume();
+      }
     } else {
       runCode(editorCode);
     }
