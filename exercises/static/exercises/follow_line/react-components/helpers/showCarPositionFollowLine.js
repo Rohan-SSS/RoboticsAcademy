@@ -9,7 +9,7 @@ export const getCarPose = (circuit, position) => {
   
   if (ackUniverse) {
     circuit = circuit.replace(" ack","")
-    ackMultiplier = 3
+    ackMultiplier = 5
   }
 
   switch (circuit) {
