@@ -82,7 +82,48 @@ Another way to solve it is to try to delete the generated image and do it again,
 
 ### Using Docker run
 
-In order to use Robotics Academy with the docker run command it is necessary to generate a RADI. To see how to do it read [how to generate a RADI][].
+You have 2 ways of launching Robotics Academy with docker run:
+
+* Creating a new RADI. To see how to do it read [how to generate a RADI][].
+* Using the docker image: `robotics-academy:latest`
+
+Then to launch Robotics Academy first you have to launch the database docker container. For example if you want to launch it from where you cloned Robotics Academy you can use the next command:
+
+```bash
+docker run --hostname my-postgres --name academy_db -d\
+    -e POSTGRES_DB=academy_db \
+    -e POSTGRES_USER=user-dev \
+    -e POSTGRES_PASSWORD=robotics-academy-dev \
+    -e POSTGRES_PORT=5432 \
+    -v ./RoboticsInfrastructure/database/universes.sql:/docker-entrypoint-initdb.d/1.sql \
+    -v ./database/exercises/db.sql:/docker-entrypoint-initdb.d/2.sql \
+    -v ./database/django_auth.sql:/docker-entrypoint-initdb.d/3.sql \
+    -v ./scripts:/scripts \
+    -d -p 5432:5432 \
+    postgres:latest
+```
+
+If you are in another folder you may need to change the first part of the paths of the volume bindings (**-v**) to the correct path.
+
+Now you can launch Robotics Academy using the followings commands:
+
+* Automatic GPU selection
+
+```bash
+docker run --rm -it $(nvidia-smi >/dev/null 2>&1 && echo "--gpus all" || echo "") --device /dev/dri -p 6080:6080 -p 1108:1108 -p 7163:7163 -p 7164:7164 --link academy_db jderobot/robotics-academy:latest
+```
+
+* Automatic GPU selection (Without Nvidia)
+
+```bash
+docker run --rm -it --device /dev/dri -p 6080:6080 -p 1108:1108 -p 7163:7163 -p 7164:7164 --link academy_db jderobot/robotics-academy:latest
+```
+
+* Only CPU
+
+```bash
+docker run --rm -it -p 6080:6080 -p 1108:1108 -p 7163:7163 -p 7164:7164 --link academy_db jderobot/robotics-academy:latest
+```
 
 [how to generate a RADI]: ./generate_a_radi.md
 
