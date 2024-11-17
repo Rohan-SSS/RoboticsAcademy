@@ -58,7 +58,11 @@ export default function EditorRobot(props) {
       setMonacoEditorSourceCode(code);
     });
 
-    let unibotics = props.props.unibotics;
+    let unibotics = undefined;
+    try {
+      unibotics = props.props.unibotics;
+    } catch {}
+
     if (unibotics) {
       // Request U code
       const request = new Request("/academy/reload_code/" + exerciseId + "/");
