@@ -6,7 +6,7 @@ import {
 
 const editorInitialState = {
   isLoading: true,
-  monacoEditorTheme: monacoEditorThemeList[0], // 
+  monacoEditorTheme: monacoEditorThemeList[0], //
   resizeEditor: resizeList[0],
   baseUrl: `${document.location.protocol}//${document.location.hostname}:7164`,
   editorOptions: {
@@ -23,7 +23,7 @@ const editorInitialState = {
     minimap: { enabled: false },
     automaticLayout: true,
     tabSize: 4,
-    rulers: [80],
+    rulers: [],
     suggestOnTriggerCharacters: true,
     quickSuggestions: true,
     wordBasedSuggestions: true,
@@ -40,10 +40,17 @@ const editorInitialState = {
       horizontalScrollbarSize: 8,
     },
   },
+  editorSettings: {
+    isModalOpen: true,
+    isCodeFormatEnable: true,
+    isZoomingEnable: true,
+    modalScreenState: "shortcuts", // widgets
+  },
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
+    // editor options
     case "updateEditorState":
       return {
         ...state,
@@ -69,6 +76,27 @@ const reducer = (state, action) => {
         ...state,
         monacoEditorTheme: action.payload.theme,
       };
+
+    // editor settings
+    case "changeSettingsModalState":
+      return {
+        ...state,
+        editorSettings: {
+          ...state.editorSettings,
+          isModalOpen: action.payload.isModalOpen,
+        },
+      };
+    case "changeModalScreenState":
+      console.log(action);
+
+      return {
+        ...state,
+        editorSettings: {
+          ...state.editorSettings,
+          modalScreenState: action.payload.screen,
+        },
+      };
+
     default:
       throw new Error("Unknown Action type!");
   }

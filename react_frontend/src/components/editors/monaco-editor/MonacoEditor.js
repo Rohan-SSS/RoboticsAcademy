@@ -14,6 +14,7 @@ import {
   useMonacoEditorLineNumberDecorationsEffect,
 } from "../../../hooks/useMonacoEditorEffect";
 import "./../../../styles/editors/MonacoEditor.css";
+import MonacoEditorInfo from "./editor-info/MonacoEditorInfo";
 
 const MonacoEditor = ({
   state,
@@ -27,7 +28,13 @@ const MonacoEditor = ({
   const editorRef = useRef(null);
   const lineNumberDecorationRef = useRef(null);
   // Rducer state
-  const { isLoading, monacoEditorTheme, editorOptions, baseUrl } = state;
+  const {
+    isLoading,
+    monacoEditorTheme,
+    editorOptions,
+    baseUrl,
+    editorSettings,
+  } = state;
   // USE STATE
   const [lineNumber, setLineNumber] = useState(-1);
   const [lineNumberDecorations, setLineNumberDecorations] = useState([]);
@@ -63,6 +70,7 @@ const MonacoEditor = ({
 
   // Code format (black)
   useMonacoEditorCodeFormatEffect({
+    editorRef,
     baseUrl,
     monacoEditorSourceCode,
     setMonacoEditorSourceCode,
@@ -98,20 +106,27 @@ const MonacoEditor = ({
       {isLoading ? (
         <MonacoEditorLoader theme={monacoEditorTheme} />
       ) : (
-        <Editor
-          height="100%"
-          width="100%"
-          defaultLanguage="python"
-          theme={monacoEditorTheme}
-          defaultValue={monacoEditorSourceCode}
-          value={monacoEditorSourceCode}
-          onChange={(code) => handleMonacoEditorCodeChange(code)}
-          beforeMount={handleEditorWillMount}
-          onMount={handleEditorDidMount}
-          // Editor Options
-          options={editorOptions}
-          className=""
-        />
+        <>
+          <MonacoEditorInfo
+            editorSettings={editorSettings}
+            dispatch={dispatch}
+            editorRef={editorRef}
+          />
+          <Editor
+            height="100%"
+            width="100%"
+            defaultLanguage="python"
+            theme={monacoEditorTheme}
+            defaultValue={monacoEditorSourceCode}
+            value={monacoEditorSourceCode}
+            onChange={(code) => handleMonacoEditorCodeChange(code)}
+            beforeMount={handleEditorWillMount}
+            onMount={handleEditorDidMount}
+            // Editor Options
+            options={editorOptions}
+            className=""
+          />
+        </>
       )}
     </div>
   );
