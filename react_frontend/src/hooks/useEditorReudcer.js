@@ -17,13 +17,13 @@ const editorInitialState = {
     scrollBeyondLastLine: true,
     // word warp
     wordWrap: "wordWrapColumn",
-    wordWrapColumn: 100,
+    wordWrapColumn: 80,
     wrappingIndent: "indent",
     //
     minimap: { enabled: false },
     automaticLayout: true,
     tabSize: 4,
-    rulers: [],
+    rulers: [80],
     suggestOnTriggerCharacters: true,
     quickSuggestions: true,
     wordBasedSuggestions: true,
@@ -87,8 +87,6 @@ const reducer = (state, action) => {
         },
       };
     case "changeModalScreenState":
-      console.log(action);
-
       return {
         ...state,
         editorSettings: {
@@ -96,7 +94,22 @@ const reducer = (state, action) => {
           modalScreenState: action.payload.screen,
         },
       };
-
+    case "isCodeFormatEnable":
+      return {
+        ...state,
+        editorSettings: {
+          ...state.editorSettings,
+          isCodeFormatEnable: !state.editorSettings.isCodeFormatEnable,
+        },
+      };
+    case "isZoomingEnable":
+      return {
+        ...state,
+        editorSettings: {
+          ...state.editorSettings,
+          isZoomingEnable: !state.editorSettings.isZoomingEnable,
+        },
+      };
     default:
       throw new Error("Unknown Action type!");
   }

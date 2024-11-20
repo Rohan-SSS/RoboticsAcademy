@@ -3,6 +3,11 @@ export { default as MonacoEditor } from "./MonacoEditor";
 // Monaco Editor Loader
 export { default as MonacoEditorLoader } from "./MonacoEditorLoader";
 
+// Monaco Editor Info
+export { default as MonacoEditorInfoButtons } from "./editor-info/MonacoEditorInfoButtons";
+export { default as MonacoEditorInfoSidebar } from "./editor-info/MonacoEditorInfoSidebar";
+export { default as MonacoEditorInfoDetails } from "./editor-info/MonacoEditorInfoDetails";
+
 // helper
 export { monacoEditorSnippet } from "./helper/monacoEditorSnippet";
 export { monacoEditorScroll } from "./helper/monacoEditorScroll";
