@@ -20,7 +20,7 @@ const MonacoEditorInfoDetails = ({ editorSettings, dispatch }) => {
     dispatch({ type: value });
   };
   return (
-    <div className="flex  flex-col w-[calc(400px-120px)] h-full ">
+    <div className="flex  flex-col w-[calc(400px-120px)] h-full select-none">
       {/* close button */}
       <div
         className="absolute top-1 right-1 flex justify-center items-center w-7 h-7 hover:bg-[#393939] rounded-full duration-100 cursor-pointer"

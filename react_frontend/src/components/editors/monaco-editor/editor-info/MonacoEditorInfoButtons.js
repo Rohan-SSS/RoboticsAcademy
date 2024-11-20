@@ -12,7 +12,7 @@ const MonacoEditorInfoButtons = ({
     <div
       className={`absolute bottom-3 right-3 flex justify-between items-center gap-1 h-9 z-[100] bg-[#2D2D2D] rounded-full border-[#464646] border-[1px] ${
         isCodeFormatEnable || isZoomingEnable ? `px-[4px]` : `px-[2px] w-[36px]`
-      } duration-100`}
+      } duration-300  select-none`}
     >
       {/* font size */}
       {isZoomingEnable && (
