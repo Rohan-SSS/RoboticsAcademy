@@ -78,10 +78,14 @@ const reducer = (state, action) => {
       };
 
     // editor settings
-    case "udpateEditorSttings":
+    case "udpateEditorSttingsWidgets":
       return {
         ...state,
-        editorSettings: action.payload.editorSettings,
+        editorSettings: {
+          ...state.editorSettings,
+          isCodeFormatEnable: action.payload.isCodeFormatEnable,
+          isZoomingEnable: action.payload.isZoomingEnable,
+        },
       };
     case "changeSettingsModalState":
       return {

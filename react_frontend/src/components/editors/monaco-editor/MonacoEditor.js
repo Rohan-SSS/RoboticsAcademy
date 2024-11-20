@@ -6,8 +6,8 @@ import {
   monacoEditorSnippet,
   monacoEditorGlyph,
   monacoEditorScroll,
-  setEditorSettingsData,
-  getEditorSettingsData,
+  setEditorSettingsWidgetsData,
+  getEditorSettingsWidgetsData,
 } from "./index";
 import {
   useMonacoEditorLoaderEffect,
@@ -46,20 +46,29 @@ const MonacoEditor = ({
   // USE Effects
   //localstorage
   useEffect(() => {
-    const data = getEditorSettingsData();
+    const data = getEditorSettingsWidgetsData();
 
     if (data) {
       dispatch({
-        type: "udpateEditorSttings",
-        payload: { editorSettings: data },
+        type: "udpateEditorSttingsWidgets",
+        payload: {
+          isCodeFormatEnable: data.isCodeFormatEnable,
+          isZoomingEnable: data.isZoomingEnable,
+        },
       });
     } else {
-      setEditorSettingsData(editorSettings);
+      setEditorSettingsWidgetsData({
+        isCodeFormatEnable: editorSettings.isCodeFormatEnable,
+        isZoomingEnable: editorSettings.isZoomingEnable,
+      });
     }
   }, []);
   // called when widgets changed
   useEffect(() => {
-    setEditorSettingsData(editorSettings);
+    setEditorSettingsWidgetsData({
+      isCodeFormatEnable: editorSettings.isCodeFormatEnable,
+      isZoomingEnable: editorSettings.isZoomingEnable,
+    });
   }, [editorSettings.isCodeFormatEnable, editorSettings.isZoomingEnable]);
 
   // editor loading

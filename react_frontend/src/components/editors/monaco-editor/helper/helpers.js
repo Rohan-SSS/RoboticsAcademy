@@ -174,13 +174,13 @@ export const snippetsBuilderV2 = ({
 };
 
 // local storage data
-export const setEditorSettingsData = (data) => {
+export const setEditorSettingsWidgetsData = (data) => {
   const data_string = JSON.stringify(data);
-  localStorage.setItem("editorSettings", data_string);
+  localStorage.setItem("editorSettingsWidgets", data_string);
 };
 
-export const getEditorSettingsData = () => {
-  const data = localStorage.getItem("editorSettings");
+export const getEditorSettingsWidgetsData = () => {
+  const data = localStorage.getItem("editorSettingsWidgets");
 
   if (data) return JSON.parse(data);
   return null;
