@@ -41,7 +41,7 @@ const editorInitialState = {
     },
   },
   editorSettings: {
-    isModalOpen: true,
+    isModalOpen: false,
     isCodeFormatEnable: true,
     isZoomingEnable: true,
     modalScreenState: "shortcuts", // widgets
@@ -78,6 +78,11 @@ const reducer = (state, action) => {
       };
 
     // editor settings
+    case "udpateEditorSttings":
+      return {
+        ...state,
+        editorSettings: action.payload.editorSettings,
+      };
     case "changeSettingsModalState":
       return {
         ...state,

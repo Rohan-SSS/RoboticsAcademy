@@ -7,8 +7,8 @@ const shortcutsDetails = [
 ];
 
 const widgetsDetails = [
-  { title: "Code Format", id: "isCodeFormatEnable" },
   { title: "Font Size", id: "isZoomingEnable" },
+  { title: "Code Format", id: "isCodeFormatEnable" },
 ];
 
 const MonacoEditorInfoDetails = ({ editorSettings, dispatch }) => {

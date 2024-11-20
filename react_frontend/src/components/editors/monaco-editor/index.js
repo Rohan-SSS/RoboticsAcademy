@@ -16,6 +16,7 @@ export {
   filterLineNumber,
   renderGlyphs,
 } from "./helper/monacoEditorGlyph";
+export { getEditorSettingsData, setEditorSettingsData } from "./helper/helpers";
 
 // autocomplete-snippets
 export { basic_snippets } from "./autocomplete-snippets/basic_snippets";

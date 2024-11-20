@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Editor, { loader } from "@monaco-editor/react";
 import PropTypes from "prop-types";
 import {
@@ -6,6 +6,8 @@ import {
   monacoEditorSnippet,
   monacoEditorGlyph,
   monacoEditorScroll,
+  setEditorSettingsData,
+  getEditorSettingsData,
 } from "./index";
 import {
   useMonacoEditorLoaderEffect,
@@ -42,6 +44,23 @@ const MonacoEditor = ({
   const [maxEditorRows, setMaxEditorRows] = useState(-1);
 
   // USE Effects
+  //localstorage
+  useEffect(() => {
+    const data = getEditorSettingsData();
+
+    if (data) {
+      dispatch({
+        type: "udpateEditorSttings",
+        payload: { editorSettings: data },
+      });
+    } else {
+      setEditorSettingsData(editorSettings);
+    }
+  }, []);
+  // called when widgets changed
+  useEffect(() => {
+    setEditorSettingsData(editorSettings);
+  }, [editorSettings.isCodeFormatEnable, editorSettings.isZoomingEnable]);
 
   // editor loading
   useMonacoEditorLoaderEffect({ loader, dispatch, monacoEditorTheme });
