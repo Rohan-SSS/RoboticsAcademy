@@ -51,7 +51,7 @@ const MonacoEditorInfoDetails = ({ editorSettings, dispatch }) => {
                   </span>
                   +
                   <span className="bg-[#383838] px-2 xpy-[1px] rounded-md border-[1px] border-[#636363]">
-                    {shortcut.keys[0]}
+                    {shortcut.keys[1]}
                   </span>
                 </div>
               </div>
