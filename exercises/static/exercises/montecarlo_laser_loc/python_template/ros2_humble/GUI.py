@@ -63,7 +63,7 @@ class GUI(MeasuringThreadingGUI):
         x = scale_x * x + offset_x
 
         self.user_position = x, y
-        self.user_angle = angle
+        self.user_angle = angle,
 
     def showParticles(self, particles):
         if particles:
