@@ -94,6 +94,9 @@ function SpecificMontecarloLaserLoc(props) {
         try {
           setVacuumPose(null)
           setUserPose(null)
+          setParticles([])
+          lastRealPose = undefined;
+          lastUserPose = undefined;
         } catch (error) {
         }
       }
