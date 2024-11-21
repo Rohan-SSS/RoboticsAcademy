@@ -22,6 +22,7 @@ const MonacoEditorInfoButtons = ({
             <div
               className="flex justify-center items-center  w-[30px] h-7 bg-[#474747] rounded-tl-full rounded-bl-full duration-100 "
               onClick={() => handleFontZoom("up")}
+              title="Zoom In"
             >
               <ZoomInIcon cssClass="" />
             </div>
@@ -29,6 +30,7 @@ const MonacoEditorInfoButtons = ({
             <div
               className="flex justify-center items-center  w-[30px] h-7 bg-[#474747] rounded-tr-full rounded-br-full duration-100 "
               onClick={() => handleFontZoom("down")}
+              title="Zoom Out"
             >
               <ZoomOutIcon cssClass="" />
             </div>
@@ -42,6 +44,7 @@ const MonacoEditorInfoButtons = ({
           <div
             className="flex justify-center items-center w-7 h-7 rounded-full hover:bg-[#474747] duration-100 cursor-pointer"
             onClick={() => handleFormatCode()}
+            title="Format Code"
           >
             <AlignIcon cssClass="" />
           </div>
@@ -58,6 +61,7 @@ const MonacoEditorInfoButtons = ({
             payload: { isModalOpen: !isModalOpen },
           })
         }
+        title="More Info"
       >
         <InfoIcon cssClass="" />
       </div>
