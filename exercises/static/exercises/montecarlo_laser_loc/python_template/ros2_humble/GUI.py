@@ -56,17 +56,14 @@ class GUI(MeasuringThreadingGUI):
         self.send_to_client(message)
 
     def showPosition(self, x, y, angle):
-        angle += math.pi
-        ay = math.cos(-angle) - math.sin(-angle)
-        ax = math.sin(-angle) + math.cos(-angle)
-        scale_y = 15
-        offset_y = 63
+        scale_y = 15; offset_y = 63
         y = scale_y * y + offset_y
-        scale_x = -30
-        offset_x = 171
+
+        scale_x = -30; offset_x = 171
         x = scale_x * x + offset_x
+
         self.user_position = x, y
-        self.user_angle = (ax, ay)
+        self.user_angle = angle
 
     def showParticles(self, particles):
         if particles:
