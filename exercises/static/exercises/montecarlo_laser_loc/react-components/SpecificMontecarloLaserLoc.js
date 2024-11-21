@@ -90,15 +90,12 @@ function SpecificMontecarloLaserLoc(props) {
 
   React.useEffect(() => {
     const callback = (message) => {
-      if (message.data.state === "ready") {
-        try {
-          setVacuumPose(null)
-          setUserPose(null)
-          setParticles([])
-          lastRealPose = undefined;
-          lastUserPose = undefined;
-        } catch (error) {
-        }
+      if (message.data.state === "visualization_ready") {
+        setVacuumPose(null)
+        setUserPose(null)
+        setParticles([])
+        lastRealPose = undefined;
+        lastUserPose = undefined;
       }
     }
     window.RoboticsExerciseComponents.commsManager.subscribe(
