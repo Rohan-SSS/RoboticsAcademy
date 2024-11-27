@@ -38,8 +38,9 @@ class GUI(MeasuringThreadingGUI):
     def update_gui(self):
 
         # Payload Image Message
-        _, encoded_image = cv2.imencode(".JPEG", self.image)
-        self.payload["image"] = base64.b64encode(encoded_image).decode("utf-8")
+        if self.image is not None:
+            _, encoded_image = cv2.imencode(".JPEG", self.image)
+            self.payload["image"] = base64.b64encode(encoded_image).decode("utf-8")
 
         # Payload Map Message
         pos_message = self.map.getRobotCoordinates()
