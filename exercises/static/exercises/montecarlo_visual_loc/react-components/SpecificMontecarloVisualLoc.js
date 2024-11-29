@@ -72,7 +72,7 @@ function SpecificMontecarloVisualLoc(props) {
         if(particles != "") {
           var new_particles = [];
           particles.forEach(element => {
-            new_particles.push([element[1]*height, element[0]*width, -element[2]])
+            new_particles.push([element[1]*height, element[0]*width, -element[2], element[3]])
           });
           setParticles(new_particles)
         }
@@ -140,7 +140,7 @@ function SpecificMontecarloVisualLoc(props) {
         }
         {userParticles.map(element => {
             return (
-              <div className="particle" style={{rotate: "z "+ element[2]+"rad", top: element[0] -5, left: element[1] -5}}>
+              <div className="particle" style={{rotate: "z "+ element[2]+"rad", top: element[0] -5, left: element[1] -5, opacity: element[3]}}>
                 <div className="particle-arrow"/>
               </div>
           )})
