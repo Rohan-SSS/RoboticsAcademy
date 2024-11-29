@@ -18,7 +18,7 @@ class GUI(MeasuringThreadingGUI):
         super().__init__(host)
 
         # Payload vars
-        self.payload = {'image': '', 'map': '', 'particles': ''}
+        self.payload = {'image': '', 'map': '', 'user': '', 'particles': ''}
         self.init_coords = (171, 63)
         self.start_coords = (201, 85.5)
         self.map = Map(getPose3d)
@@ -28,9 +28,10 @@ class GUI(MeasuringThreadingGUI):
         # Image
         self.image = None
         self.image_lock = threading.Lock()
+        self.image_updated = False
         # User position
-        #self.user_position = (0, 0)
-        #self.user_angle = (0, 0)
+        self.user_position = (0, 0)
+        self.user_angle = (0, 0)
 
         self.start()
 
@@ -38,9 +39,8 @@ class GUI(MeasuringThreadingGUI):
     def update_gui(self):
 
         # Payload Image Message
-        if self.image is not None:
-            _, encoded_image = cv2.imencode(".JPEG", self.image)
-            self.payload["image"] = base64.b64encode(encoded_image).decode("utf-8")
+        payload_image = self.payloadImage()
+        self.payload["image"] = json.dumps(payload_image)
 
         # Payload Map Message
         pos_message = self.map.getRobotCoordinates()
@@ -51,11 +51,11 @@ class GUI(MeasuringThreadingGUI):
         self.payload["map"] = pos_message
 
         # Payload User Message
-        #pos_message_user = self.user_position
-        #ang_message_user = self.user_angle
-        #pos_message_user = pos_message_user + ang_message_user
-        #pos_message_user = str(pos_message_user)
-        #self.payload["user"] = pos_message_user
+        pos_message_user = self.user_position
+        ang_message_user = self.user_angle
+        pos_message_user = pos_message_user + ang_message_user
+        pos_message_user = str(pos_message_user)
+        self.payload["user"] = pos_message_user
 
         # Payload Particles Message
         if self.particles:
@@ -65,6 +65,41 @@ class GUI(MeasuringThreadingGUI):
 
         message = json.dumps(self.payload)
         self.send_to_client(message)
+
+    # Function to prepare image payload
+    # Encodes the image as a JSON string and sends through the WS
+    def payloadImage(self):
+        with self.image_lock:
+            image_updated = self.image_updated
+            image_to_be_shown = self.image
+        
+        image = image_to_be_shown
+        payload = {'image': '', 'shape': ''}
+        
+        if not image_updated:
+            return payload
+        
+        shape = image.shape
+        frame = cv2.imencode('.JPEG', image)[1]
+        encoded_image = base64.b64encode(frame)
+        
+        payload['image'] = encoded_image.decode('utf-8')
+        payload['shape'] = shape
+        
+        with self.image_lock:
+            self.image_updated = False
+        
+        return payload
+
+    def showPosition(self, x, y, angle):
+        scale_y = 15; offset_y = 63
+        y = scale_y * y + offset_y
+        
+        scale_x = -30; offset_x = 171
+        x = scale_x * x + offset_x
+        
+        self.user_position = x, y
+        self.user_angle = angle,
 
     def showParticles(self, particles):
         if particles:
@@ -83,6 +118,7 @@ class GUI(MeasuringThreadingGUI):
     def setImage(self, image):
         with self.image_lock:
             self.image = image
+            self.image_updated = True
 
 host = "ws://127.0.0.1:2303"
 gui = GUI(host)
@@ -93,6 +129,9 @@ start_console()
 # Expose to the user
 def showImage(img):
     gui.setImage(img)
+
+def showPosition(x, y, angle):
+    gui.showPosition(x, y, angle)
 
 def showParticles(particles):
     gui.showParticles(particles)
