@@ -704,6 +704,13 @@ export const guiAndHalAutoCompleteObj = {
       },
       {
         type: "method",
+        label: "getOdom()",
+        code: "getOdom()",
+        descriptions:
+          "Get the orientation of the robot with noise regarding the map.",
+      },
+      {
+        type: "method",
         label: "getLaserData()",
         code: "getLaserData()",
         descriptions:
