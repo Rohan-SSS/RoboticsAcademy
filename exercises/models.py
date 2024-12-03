@@ -112,6 +112,19 @@ class Exercise(models.Model):
                     "exercise_id":self.exercise_id
                 }
                 configurations.append(config)
+        
+        # If empty worlds add one by default
+        if len(configurations) == 0:
+            config = {
+                "name": None,
+                "launch_file_path": None,
+                "ros_version": None,
+                "visualization": "console",
+                "world": None,
+                "template": self.template,
+                "exercise_id":self.exercise_id
+            }
+            configurations.append(config)
 
         context = {
             'exercise_base': "exercise_base_2_RA.html",
