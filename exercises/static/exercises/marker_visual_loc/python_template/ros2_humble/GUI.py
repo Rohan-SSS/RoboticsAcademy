@@ -80,4 +80,16 @@ def showImage(image):
 
 def showEstimatedPose(pose):
     """Pose must be (x, y, yaw)"""
-    gui.setEstimatedRobotPose(pose)
+    x, y, yaw = pose
+
+    scale_y = 15
+    offset_y = 63
+    y = scale_y * y + offset_y
+
+    scale_x = -30
+    offset_x = 171
+    x = scale_x * x + offset_x
+
+    transformed_pose = (x, y, yaw)
+    
+    gui.setEstimatedRobotPose(transformed_pose)
