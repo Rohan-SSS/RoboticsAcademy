@@ -1,6 +1,9 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import { drawImage } from "./helpers/showImageVisual";
+import RobotRed from "../resources/images/robot_red.svg";
+import RobotGreen from "../resources/images/robot_green.svg";
+import RobotBlue from "../resources/images/robot_blue.svg";
 
 import house from "../resources/images/map.png";
 
@@ -100,17 +103,17 @@ function SpecificVisualLoc(props) {
         src="https://via.placeholder.com/800x600.png?text=No%20image%20received%20from%20exercise"/>
       {realPose &&
         <div id="real-pos" style={{rotate: "z "+ realPose[2]+"rad", top: realPose[0] -5 , left: realPose[1] -5}}>
-          <div className="arrow"/>
+          <img src={RobotGreen} id="real-pos"/>
         </div>
       }
       {noisyPose &&
         <div id="noisy-pos" style={{rotate: "z "+ noisyPose[2]+"rad", top: noisyPose[0] -5 , left: noisyPose[1] -5}}>
-          <div className="arrow"/>
+          <img src={RobotBlue} id="noisy-pos"/>
         </div>
       }
       {userPose &&
         <div id="user-pos" style={{rotate: "z "+ userPose[2]+"rad", top: userPose[0] -5 , left: userPose[1] -5}}>
-          <div className="arrow"/>
+          <img src={RobotRed} id="user-pos"/>
         </div>
       }
     </div>
