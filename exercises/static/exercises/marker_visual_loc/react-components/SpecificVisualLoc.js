@@ -1,6 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { drawImage } from "./helpers/showImageVisual";
+import { drawImage, updatePath, addToPath } from "./helpers/showImageVisual";
 import RobotRed from "../resources/images/robot_red.svg";
 import RobotGreen from "../resources/images/robot_green.svg";
 import RobotBlue from "../resources/images/robot_blue.svg";
@@ -12,6 +12,15 @@ function SpecificVisualLoc(props) {
   const [realPose, setRealPose] = React.useState(null)
   const [noisyPose, setNoisyPose] = React.useState(null)
   const [userPose, setUserPose] = React.useState(null)
+  const [realPath, setRealPath] = React.useState("")
+  const [noisyPath, setNoisyPath] = React.useState("")
+  const [userPath, setUserPath] = React.useState("")
+  var realTrail = [];
+  var noisyTrail = [];
+  var userTrail = [];
+  var realLastPose = undefined;
+  var noisyLastPose = undefined;
+  var userLastPose = undefined;
 
   // TODO: Add shadows of poses
 
@@ -30,21 +39,23 @@ function SpecificVisualLoc(props) {
         const pose = updateData.real_pose.substring(1, updateData.real_pose.length - 1);
         const content = pose.split(",").map(item => parseFloat(item));
 
-        setRealPose([content[1]*height,content[0]*width, -content[2]]);
+        updatePath(realTrail, setRealPath, height, width);
+        setRealPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
+        addToPath(content[1], content[0], realTrail);
       }
 
       if (updateData.noisy_pose) {
         const pose = updateData.noisy_pose.substring(1, updateData.noisy_pose.length - 1);
         const content = pose.split(",").map(item => parseFloat(item));
 
-        setNoisyPose([content[1]*height,content[0]*width, -content[2]]);
+        setNoisyPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
       }
 
       if (updateData.estimate_pose) {
         const pose = updateData.estimate_pose.substring(1, updateData.estimate_pose.length - 1);
         const content = pose.split(",").map(item => parseFloat(item));
 
-        setUserPose([content[1]*height,content[0]*width, -content[2]]);
+        setUserPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
       }
 
       if (updateData.image) {
@@ -105,6 +116,13 @@ function SpecificVisualLoc(props) {
         <div id="real-pos" style={{rotate: "z "+ realPose[2]+"rad", top: realPose[0] -5 , left: realPose[1] -5}}>
           <img src={RobotGreen} id="real-pos"/>
         </div>
+      }
+      {realPath &&
+        <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg" style={{zIndex:2, position:"absolute"}}>
+          <path xmlns="http://www.w3.org/2000/svg" d={realPath} 
+            style={{strokeWidth: "20px", strokeLinejoin:"round", stroke: "green", fill: "none"}}
+          />
+        </svg>
       }
       {noisyPose &&
         <div id="noisy-pos" style={{rotate: "z "+ noisyPose[2]+"rad", top: noisyPose[0] -5 , left: noisyPose[1] -5}}>
