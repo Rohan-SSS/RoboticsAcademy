@@ -6,8 +6,9 @@ import cv2
 
 
 class Map:
-    def __init__(self, pose_getter):
+    def __init__(self, pose_getter, noisy_pose_getter):
         self.pose_getter = pose_getter
+        self.noisy_pose_getter = noisy_pose_getter
 
     def RTx(self, angle, tx, ty, tz):
         RT = np.matrix(
@@ -61,14 +62,20 @@ class Map:
 
         return x, y, pose.yaw
 
-    def getRobotCoordinatesWithNoise(self, noise_std=2.0):
-        x, y, yaw = self.getRobotCoordinates()
-        
-        x_noisy = x + random.gauss(0, noise_std)
-        y_noisy = y + random.gauss(0, noise_std)
-        yaw_noisy = yaw + random.gauss(0, noise_std)
+    def getRobotCoordinatesWithNoise(self):
+        pose = self.noisy_pose_getter()
+        x = pose.x
+        y = pose.y
 
-        return x_noisy, y_noisy, yaw_noisy
+        scale_y = 15
+        offset_y = 63
+        y = scale_y * y + offset_y
+
+        scale_x = -30
+        offset_x = 171
+        x = scale_x * x + offset_x
+
+        return x, y, pose.yaw
 
     # Function to reset
     def reset(self):

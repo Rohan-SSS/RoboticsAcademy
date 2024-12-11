@@ -10,7 +10,7 @@ from map import Map
 from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
 from console_interfaces.general.console import start_console
 
-from HAL import getPose3d
+from HAL import getPose3d, getOdom
 
 class GUI(MeasuringThreadingGUI):
 
@@ -21,7 +21,7 @@ class GUI(MeasuringThreadingGUI):
         self.image_lock = threading.Lock()
 
         self.predict_pose = None
-        self.map = Map(getPose3d)
+        self.map = Map(getPose3d, getOdom)
         
         # Payload vars
         self.payload = {"image": "", "real_pose": "","noisy_pose": "", "estimate_pose": "" }
