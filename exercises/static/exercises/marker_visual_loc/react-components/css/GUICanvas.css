@@ -15,6 +15,7 @@
 
 #real-pos {
   position: absolute;
+  z-index: 3;
   width: 20px;
   height: 20px;
   border-radius: 10px;
@@ -23,6 +24,7 @@
 
 #noisy-pos {
   position: absolute;
+  z-index: 3;
   width: 20px;
   height: 20px;
   border-radius: 10px;
@@ -31,6 +33,7 @@
 
 #user-pos {
   position: absolute;
+  z-index: 3;
   width: 20px;
   height: 20px;
   border-radius: 10px;
