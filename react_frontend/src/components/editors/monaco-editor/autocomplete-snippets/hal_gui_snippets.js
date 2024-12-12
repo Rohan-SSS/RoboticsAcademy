@@ -821,5 +821,61 @@ export const guiAndHalAutoCompleteObj = {
         descriptions: "Shows the particles on the map.",
       },
     ],
+  },
+  _marker_visual_loc: {
+    hal: [
+      {
+        type: "method",
+        label: "getImage()",
+        code: "getImage()",
+        descriptions: "Get the image.",
+      },
+      {
+        type: "method",
+        label: "setV()",
+        code: "setV()",
+        descriptions: "Set the linear speed.",
+      },
+      {
+        type: "method",
+        label: "setW()",
+        code: "setW()",
+        descriptions: "Set the angular velocity.",
+      },
+      {
+        type: "method",
+        label: "getPose3d().x",
+        code: "getPose3d().x",
+        descriptions: "Get the position of the robot (x coordinate).",
+      },
+      {
+        type: "method",
+        label: "getPose3d().y",
+        code: "getPose3d().y",
+        descriptions: "Obtain the position of the robot (y coordinate).",
+      },
+      {
+        type: "method",
+        label: "getPose3d().yaw",
+        code: "getPose3d().yaw",
+        descriptions:
+          "Get the orientation of the robot with regarding the map.",
+      },
+    ],
+    gui: [
+      {
+        type: "method",
+        label: "showEstimatedPose((x, y, angle))",
+        code: "showEstimatedPose((x, y, angle))",
+        descriptions: "Shows the estimated position on the map.",
+      },
+      {
+        type: "method",
+        label: "showImage()",
+        code: "showImage()",
+        descriptions:
+          "Allows you to view a debug image or with relevant information.",
+      }
+    ],
   }
 };
