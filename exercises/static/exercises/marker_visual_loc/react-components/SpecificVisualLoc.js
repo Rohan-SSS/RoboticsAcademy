@@ -65,7 +65,7 @@ function SpecificVisualLoc(props) {
         realLastPose = content
 
         setRealPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid < 10) {
+        if (valuesUntilValid > 10) {
           updatePath(realTrail, setRealPath, height, width);
           addToPath(content[1], content[0], realTrail);
         } else {
@@ -79,7 +79,7 @@ function SpecificVisualLoc(props) {
         noisyLastPose = content
 
         setNoisyPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid < 10) {
+        if (valuesUntilValid > 10) {
           updatePath(noisyTrail, setNoisyPath, height, width);
           addToPath(content[1], content[0], noisyTrail);
         }
@@ -91,7 +91,7 @@ function SpecificVisualLoc(props) {
         userLastPose = content
 
         setUserPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid < 10) {
+        if (valuesUntilValid > 10) {
           updatePath(userTrail, setUserPath, height, width);
           addToPath(content[1], content[0], userTrail);
         }
