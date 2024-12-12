@@ -136,7 +136,7 @@ function SpecificVisualLoc(props) {
         } catch (error) {
         }
       }
-      valuesUntilValid = 0;
+      valuesUntilValid = -10;
     }
     window.RoboticsExerciseComponents.commsManager.subscribe(
       [window.RoboticsExerciseComponents.commsManager.events.STATE_CHANGED],
