@@ -86,8 +86,8 @@ def showEstimatedPose(pose):
     offset_y = -6.88
     y = scale_y * (offset_y - y)
 
-    scale_x =  83.87
-    offset_x = 8.05
+    scale_x =  83
+    offset_x = 8
     x = scale_x * (offset_x - x)
 
     transformed_pose = (x, y, yaw)

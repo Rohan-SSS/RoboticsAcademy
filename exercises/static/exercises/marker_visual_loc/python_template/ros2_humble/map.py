@@ -56,8 +56,8 @@ class Map:
         offset_y = -6.88
         y = scale_y * (offset_y - y)
 
-        scale_x =  83.87
-        offset_x = 8.05
+        scale_x =  83
+        offset_x = 8
         x = scale_x * (offset_x - x)
 
         return x, y, pose.yaw
@@ -71,7 +71,7 @@ class Map:
         offset_y = -6.88
         y = scale_y * (offset_y - y)
 
-        scale_x =  83.8
+        scale_x =  83
         offset_x = 8
         x = scale_x * (offset_x - x)
 
