@@ -49,11 +49,12 @@ function SpecificVisualLoc(props) {
     console.log("TestShowScreen subscribing to ['update'] events");
     const callback = (message) => {
       const updateData = message.data.update;
+      console.log(updateData)
 
       var img = document.getElementById('gui-canvas'); 
       //or however you get a handle to the IMG
-      var width = (1012 / 300) / (1012 /img.clientWidth);
-      var height = (1012 / 150) / (1012 /img.clientHeight);
+      var width = (img.clientWidth / 1012);
+      var height = (img.clientHeight / 1012);
 
       if (updateData.real_pose) {
         const pose = updateData.real_pose.substring(1, updateData.real_pose.length - 1);

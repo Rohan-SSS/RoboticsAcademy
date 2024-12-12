@@ -82,13 +82,13 @@ def showEstimatedPose(pose):
     """Pose must be (x, y, yaw)"""
     x, y, yaw = pose
 
-    scale_y = 15
-    offset_y = 63
-    y = scale_y * y + offset_y
+    scale_y = -85
+    offset_y = -6.88
+    y = scale_y * (offset_y - y)
 
-    scale_x = -30
-    offset_x = 171
-    x = scale_x * x + offset_x
+    scale_x =  83.87
+    offset_x = 8.05
+    x = scale_x * (offset_x - x)
 
     transformed_pose = (x, y, yaw)
     
