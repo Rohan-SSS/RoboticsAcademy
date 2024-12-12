@@ -52,7 +52,6 @@ function SpecificVisualLoc(props) {
     console.log("TestShowScreen subscribing to ['update'] events");
     const callback = (message) => {
       const updateData = message.data.update;
-      console.log(updateData)
 
       var img = document.getElementById('gui-canvas'); 
       //or however you get a handle to the IMG
@@ -98,7 +97,6 @@ function SpecificVisualLoc(props) {
       }
 
       if (updateData.image) {
-        console.log("image");
         drawImage(updateData);
       }
 
@@ -124,7 +122,6 @@ function SpecificVisualLoc(props) {
 
   React.useEffect(() => {
     const callback = (message) => {
-      console.log(message);
       if (message.data.state === "visualization_ready") {
         try {
           setRealPose(null)
@@ -136,10 +133,10 @@ function SpecificVisualLoc(props) {
           realTrail=[]
           noisyTrail=[]
           userTrail=[]
-          valuesUntilValid = 0;
         } catch (error) {
         }
       }
+      valuesUntilValid = 0;
     }
     window.RoboticsExerciseComponents.commsManager.subscribe(
       [window.RoboticsExerciseComponents.commsManager.events.STATE_CHANGED],
