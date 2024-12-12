@@ -21,6 +21,7 @@ function SpecificVisualLoc(props) {
   var realLastPose = undefined;
   var noisyLastPose = undefined;
   var userLastPose = undefined;
+  var valuesUntilValid = 0;
 
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
@@ -43,6 +44,8 @@ function SpecificVisualLoc(props) {
     if (userLastPose) {
       setUserPose([userLastPose[1]*height,userLastPose[0]*width, -1.57 -userLastPose[2]]);
     }
+
+    valuesUntilValid = 0;
   });
 
   React.useEffect(() => {
@@ -61,9 +64,13 @@ function SpecificVisualLoc(props) {
         const content = pose.split(",").map(item => parseFloat(item));
         realLastPose = content
 
-        updatePath(realTrail, setRealPath, height, width);
         setRealPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        addToPath(content[1], content[0], realTrail);
+        if (valuesUntilValid < 10) {
+          updatePath(realTrail, setRealPath, height, width);
+          addToPath(content[1], content[0], realTrail);
+        } else {
+          valuesUntilValid = valuesUntilValid + 1;
+        }
       }
 
       if (updateData.noisy_pose) {
@@ -71,9 +78,11 @@ function SpecificVisualLoc(props) {
         const content = pose.split(",").map(item => parseFloat(item));
         noisyLastPose = content
 
-        updatePath(noisyTrail, setNoisyPath, height, width);
         setNoisyPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        addToPath(content[1], content[0], noisyTrail);
+        if (valuesUntilValid < 10) {
+          updatePath(noisyTrail, setNoisyPath, height, width);
+          addToPath(content[1], content[0], noisyTrail);
+        }
       }
 
       if (updateData.estimate_pose) {
@@ -81,9 +90,11 @@ function SpecificVisualLoc(props) {
         const content = pose.split(",").map(item => parseFloat(item));
         userLastPose = content
 
-        updatePath(userTrail, setUserPath, height, width);
         setUserPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        addToPath(content[1], content[0], userTrail);
+        if (valuesUntilValid < 10) {
+          updatePath(userTrail, setUserPath, height, width);
+          addToPath(content[1], content[0], userTrail);
+        }
       }
 
       if (updateData.image) {
@@ -125,6 +136,7 @@ function SpecificVisualLoc(props) {
           realTrail=[]
           noisyTrail=[]
           userTrail=[]
+          valuesUntilValid = 0;
         } catch (error) {
         }
       }
