@@ -49,8 +49,8 @@ class Map:
 
     def getRobotCoordinates(self):
         pose = self.pose_getter()
-        x = pose.x
-        y = pose.y
+        x = pose.x - 1
+        y = pose.y + 1.5
 
         scale_y = 15
         offset_y = 63
@@ -64,8 +64,8 @@ class Map:
 
     def getRobotCoordinatesWithNoise(self):
         pose = self.noisy_pose_getter()
-        x = pose.x
-        y = pose.y
+        x = pose.x - 1
+        y = pose.y + 1.5
 
         scale_y = 15
         offset_y = 63
