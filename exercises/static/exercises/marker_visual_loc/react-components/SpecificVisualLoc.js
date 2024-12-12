@@ -25,8 +25,8 @@ function SpecificVisualLoc(props) {
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
-    var width = (1012 / 300) / (1012 /img.clientWidth);
-    var height = (1012 / 150) / (1012 /img.clientHeight);
+    var width = (img.clientWidth / 1012);
+    var height = (img.clientHeight / 1012);
 
     updatePath(realTrail, setRealPath, height, width);
     updatePath(noisyTrail, setNoisyPath, height, width);
