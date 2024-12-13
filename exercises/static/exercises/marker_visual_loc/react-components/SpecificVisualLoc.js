@@ -23,6 +23,8 @@ function SpecificVisualLoc(props) {
   var userLastPose = undefined;
   var valuesUntilValid = 0;
 
+  const timeout = 60;
+
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
@@ -64,7 +66,7 @@ function SpecificVisualLoc(props) {
         realLastPose = content
 
         setRealPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid > 30) {
+        if (valuesUntilValid > timeout) {
           updatePath(realTrail, setRealPath, height, width);
           addToPath(content[1], content[0], realTrail);
         } else {
@@ -78,7 +80,7 @@ function SpecificVisualLoc(props) {
         noisyLastPose = content
 
         setNoisyPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid > 30) {
+        if (valuesUntilValid > timeout) {
           updatePath(noisyTrail, setNoisyPath, height, width);
           addToPath(content[1], content[0], noisyTrail);
         }
@@ -90,7 +92,7 @@ function SpecificVisualLoc(props) {
         userLastPose = content
 
         setUserPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
-        if (valuesUntilValid > 30) {
+        if (valuesUntilValid > timeout) {
           updatePath(userTrail, setUserPath, height, width);
           addToPath(content[1], content[0], userTrail);
         }
