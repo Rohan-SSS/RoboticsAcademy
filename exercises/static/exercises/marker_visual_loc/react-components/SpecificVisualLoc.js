@@ -23,7 +23,7 @@ function SpecificVisualLoc(props) {
   var userLastPose = undefined;
   var valuesUntilValid = 0;
 
-  const timeout = 60;
+  const timeout = 40;
 
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
