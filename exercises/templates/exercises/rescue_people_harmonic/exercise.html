@@ -9,14 +9,14 @@
 
         {% react_component components/wrappers/MaterialBox id="exercise-container" %}
             {% react_component components/layout_components/MainAppBar exerciseName="Rescue People" url="https://jderobot.github.io/RoboticsAcademy/exercises/Drones/rescue_people" %} 
-            {% react_component components/visualizers/WorldIndicator %} {% end_react_component %}  
+            {% react_component components/visualizers/WorldSelector %} {% end_react_component %}   
             {% end_react_component %}  
             {% react_component components/wrappers/MaterialBox id="content" %}
                 {% react_component components/wrappers/MaterialBox id="content-exercise" %}
                     {% react_component components/layout_components/ExerciseControl %}{% end_react_component %}
                     {% react_component components/wrappers/FlexContainer row %}
                     {% react_component components/wrappers/FlexContainer console%} 
-                        {% react_component components/editors/AceEditorRobot %}{% end_react_component %}
+                        {% react_component components/editors/EditorRobot %}{% end_react_component %}
                         {% react_component components/visualizers/ConsoleViewer%}{% end_react_component %}
                         {% end_react_component%}
                         {% react_component components/wrappers/FlexContainer%} 
