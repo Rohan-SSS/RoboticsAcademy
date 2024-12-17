@@ -154,7 +154,17 @@ function SpecificVisualLoc(props) {
           realTrail=[]
           noisyTrail=[]
           userTrail=[]
-          setResizedBeacons(beacons)
+
+          var img = document.getElementById('gui-canvas'); 
+          //or however you get a handle to the IMG
+          var width = (img.clientWidth / 1012);
+          var height = (img.clientHeight / 1012);
+          setResizedBeacons(beacons.map(beacon => ({
+            id: beacon.id,
+            x: beacon.x * width,
+            y: beacon.y * height,
+            type: beacon.type,
+          })))
         } catch (error) {
         }
       }
@@ -229,7 +239,7 @@ function SpecificVisualLoc(props) {
             zIndex: "5",
             width: `${(beacon.type == "vert") ? 0 : 20}px`,
             height: `${(beacon.type == "hor") ? 0 : 20}px`,
-            translate: `${(beacon.type == "hor") ? -12 : 0}px ${(beacon.type == "vert") ? -12 : 0}px`,
+            // translate: `${(beacon.type == "hor") ? -12 : 0}px ${(beacon.type == "vert") ? -12 : 0}px`,
           }}
           title={`ID: ${beacon.id}`}
         />
