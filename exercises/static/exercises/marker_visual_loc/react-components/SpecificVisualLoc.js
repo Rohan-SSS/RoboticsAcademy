@@ -25,11 +25,28 @@ function SpecificVisualLoc(props) {
 
   const timeout = 40;
 
+  const beacons = [
+    { id: "tag_0", x: 518.75, y: 284.325 },
+    { id: "tag_1", x: 481.4, y: 825.775 },
+    { id: "tag_2", x: 171.39500000000004, y: 339.15 },
+    { id: "tag_3", x: 400.89, y: 62.90000000000002 },
+    { id: "tag_4", x: 844.9399999999999, y: 712.3 },
+    { id: "tag_5", x: 283.03000000000003, y: 499.8 },
+    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995 },
+    { id: "tag_7", x: 499.65999999999997, y: 140.24999999999994 },
+  ];
+
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
     var width = (img.clientWidth / 1012);
     var height = (img.clientHeight / 1012);
+
+    const resizedBeacons = beacons.map(beacon => ({
+      id: beacon.id,
+      x: beacon.x * width,
+      y: beacon.y * height,
+    }))
 
     updatePath(realTrail, setRealPath, height, width);
     updatePath(noisyTrail, setNoisyPath, height, width);
@@ -195,6 +212,31 @@ function SpecificVisualLoc(props) {
           />
         </svg>
       }
+      {resizedBeacons.map((beacon, index) => (
+        <div
+          key={index}
+          className="beacon"
+          style={{
+            position: "absolute",
+            width: "20px",
+            height: "20px",
+            backgroundColor: "red",
+            border: "1px solid black",
+            top: `${beacon.y}px`,
+            left: `${beacon.x}px`,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "white",
+            fontSize: "12px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+          title={`ID: ${beacon.id}`}
+        >
+          {beacon.id}
+        </div>
+      ))}
     </div>
   );
 }
