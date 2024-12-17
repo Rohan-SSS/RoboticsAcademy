@@ -3,101 +3,118 @@ import cv2
 import base64
 import threading
 import time
-import websocket
+
+from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
 from src.manager.ram_logging.log_manager import LogManager
 from console import start_console
 import numpy as np
 
 
-class ThreadingGUI:
+# Graphical User Interface Class
 
-    def __init__(self, host="ws://127.0.0.1:2303", freq=30.0):
+class GUI(MeasuringThreadingGUI):
+
+    def __init__(self, host="ws://127.0.0.1:2303"):
+        super().__init__(host)
 
         # Execution control vars
-        self.out_period = 1.0 / freq
-        self.image = None
-        self.image_lock = threading.Lock()
-        self.ack = True
-        self.ack_lock = threading.Lock()
-        self.running = True
+        self.image_to_be_shown = None
+        self.image_to_be_shown_updated = False
+        self.image_show_lock = threading.Lock()
+        #self.ack = True
+        #self.ack_lock = threading.Lock()
+        #self.running = True
 
         self.host = host
-        self.msg = {"image": ""}
+        self.payload = {"image": ""}
+        self.frame_rgb = None
 
-        # Initialize and start the WebSocket client thread
-        threading.Thread(target=self.run_websocket, daemon=True).start()
-
-        # Initialize and start the image sending thread (GUI out thread)
-        threading.Thread(
-            target=self.gui_out_thread, name="gui_out_thread", daemon=True
-        ).start()
-
-    # Init websocket client
-    def run_websocket(self):
-        self.client = websocket.WebSocketApp(self.host, on_message=self.gui_in_thread)
-        self.client.run_forever(ping_timeout=None, ping_interval=0)
-
+        self.start()
+        
     # Process incoming messages to the GUI
     def gui_in_thread(self, ws, message):
-
-        # In this case, messages can be either acks or key strokes
+        # In this case, incoming msgs can only be acks
         if "ack" in message:
             with self.ack_lock:
                 self.ack = True
-        else:
-            LogManager.logger.error("Unsupported msg")
+                self.ack_frontend = True
+        elif "pick" in message:
+            print ("pick")
+            message_array=np.fromstring(message, dtype=int, sep=',')
+            message_array.resize(240,320,3)
+            frame_int64 = message_array
+            frame_bgr = np.uint8(frame_int64)
+            self.frame_rgb = cv2.cvtColor(frame_bgr ,cv2.COLOR_BGR2RGB)
 
-    # Process outcoming messages from the GUI
-    def gui_out_thread(self):
-        while self.running:
-            start_time = time.time()
+    # Prepares and sends a map to the websocket server
+    def update_gui(self):
 
-            # Check if a new image should be sent
-            with self.ack_lock:
-                with self.image_lock:
-                    if self.ack:
-                        if np.any(self.image):
-                            self.send_image()
-                            self.ack = False
+        payload = self.payloadImage()
+        self.payload["image"] = json.dumps(payload)  
+       
+        message = json.dumps(self.payload)
+        self.send_to_client(message)
 
-            # Maintain desired frequency
-            elapsed = time.time() - start_time
-            sleep_time = max(0, self.out_period - elapsed)
-            time.sleep(sleep_time)
+    # Function to prepare image payload
+    # Encodes the image as a JSON string and sends through the WS
+    def payloadImage(self):
+        with self.image_show_lock:
+            image_to_be_shown_updated = self.image_to_be_shown_updated
+            image_to_be_shown = self.image_to_be_shown
 
-    # Prepares and send image to the websocket server
-    def send_image(self):
+        image = image_to_be_shown
+        payload = {'image': '', 'shape': ''}
 
-        if np.any(self.image):
-            _, encoded_image = cv2.imencode(".JPEG", self.image)
-            b64 = base64.b64encode(encoded_image).decode("utf-8")
-            shape = self.image.shape
-        else:
-            b64 = None
-            shape = 0
+        if not image_to_be_shown_updated:
+            return payload
 
-        payload= {
-            "image": b64,
-            "shape": shape,
-        }
+        shape = image.shape
+        
+        frame = cv2.imencode('.JPEG', image)[1]
+        encoded_image = base64.b64encode(frame)
 
-        self.msg["image"] = json.dumps(payload)
-        message = json.dumps(self.msg)
-        try:
-            if self.client:
-                self.client.send(message)
-        except Exception as e:
-            LogManager.logger.info(f"Error sending message: {e}")
+        payload['image'] = encoded_image.decode('utf-8')
+        payload['shape'] = shape
 
-    # Functions to set the next image to be sent
-    def setImage(self, image):
-        with self.image_lock:
-            self.image = image
+        with self.image_show_lock:
+            self.image_to_be_shown_updated = False
+
+        return payload
+    
+    # Function for student to call
+    def showImage(self, image):
+        with self.image_show_lock:
+            self.image_to_be_shown = image
+            self.image_to_be_shown_updated = True
 
 
+    def getImage(self):
+        # TEMPORAL PARA PROBAR EL ENVIO DE IMAGENES   
+        self.frame_rgb = np.ones((240, 320, 3), dtype="uint8") * 0  # Blanco
+
+        # Establecer el texto a mostrar
+        texto = "Hola"
+
+        # Definir la fuente, tamaño, color y grosor del texto
+        fuente = cv2.FONT_HERSHEY_SIMPLEX
+        tamaño_fuente = 1
+        color = (255, 0, 0)  # Negro
+        grosor = 2
+
+        # Obtener el tamaño del texto para centrarlo
+        (tamaño_texto, _) = cv2.getTextSize(texto, fuente, tamaño_fuente, grosor)
+        ancho_texto, alto_texto = tamaño_texto
+
+        # Calcular las coordenadas para centrar el texto
+        pos_x = (self.frame_rgb.shape[1] - ancho_texto) // 2
+        pos_y = (self.frame_rgb.shape[0] + alto_texto) // 2
+
+        # Poner el texto sobre la imagen
+        cv2.putText(self.frame_rgb, texto, (pos_x, pos_y), fuente, tamaño_fuente, color, grosor)
+        return self.frame_rgb
+            
 host = "ws://127.0.0.1:2303"
-gui = ThreadingGUI(host)
-
+gui = GUI(host)
 
 # Redirect the console
 start_console()
@@ -105,6 +122,8 @@ start_console()
 
 # Expose the user functions
 def showImage(image):
-    gui.setImage(image)
+    gui.showImage(image)
 
 
+def getImage():
+    return gui.getImage()
