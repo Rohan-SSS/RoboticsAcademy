@@ -29,12 +29,12 @@ function SpecificVisualLoc(props) {
   const beacons = [
     { id: "tag_0", x: 518.75, y: 284.325, type: "hor" },
     { id: "tag_1", x: 481.4, y: 825.775, type: "hor" },
-    { id: "tag_2", x: 171.39500000000004, y: 339.15, type: "vert" },
-    { id: "tag_3", x: 400.89, y: 62.90000000000002, type: "hor" },
-    { id: "tag_4", x: 844.9399999999999, y: 712.3, type: "vert" },
-    { id: "tag_5", x: 283.03000000000003, y: 499.8, type: "vert" },
-    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995, type: "hor" },
-    { id: "tag_7", x: 499.65999999999997, y: 140.24999999999994, type: "vert" },
+    { id: "tag_2", x: 171.395, y: 339.15, type: "vert" },
+    { id: "tag_3", x: 400.89, y: 62.9, type: "hor" },
+    { id: "tag_4", x: 844.94, y: 712.3, type: "vert" },
+    { id: "tag_5", x: 283.03, y: 499.8, type: "vert" },
+    { id: "tag_6", x: 730.4, y: 342.55, type: "hor" },
+    { id: "tag_7", x: 499.66, y: 140.25, type: "vert" },
   ];
 
   const resizeObserver = new ResizeObserver((entries) => {
