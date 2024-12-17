@@ -218,19 +218,19 @@ function SpecificVisualLoc(props) {
           />
         </svg>
       }
-      {Object.entries(resizedBeacons).map((beacon, index) => {
-        console.log(beacon)
+      {Object.entries(resizedBeacons).map((data, ind) => {
+        const beacon = data[1];
         return(
         <div
-          key={index}
-          className={`beacon ${beacon.type}`}
+          key={beacon["id"]}
+          className={`beacon ${beacon["type"]}`}
           style={{
-            top: `${beacon.y}px`,
-            left: `${beacon.x}px`,
+            top: `${beacon["y"]}px`,
+            left: `${beacon["x"]}px`,
           }}
-          title={`ID: ${beacon.id}`}
+          title={`ID: ${beacon["id"]}`}
         >
-          {beacon.id}
+          {beacon["id"]}
         </div>
       )})}
     </div>
