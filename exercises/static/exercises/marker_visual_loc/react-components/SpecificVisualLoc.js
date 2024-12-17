@@ -27,13 +27,13 @@ function SpecificVisualLoc(props) {
   const timeout = 40;
 
   const beacons = [
-    { id: "tag_0", x: 518.75, y: 284.325, type: "beacon-vert" },
-    { id: "tag_1", x: 481.4, y: 825.775, type: "beacon-vert" },
+    { id: "tag_0", x: 518.75, y: 284.325, type: "beacon-hor" },
+    { id: "tag_1", x: 481.4, y: 825.775, type: "beacon-hor" },
     { id: "tag_2", x: 171.39500000000004, y: 339.15, type: "beacon-vert" },
-    { id: "tag_3", x: 400.89, y: 62.90000000000002, type: "beacon-vert" },
+    { id: "tag_3", x: 400.89, y: 62.90000000000002, type: "beacon-hor" },
     { id: "tag_4", x: 844.9399999999999, y: 712.3, type: "beacon-vert" },
     { id: "tag_5", x: 283.03000000000003, y: 499.8, type: "beacon-vert" },
-    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995, type: "beacon-vert" },
+    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995, type: "beacon-hor" },
     { id: "tag_7", x: 499.65999999999997, y: 140.24999999999994, type: "beacon-vert" },
   ];
 
@@ -218,13 +218,13 @@ function SpecificVisualLoc(props) {
           />
         </svg>
       }
-      {Object.entries(resizedBeacons).map((index, beacon) => (
+      {Object.entries(resizedBeacons).map((beacon, index) => {
+        console.log(beacon)
+        return(
         <div
           key={index}
-          className="beacon"
+          className={`beacon ${beacon.type}`}
           style={{
-            width: "20px",
-            height: "20px",
             top: `${beacon.y}px`,
             left: `${beacon.x}px`,
           }}
@@ -232,7 +232,7 @@ function SpecificVisualLoc(props) {
         >
           {beacon.id}
         </div>
-      ))}
+      )})}
     </div>
   );
 }
