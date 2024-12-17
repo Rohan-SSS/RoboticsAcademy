@@ -7,7 +7,7 @@ import RobotBlue from "../resources/images/robot_blue.svg";
 
 import house from "../resources/images/map.png";
 
-import "./css/GUICanvas.css"
+import "./css/GUICanvas.css";
 function SpecificVisualLoc(props) {
   const [realPose, setRealPose] = React.useState(null)
   const [noisyPose, setNoisyPose] = React.useState(null)
@@ -27,14 +27,14 @@ function SpecificVisualLoc(props) {
   const timeout = 40;
 
   const beacons = [
-    { id: "tag_0", x: 518.75, y: 284.325, type: "beacon-hor" },
-    { id: "tag_1", x: 481.4, y: 825.775, type: "beacon-hor" },
-    { id: "tag_2", x: 171.39500000000004, y: 339.15, type: "beacon-vert" },
-    { id: "tag_3", x: 400.89, y: 62.90000000000002, type: "beacon-hor" },
-    { id: "tag_4", x: 844.9399999999999, y: 712.3, type: "beacon-vert" },
-    { id: "tag_5", x: 283.03000000000003, y: 499.8, type: "beacon-vert" },
-    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995, type: "beacon-hor" },
-    { id: "tag_7", x: 499.65999999999997, y: 140.24999999999994, type: "beacon-vert" },
+    { id: "tag_0", x: 518.75, y: 284.325, type: "hor" },
+    { id: "tag_1", x: 481.4, y: 825.775, type: "hor" },
+    { id: "tag_2", x: 171.39500000000004, y: 339.15, type: "vert" },
+    { id: "tag_3", x: 400.89, y: 62.90000000000002, type: "hor" },
+    { id: "tag_4", x: 844.9399999999999, y: 712.3, type: "vert" },
+    { id: "tag_5", x: 283.03000000000003, y: 499.8, type: "vert" },
+    { id: "tag_6", x: 730.4000000000001, y: 342.54999999999995, type: "hor" },
+    { id: "tag_7", x: 499.65999999999997, y: 140.24999999999994, type: "vert" },
   ];
 
   const resizeObserver = new ResizeObserver((entries) => {
@@ -47,6 +47,7 @@ function SpecificVisualLoc(props) {
       id: beacon.id,
       x: beacon.x * width,
       y: beacon.y * height,
+      type: beacon.type,
     })))
 
     updatePath(realTrail, setRealPath, height, width);
@@ -153,11 +154,7 @@ function SpecificVisualLoc(props) {
           realTrail=[]
           noisyTrail=[]
           userTrail=[]
-          setResizedBeacons(beacons.map(beacon => ({
-            id: beacon.id,
-            x: beacon.x * width,
-            y: beacon.y * height,
-          })))
+          setResizedBeacons(beacons)
         } catch (error) {
         }
       }
@@ -218,27 +215,27 @@ function SpecificVisualLoc(props) {
           />
         </svg>
       }
-      {Object.entries(resizedBeacons).map((data, ind) => {
-        const beacon = data[1];
+      {Object.values(resizedBeacons).map((beacon) => {
         return(
         <div
-          key={beacon["id"]}
-          className={`beacon ${beacon["type"]}`}
+          key={beacon.id}
+          className={`beacon ${beacon.type}`}
           style={{
-            top: `${beacon["y"]}px`,
-            left: `${beacon["x"]}px`,
+            top: `${beacon.y}px`,
+            left: `${beacon.x}px`,
+            position: "absolute",
+            border: "2px solid rgb(255, 255, 255)",
+            cursor: "pointer",
+            zIndex: "5",
+            width: `${(beacon.type == "vert") ? 0 : 20}px`,
+            height: `${(beacon.type == "hor") ? 0 : 20}px`,
+            translate: `${(beacon.type == "hor") ? -12 : 0}px ${(beacon.type == "vert") ? -12 : 0}px`,
           }}
-          title={`ID: ${beacon["id"]}`}
-        >
-          {beacon["id"]}
-        </div>
+          title={`ID: ${beacon.id}`}
+        />
       )})}
     </div>
   );
 }
-
-SpecificVisualLoc.propTypes = {
-  circuit: PropTypes.string,
-};
 
 export default SpecificVisualLoc;
