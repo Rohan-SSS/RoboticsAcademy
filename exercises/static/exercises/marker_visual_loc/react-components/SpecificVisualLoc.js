@@ -27,13 +27,13 @@ function SpecificVisualLoc(props) {
   const timeout = 40;
 
   const beacons = [
-    { id: "tag_0", x: 518.75, y: 284.325, type: "hor" },
-    { id: "tag_1", x: 481.4, y: 825.775, type: "hor" },
-    { id: "tag_2", x: 171.395, y: 339.15, type: "vert" },
-    { id: "tag_3", x: 400.89, y: 62.9, type: "hor" },
+    { id: "tag_0", x: 518.75, y: 270.325, type: "hor" },
+    { id: "tag_1", x: 481.4, y: 810.775, type: "hor" },
+    { id: "tag_2", x: 196.395, y: 339.15, type: "vert" },
+    { id: "tag_3", x: 400.89, y: 79.9, type: "hor" },
     { id: "tag_4", x: 844.94, y: 712.3, type: "vert" },
-    { id: "tag_5", x: 283.03, y: 499.8, type: "vert" },
-    { id: "tag_6", x: 730.4, y: 342.55, type: "hor" },
+    { id: "tag_5", x: 295.03, y: 499.8, type: "vert" },
+    { id: "tag_6", x: 730.4, y: 350.55, type: "hor" },
     { id: "tag_7", x: 499.66, y: 140.25, type: "vert" },
   ];
 
@@ -239,7 +239,6 @@ function SpecificVisualLoc(props) {
             zIndex: "5",
             width: `${(beacon.type == "vert") ? 0 : 20}px`,
             height: `${(beacon.type == "hor") ? 0 : 20}px`,
-            // translate: `${(beacon.type == "hor") ? -12 : 0}px ${(beacon.type == "vert") ? -12 : 0}px`,
           }}
           title={`ID: ${beacon.id}`}
         />
