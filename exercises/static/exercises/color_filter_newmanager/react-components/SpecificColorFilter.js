@@ -21,12 +21,6 @@ function SpecificColorFilter(props) {
       // Send the ACK of the msg
       window.RoboticsExerciseComponents.commsManager.send("gui", "ack");
     };
-
-   /*return () => {
-        
-   // Start Streaming
-    startStreaming()
-    };*/
    
     window.RoboticsExerciseComponents.commsManager.subscribe(
       [window.RoboticsExerciseComponents.commsManager.events.UPDATE],

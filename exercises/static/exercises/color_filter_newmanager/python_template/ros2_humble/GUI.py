@@ -39,12 +39,22 @@ class GUI(MeasuringThreadingGUI):
                 self.ack = True
                 self.ack_frontend = True
         elif "pick" in message:
-            print ("pick")
-            message_array=np.fromstring(message, dtype=int, sep=',')
-            message_array.resize(240,320,3)
-            frame_int64 = message_array
-            frame_bgr = np.uint8(frame_int64)
-            self.frame_rgb = cv2.cvtColor(frame_bgr ,cv2.COLOR_BGR2RGB)
+            base64_buffer = message[4:]
+
+            if base64_buffer.startswith('data:image/jpeg;base64,'):
+                base64_buffer = base64_buffer[len('data:image/jpeg;base64,'):]
+
+            # Decodificar la cadena base64 a bytes
+            image_data = base64.b64decode(base64_buffer)
+   
+            # Convertir los bytes a un array de numpy
+            nparr = np.frombuffer(image_data, np.uint8)
+    
+            # Decodificar la imagen (convertirla a formato OpenCV)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+            self.frame_rgb = img
+
 
     # Prepares and sends a map to the websocket server
     def update_gui(self):
@@ -89,29 +99,13 @@ class GUI(MeasuringThreadingGUI):
 
 
     def getImage(self):
-        # TEMPORAL PARA PROBAR EL ENVIO DE IMAGENES   
-        self.frame_rgb = np.ones((240, 320, 3), dtype="uint8") * 0  # Blanco
+        if (self.frame_rgb is None):
+            # TEMPORAL PARA PROBAR EL ENVIO DE IMAGENES   
+            frame_rgb = np.ones((240, 320, 3), dtype="uint8") * 255  # Blanco
 
-        # Establecer el texto a mostrar
-        texto = "Hola"
-
-        # Definir la fuente, tamaño, color y grosor del texto
-        fuente = cv2.FONT_HERSHEY_SIMPLEX
-        tamaño_fuente = 1
-        color = (255, 0, 0)  # Negro
-        grosor = 2
-
-        # Obtener el tamaño del texto para centrarlo
-        (tamaño_texto, _) = cv2.getTextSize(texto, fuente, tamaño_fuente, grosor)
-        ancho_texto, alto_texto = tamaño_texto
-
-        # Calcular las coordenadas para centrar el texto
-        pos_x = (self.frame_rgb.shape[1] - ancho_texto) // 2
-        pos_y = (self.frame_rgb.shape[0] + alto_texto) // 2
-
-        # Poner el texto sobre la imagen
-        cv2.putText(self.frame_rgb, texto, (pos_x, pos_y), fuente, tamaño_fuente, color, grosor)
-        return self.frame_rgb
+            return frame_rgb
+        else:
+            return self.frame_rgb
             
 host = "ws://127.0.0.1:2303"
 gui = GUI(host)

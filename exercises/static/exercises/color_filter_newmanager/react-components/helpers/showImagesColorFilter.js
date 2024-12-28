@@ -6,10 +6,6 @@ function decode_utf8(s){
 
 let image = new Image();
 let image_camera = new Image();
-// The stream & capture
-//var stream = document.getElementById('stream');
-// The video stream
-//var cameraStream = null;
 
 export function drawImage (data){
     var canvas = document.getElementById("gui_canvas"),
@@ -39,48 +35,3 @@ export function drawImage (data){
 }
 
 
-// Start Streaming
-/*export function startStreaming() {
-
-console.log("startStreaming");
-    var mediaSupport = 'mediaDevices' in navigator;
-
-    if( mediaSupport && null == cameraStream ) {
-
-        window.navigator.mediaDevices.getUserMedia({video: true})
-        .then(function(mediaStream) {
-
-            cameraStream = mediaStream;
-            videoRef.current.srcObject = mediaStream;
-            videoRef.current.play();
-            console.log("stream play");
-
-        })
-        .catch(function(err) {
-
-            console.log("Unable to access camera: " + err);
-            //stopStreaming();
-        });
-    }
-    else {
-
-        alert('Your browser does not support media devices.');
-
-        return;
-    }
-    //requestAnimationFrame(showImageOutput);
-
-}*/
-
-/*function stopStreaming() {
-
-    if(null != cameraStream) {
-
-        var track = cameraStream.getTracks()[0];
-
-        track.stop();
-        stream.load();
-
-        cameraStream = null;
-    }
-}*/
