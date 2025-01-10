@@ -24,12 +24,14 @@ if not rclpy.ok():
 motor_node = MotorsNode("/turtlebot3/cmd_vel", 4, 0.3)
 camera_node = CameraNode("/turtlebot3/camera/image_raw")
 odometry_node = OdometryNode("/turtlebot3/odom")
+laser_node = LaserNode("/turtlebot3/laser/scan")
 noisy_odometry_node = NoisyOdometryNode("/turtlebot3/odom")
 
 # Spin nodes so that subscription callbacks load topic data
 executor = rclpy.executors.MultiThreadedExecutor()
 executor.add_node(camera_node)
 executor.add_node(odometry_node)
+executor.add_node(laser_node)
 executor.add_node(noisy_odometry_node)
 
 executor_thread = threading.Thread(target=__auto_spin, daemon=True)
@@ -59,6 +61,12 @@ def getImage():
         image = camera_node.getImage()
     return image.data
 
+# Laser
+def getLaserData():
+    laser_data = laser_node.getLaserData()
+    while len(laser_data.values) == 0:
+        laser_data = laser_node.getLaserData()
+    return laser_data
 
 ### SETTERS ###
 
