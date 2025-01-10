@@ -250,7 +250,7 @@ RUN rm -rf log
 # remove log folder
 RUN mkdir -p /home/drones_ws/src/
 WORKDIR /home/drones_ws/src/
-RUN git clone https://github.com/aerostack2/aerostack2.git
+RUN git clone https://github.com/aerostack2/aerostack2.git -b 733-aerostack2-shared-launch-context
 RUN touch aerostack2/as2_hardware_drivers/COLCON_IGNORE
 RUN touch aerostack2/as2_behavior_tree/COLCON_IGNORE
 RUN touch aerostack2/as2_map_server/COLCON_IGNORE
