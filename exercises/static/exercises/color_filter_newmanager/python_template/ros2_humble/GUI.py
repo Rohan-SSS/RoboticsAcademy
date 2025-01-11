@@ -21,10 +21,6 @@ class GUI(MeasuringThreadingGUI):
         self.image_to_be_shown = None
         self.image_to_be_shown_updated = False
         self.image_show_lock = threading.Lock()
-        #self.ack = True
-        #self.ack_lock = threading.Lock()
-        #self.running = True
-
         self.host = host
         self.payload = {"image": ""}
         self.frame_rgb = None
@@ -33,12 +29,8 @@ class GUI(MeasuringThreadingGUI):
         
     # Process incoming messages to the GUI
     def gui_in_thread(self, ws, message):
-        # In this case, incoming msgs can only be acks
-        if "ack" in message:
-            with self.ack_lock:
-                self.ack = True
-                self.ack_frontend = True
-        elif "pick" in message:
+        # In this case
+        if "pick" in message:
             base64_buffer = message[4:]
 
             if base64_buffer.startswith('data:image/jpeg;base64,'):
