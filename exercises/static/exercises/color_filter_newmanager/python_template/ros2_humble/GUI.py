@@ -46,6 +46,7 @@ class GUI(MeasuringThreadingGUI):
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
             self.frame_rgb = img
+            self.send_to_client("ack")
 
 
     # Prepares and sends a map to the websocket server

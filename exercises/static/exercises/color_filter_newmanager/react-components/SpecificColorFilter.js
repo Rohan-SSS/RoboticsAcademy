@@ -12,7 +12,7 @@ function SpecificColorFilter(props) {
     // Start Streaming
     //startStreaming()
     const callback = (message) => {
-      console.log(message);
+      //console.log(message);
 
       if (message.data.update.image) {
         drawImage(message.data.update);

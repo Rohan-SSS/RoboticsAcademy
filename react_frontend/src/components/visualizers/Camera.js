@@ -52,7 +52,6 @@ function Camera() {
       // Enviar la matriz por WebSocket
       window.RoboticsExerciseComponents.commsManager.send("gui", `pick${imageDataURL}`);
 
-
     }
   };
 
@@ -66,6 +65,30 @@ function Camera() {
   }, []);
   
 
+
+  React.useEffect(() => {
+	  // Callback para recibir el 'ACK'
+	  const ackCallback = (ackMessage) => {
+	    console.log("ACK recibido:", ackMessage);
+	    // Aquí puedes manejar lo que ocurre cuando recibes el ACK
+	    // Por ejemplo, podrías actualizar el estado o mostrar un mensaje
+	  };
+
+	  // Suscribirse al evento 'ACK' para recibir la confirmación de respuesta
+	  window.RoboticsExerciseComponents.commsManager.subscribe(
+	    ["ack"], // Aquí se asume que el "ack" es un evento que se dispara con la respuesta
+	    ackCallback
+	  );
+
+	  // Limpiar las suscripciones cuando el componente se desmonte
+	  return () => {
+	    // Desuscribirse también del evento de "ACK"
+	    window.RoboticsExerciseComponents.commsManager.unsubscribe(
+	      ["ack"],
+	      ackCallback
+	    );
+	  };
+	}, []);
   
   return (
     <div style={{display: "flex", width: "100%", height: "100%"}}>
