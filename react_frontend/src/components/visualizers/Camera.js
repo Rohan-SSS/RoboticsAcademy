@@ -68,25 +68,32 @@ function Camera() {
 
   React.useEffect(() => {
 	  // Callback para recibir el 'ACK'
-	  const ackCallback = (ackMessage) => {
-	    console.log("ACK recibido:", ackMessage);
+	  const callback = (message) => {
+	  console.log("ACK recibido:", message);
+	    const update = message.data.update;
+	    if (update.ack_img) 
+	    { 
+	       console.log("ACK recibido 1:", message);
+	    }
 	    // Aquí puedes manejar lo que ocurre cuando recibes el ACK
 	    // Por ejemplo, podrías actualizar el estado o mostrar un mensaje
 	  };
 
 	  // Suscribirse al evento 'ACK' para recibir la confirmación de respuesta
 	  window.RoboticsExerciseComponents.commsManager.subscribe(
-	    ["ack"], // Aquí se asume que el "ack" es un evento que se dispara con la respuesta
-	    ackCallback
+	    [window.RoboticsExerciseComponents.commsManager.events.UPDATE], // Aquí se asume que el "ack" es un evento que se dispara con la respuesta
+	    callback
 	  );
-
+	  console.log("Suscripción a 'ack' completada");
 	  // Limpiar las suscripciones cuando el componente se desmonte
 	  return () => {
+	  console.log("Desuscribiendo de 'ack' events");
 	    // Desuscribirse también del evento de "ACK"
 	    window.RoboticsExerciseComponents.commsManager.unsubscribe(
-	      ["ack"],
-	      ackCallback
+	      [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
+	      callback
 	    );
+	    console.log("Desuscripción de 'ack' completada");
 	  };
 	}, []);
   
