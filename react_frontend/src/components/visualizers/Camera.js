@@ -1,104 +1,127 @@
-import React, { useEffect, useRef, useState} from 'react';
-
+import React, { useEffect, useRef, useState } from "react";
 
 function Camera() {
+  const commsManager = window.RoboticsExerciseComponents.commsManager;
   const videoRef = useRef(null);
-  const streamRef = useRef(null);  // Usamos useRef para manejar el stream
+  const streamRef = useRef(null); // Usamos useRef para manejar el stream
   const [stream, setStream] = useState(null);
+  const [readyCamera, setReadyCamera] = useState(false);
+  const [pauseCamera, setPauseCamera] = useState(false);
+
   // Obtener el stream de la cámara
   useEffect(() => {
+    if (!readyCamera) return;
+
     const startCamera = () => {
-	    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-	      navigator.mediaDevices.getUserMedia({ video: true })
-		.then(stream => {
-		  // Establecer el stream y asignarlo al video
-		  setStream(stream);
-		  if (videoRef.current) {
-		    videoRef.current.srcObject = stream;
-		    streamRef.current = stream; // Guardamos el stream en la referencia
-		  }
-		})
-		.catch(err => console.log(err));
-	    }
+      const frameRate = 20;
+      const constraints = {
+        video: {
+          frameRate: { ideal: frameRate, min: frameRate, max: frameRate },
+        },
+        audio: false,
+      };
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: false })
+          .then((stream) => {
+            // Establecer el stream y asignarlo al video
+            setStream(stream);
+            if (videoRef.current) {
+              videoRef.current.srcObject = stream;
+              streamRef.current = stream; // Guardamos el stream en la referencia
+            }
+          })
+          .catch((err) => console.log(err));
+      }
     };
 
     startCamera();
-    
-        // Limpiar el stream cuando el componente se desmonte
+
+    // Limpiar el stream cuando el componente se desmonte
     return () => {
-      if (streamRef,current) {
-        streamRef.getTracks().forEach(track => track.stop());
+      if ((streamRef, current)) {
+        streamRef.getTracks().forEach((track) => track.stop());
       }
     };
-  }, []);
+  }, [readyCamera]);
 
   // Función para capturar un fotograma del video y convertirlo en una matriz CV_8UC4
   const captureFrame = () => {
     const video = videoRef.current;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
     if (video && canvas && ctx) {
       // Establecer el tamaño del canvas igual al tamaño del video
       canvas.width = 320;
       canvas.height = 240;
-      
+
       // Dibujar el frame del video en el canvas
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       // Obtener los datos de la imagen (array de píxeles RGBA)
-      const imageDataURL = canvas.toDataURL('image/jpeg');
+      const imageDataURL = canvas.toDataURL("image/jpeg");
       // Codificamos en base64
       // Enviar la matriz por WebSocket
-      window.RoboticsExerciseComponents.commsManager.send("gui", `pick${imageDataURL}`);
-
+      window.RoboticsExerciseComponents.commsManager.send(
+        "gui",
+        `pick${imageDataURL}`
+      );
     }
   };
 
   // Llamar a captureFrame cada 100 ms para enviar imágenes de la cámara
   useEffect(() => {
-    const interval = setInterval(() => {
-      captureFrame();
-    }, 2000); // 10 fotogramas por segundo (100 ms)
+    if (readyCamera && !pauseCamera) {
+      const interval = setInterval(() => {
+        captureFrame();
+      }, 0);
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [readyCamera, pauseCamera]);
 
-    return () => clearInterval(interval);
+  useEffect(() => {
+    const callback = (message) => {
+      if (
+        message.data.state === "visualization_ready" ||
+        message.data.state === "application_running"
+      ) {
+        setReadyCamera(true);
+        setPauseCamera(false);
+      } else if (message.data.state === "paused") {
+        setPauseCamera(true);
+      }
+    };
+    commsManager.subscribe([commsManager.events.STATE_CHANGED], callback);
+
+    return () => {
+      commsManager.unsubscribe([commsManager.events.STATE_CHANGED], callback);
+    };
   }, []);
-  
 
+  // ack (you can get response from update_gui() in GUI.py)
+  useEffect(() => {
+    const callback = (message) => {
+      console.log("message ", message);
+    };
+    window.RoboticsExerciseComponents.commsManager.subscribe(
+      [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
+      callback
+    );
 
-  React.useEffect(() => {
-	  // Callback para recibir el 'ACK'
-	  const callback = (message) => {
-	  console.log("ACK recibido:", message);
-	    const update = message.data.update;
-	    if (update.ack_img) 
-	    { 
-	       console.log("ACK recibido 1:", message);
-	    }
-	    // Aquí puedes manejar lo que ocurre cuando recibes el ACK
-	    // Por ejemplo, podrías actualizar el estado o mostrar un mensaje
-	  };
+    return () => {
+      console.log("TestShowScreen unsubscribing from ['state-changed'] events");
+      window.RoboticsExerciseComponents.commsManager.unsubscribe(
+        [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
+        callback
+      );
+    };
+  }, []);
 
-	  // Suscribirse al evento 'ACK' para recibir la confirmación de respuesta
-	  window.RoboticsExerciseComponents.commsManager.subscribe(
-	    [window.RoboticsExerciseComponents.commsManager.events.UPDATE], // Aquí se asume que el "ack" es un evento que se dispara con la respuesta
-	    callback
-	  );
-	  console.log("Suscripción a 'ack' completada");
-	  // Limpiar las suscripciones cuando el componente se desmonte
-	  return () => {
-	  console.log("Desuscribiendo de 'ack' events");
-	    // Desuscribirse también del evento de "ACK"
-	    window.RoboticsExerciseComponents.commsManager.unsubscribe(
-	      [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
-	      callback
-	    );
-	    console.log("Desuscripción de 'ack' completada");
-	  };
-	}, []);
-  
   return (
-    <div style={{display: "flex", width: "100%", height: "100%"}}>
+    <div style={{ display: "flex", width: "100%", height: "100%" }}>
       <video ref={videoRef} autoPlay></video>
     </div>
   );
