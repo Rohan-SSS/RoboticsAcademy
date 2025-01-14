@@ -117,7 +117,7 @@ class GUI(MeasuringThreadingGUI):
     def getMap(self, url):
         return plt.imread(url)
     
-    def getColorMap(self, url):
+    def getBGRMap(self, url):
         return cv2.imread(url)
     
     def poseToMap(self, x_prime, y_prime, yaw_prime):
@@ -157,8 +157,8 @@ def showParticles(particles):
 def getMap(url):
     return gui.getMap(url)
 
-def getColorMap(url):
-    return gui.getColorMap(url)
+def getBGRMap(url):
+    return gui.getBGRMap(url)
 
 def poseToMap(x_prime, y_prime, yaw_prime):
     return gui.poseToMap(x_prime, y_prime, yaw_prime)
