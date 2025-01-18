@@ -181,47 +181,6 @@ export const useMonacoEditorCodeFormatEffect = ({
   }, []);
 };
 
-// Code Format (with black)
-// export const useMonacoEditorCodeFormatEffect = ({
-//   editorRef,
-//   baseUrl,
-//   monacoEditorSourceCode,
-//   setMonacoEditorSourceCode,
-//   setUpdateGlyphs,
-// }) => {
-//   // Use Effect for Black (code prettify/beautify)
-//   useEffect(() => {
-//     if (!editorRef.current) return;
-
-//     const handleKeyDown = async (event) => {
-//       // Check if Ctrl+S is pressed
-//       if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
-//         event.preventDefault();
-
-//         try {
-//           await fetchFormatCode({
-//             baseUrl,
-//             setMonacoEditorSourceCode,
-//             monacoEditorSourceCode,
-//           });
-//           setUpdateGlyphs(true);
-//         } catch (error) {
-//           console.log(error);
-//         }
-//       }
-//     };
-
-//     editorRef.current.getDomNode().addEventListener("keydown", handleKeyDown);
-
-//     // Clean up event
-//     return () => {
-//       editorRef.current
-//         .getDomNode()
-//         .removeEventListener("keydown", handleKeyDown);
-//     };
-//   }, [editorRef, monacoEditorSourceCode]);
-// };
-
 export const useMonacoEditorLineNumberDecorationsEffect = ({
   editorRef,
   lineNumberDecorationRef,
