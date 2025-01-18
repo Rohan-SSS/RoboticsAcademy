@@ -90,7 +90,6 @@ const MonacoEditor = ({
   });
   // code analysis (pylint)
   useMonacoEditorCodeAnalysisEffect({
-    baseUrl,
     monacoRef,
     editorRef,
     monacoEditorSourceCode,
@@ -99,7 +98,6 @@ const MonacoEditor = ({
   // Code format (black)
   useMonacoEditorCodeFormatEffect({
     editorRef,
-    baseUrl,
     monacoEditorSourceCode,
     setMonacoEditorSourceCode,
     setUpdateGlyphs,

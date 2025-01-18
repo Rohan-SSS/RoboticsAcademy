@@ -134,6 +134,8 @@ const CommsManager = (address) => {
     UPDATE: "update",
     STATE_CHANGED: "state-changed",
     INTROSPECTION: "introspection",
+    CODE_FORMAT: "code-format",
+    CODE_ANALYSIS: "code-analysis",
   };
 
   const commands = {
@@ -150,6 +152,8 @@ const CommsManager = (address) => {
     terminate_universe: () => send("terminate_universe"),
     disconnect: () => send("disconnect"),
     style_check: (code) => send("style_check", code),
+    code_format: (code) => send("code_format", code),
+    code_analysis: (data) => send("code_analysis", data),
   };
 
   return {

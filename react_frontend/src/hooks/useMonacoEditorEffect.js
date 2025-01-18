@@ -1,11 +1,18 @@
 import { useEffect } from "react";
 import {
-  fetchAnalysisCode,
   fetchFormatCode,
   filterLineNumber,
   getMarkerSeverity,
   renderGlyphs,
 } from "../components/editors/monaco-editor";
+
+import {
+  pylint_error,
+  pylint_warning,
+  pylint_convention,
+  pylint_refactor,
+  pylint_fatal,
+} from "../components/editors/monaco-editor/constants";
 
 export const useMonacoEditorLoaderEffect = ({
   loader,
@@ -41,7 +48,6 @@ export const useMonacoEditorLoaderEffect = ({
 
 // Code Analysis (with pylint)
 export const useMonacoEditorCodeAnalysisEffect = ({
-  baseUrl,
   monacoRef,
   editorRef,
   monacoEditorSourceCode,
@@ -51,12 +57,27 @@ export const useMonacoEditorCodeAnalysisEffect = ({
 
     const controller = new AbortController();
 
+    window.RoboticsExerciseComponents.commsManager.code_analysis({
+      code: monacoEditorSourceCode,
+      disable_errors: [
+        ...pylint_error,
+        ...pylint_warning,
+        ...pylint_convention,
+        ...pylint_refactor,
+        ...pylint_fatal,
+      ],
+    });
+
+    return () => controller.abort();
+  }, [monacoEditorSourceCode]);
+
+  const callback = (message) => {
+    if (!editorRef.current || !monacoRef.current) return;
+
+    const controller = new AbortController();
+
     const drawMarker = async () => {
-      const data = await fetchAnalysisCode({
-        baseUrl,
-        monacoEditorSourceCode,
-        controller,
-      });
+      const data = message.data;
 
       if (!data) return;
 
@@ -84,13 +105,26 @@ export const useMonacoEditorCodeAnalysisEffect = ({
     drawMarker();
 
     return () => controller.abort();
-  }, [monacoEditorSourceCode]);
+  };
+
+  useEffect(() => {
+    window.RoboticsExerciseComponents.commsManager.subscribe(
+      [window.RoboticsExerciseComponents.commsManager.events.CODE_ANALYSIS],
+      callback
+    );
+
+    return () => {
+      window.RoboticsExerciseComponents.commsManager.unsubscribe(
+        [window.RoboticsExerciseComponents.commsManager.events.CODE_ANALYSIS],
+        callback
+      );
+    };
+  }, []);
 };
 
 // Code Format (with black)
 export const useMonacoEditorCodeFormatEffect = ({
   editorRef,
-  baseUrl,
   monacoEditorSourceCode,
   setMonacoEditorSourceCode,
   setUpdateGlyphs,
@@ -104,16 +138,9 @@ export const useMonacoEditorCodeFormatEffect = ({
       if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
         event.preventDefault();
 
-        try {
-          await fetchFormatCode({
-            baseUrl,
-            setMonacoEditorSourceCode,
-            monacoEditorSourceCode,
-          });
-          setUpdateGlyphs(true);
-        } catch (error) {
-          console.log(error);
-        }
+        window.RoboticsExerciseComponents.commsManager.code_format({
+          code: monacoEditorSourceCode,
+        });
       }
     };
 
@@ -126,7 +153,74 @@ export const useMonacoEditorCodeFormatEffect = ({
         .removeEventListener("keydown", handleKeyDown);
     };
   }, [editorRef, monacoEditorSourceCode]);
+
+  const callback = (message) => {
+    if (!editorRef.current) return;
+
+    const data = message.data;
+    console.log(data)
+
+    if (!data) return;
+
+    setMonacoEditorSourceCode(data.formatted_code);
+    setUpdateGlyphs(true);
+  };
+
+  useEffect(() => {
+    window.RoboticsExerciseComponents.commsManager.subscribe(
+      [window.RoboticsExerciseComponents.commsManager.events.CODE_FORMAT],
+      callback
+    );
+
+    return () => {
+      window.RoboticsExerciseComponents.commsManager.unsubscribe(
+        [window.RoboticsExerciseComponents.commsManager.events.CODE_FORMAT],
+        callback
+      );
+    };
+  }, []);
 };
+
+// Code Format (with black)
+// export const useMonacoEditorCodeFormatEffect = ({
+//   editorRef,
+//   baseUrl,
+//   monacoEditorSourceCode,
+//   setMonacoEditorSourceCode,
+//   setUpdateGlyphs,
+// }) => {
+//   // Use Effect for Black (code prettify/beautify)
+//   useEffect(() => {
+//     if (!editorRef.current) return;
+
+//     const handleKeyDown = async (event) => {
+//       // Check if Ctrl+S is pressed
+//       if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
+//         event.preventDefault();
+
+//         try {
+//           await fetchFormatCode({
+//             baseUrl,
+//             setMonacoEditorSourceCode,
+//             monacoEditorSourceCode,
+//           });
+//           setUpdateGlyphs(true);
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       }
+//     };
+
+//     editorRef.current.getDomNode().addEventListener("keydown", handleKeyDown);
+
+//     // Clean up event
+//     return () => {
+//       editorRef.current
+//         .getDomNode()
+//         .removeEventListener("keydown", handleKeyDown);
+//     };
+//   }, [editorRef, monacoEditorSourceCode]);
+// };
 
 export const useMonacoEditorLineNumberDecorationsEffect = ({
   editorRef,
