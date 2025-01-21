@@ -28,8 +28,6 @@ export { importSnippetsObj } from "./autocomplete-snippets/import_snippets";
 
 // helper
 export {
-  fetchAnalysisCode,
-  fetchFormatCode,
   getMarkerSeverity,
   getHalGuiMethods,
   snippetsBuilderV2,
