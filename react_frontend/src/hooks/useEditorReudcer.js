@@ -8,7 +8,6 @@ const editorInitialState = {
   isLoading: true,
   monacoEditorTheme: monacoEditorThemeList[0], //
   resizeEditor: resizeList[0],
-  baseUrl: `${document.location.protocol}//${document.location.hostname}:7164`,
   editorOptions: {
     //
     fontSize: 14,

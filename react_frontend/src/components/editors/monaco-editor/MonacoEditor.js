@@ -34,7 +34,6 @@ const MonacoEditor = ({
     isLoading,
     monacoEditorTheme,
     editorOptions,
-    baseUrl,
     editorSettings,
   } = state;
   // USE STATE
