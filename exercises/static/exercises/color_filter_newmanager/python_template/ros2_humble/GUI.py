@@ -46,8 +46,15 @@ class GUI(MeasuringThreadingGUI):
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
             self.frame_rgb = img
-            ack_message = {'ack_img': 'ack'}
-            self.send_to_client(json.dumps(ack_message))
+            ack = {
+                "id": "ack",  # Usamos 'id' como "ack" para identificar este mensaje
+                "command": "update",
+                "data": {
+                    "message": "Ack recibido correctamente"
+                }
+            }
+
+            self.send_to_client(json.dumps(ack))
 
 
     # Prepares and sends a map to the websocket server
@@ -58,6 +65,7 @@ class GUI(MeasuringThreadingGUI):
        
         message = json.dumps(self.payload)
         self.send_to_client(message)
+
 
     # Function to prepare image payload
     # Encodes the image as a JSON string and sends through the WS
@@ -90,6 +98,7 @@ class GUI(MeasuringThreadingGUI):
         with self.image_show_lock:
             self.image_to_be_shown = image
             self.image_to_be_shown_updated = True
+
 
 
     def getImage(self):

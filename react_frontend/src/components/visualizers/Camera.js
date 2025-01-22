@@ -1,4 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import { drawImage, startStreaming } from "./showImagesColorFilter";
+// The stream & capture
+//var stream = document.getElementById('stream');
+function decode_utf8(s) {
+    return decodeURIComponent(escape(s));
+}
 
 function Camera() {
   const commsManager = window.RoboticsExerciseComponents.commsManager;
@@ -7,7 +14,11 @@ function Camera() {
   const [stream, setStream] = useState(null);
   const [readyCamera, setReadyCamera] = useState(false);
   const [pauseCamera, setPauseCamera] = useState(false);
-
+  const [isRunning, setIsRunning] = useState(true); // Estado para controlar si el intervalo está activo
+  const intervalRef = useRef(null); // Referencia para guardar el ID del intervalo
+  const [image, setImage] = React.useState(null);
+  const [imageData, setImageData] = React.useState("");
+    
   // Obtener el stream de la cámara
   useEffect(() => {
     if (!readyCamera) return;
@@ -29,6 +40,7 @@ function Camera() {
             if (videoRef.current) {
               videoRef.current.srcObject = stream;
               streamRef.current = stream; // Guardamos el stream en la referencia
+              captureFrame();
             }
           })
           .catch((err) => console.log(err));
@@ -36,7 +48,7 @@ function Camera() {
     };
 
     startCamera();
-
+    
     // Limpiar el stream cuando el componente se desmonte
     return () => {
       if ((streamRef, current)) {
@@ -72,15 +84,18 @@ function Camera() {
 
   // Llamar a captureFrame cada 100 ms para enviar imágenes de la cámara
   useEffect(() => {
-    if (readyCamera && !pauseCamera) {
-      const interval = setInterval(() => {
+    if (isRunning && readyCamera && !pauseCamera) {
+      intervalRef.current = setInterval(() => {
         captureFrame();
       }, 0);
       return () => {
-        clearInterval(interval);
+        if (intervalRef.current) 
+        {
+           clearInterval(intervalRef.current);
+        }
       };
     }
-  }, [readyCamera, pauseCamera]);
+  }, [isRunning, readyCamera, pauseCamera]);
 
   useEffect(() => {
     const callback = (message) => {
@@ -104,7 +119,30 @@ function Camera() {
   // ack (you can get response from update_gui() in GUI.py)
   useEffect(() => {
     const callback = (message) => {
-      console.log("message ", message);
+      if (message.data.update.id == "ack" && readyCamera && !pauseCamera)
+      {
+      	captureFrame();
+      }
+      if (isRunning && intervalRef.current) 
+      {
+      	 setIsRunning(false);
+         clearInterval(intervalRef.current);
+      }
+      
+      if (message.data.update.image) 
+      {
+         let image_data = JSON.parse(message.data.update.image);
+         let source = decode_utf8(image_data.image);
+
+         if (source.length > 0)
+            setImageData(`data:image/jpeg;base64,${source}`);
+         
+         // Send the ACK of the msg
+         window.RoboticsExerciseComponents.commsManager.send("gui", "ack");
+      }
+
+            
+
     };
     window.RoboticsExerciseComponents.commsManager.subscribe(
       [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
@@ -118,11 +156,16 @@ function Camera() {
         callback
       );
     };
-  }, []);
+  }, [isRunning, readyCamera, pauseCamera]);
 
   return (
     <div style={{ display: "flex", width: "100%", height: "100%" }}>
-      <video ref={videoRef} autoPlay></video>
+      <div style={{ display: "flex", width: "100%", height: "100%" }}>
+        <video ref={videoRef} autoPlay></video>
+      </div>
+      <div style={{ display: "flex", width: "100%", height: "100%" }}>
+        {imageData && <img src={imageData} />}
+      </div>
     </div>
   );
 }
