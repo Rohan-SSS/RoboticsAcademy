@@ -106,15 +106,7 @@ export default function EditorRobot(props) {
   }, []);
 
   //! Monaco Code Editor
-
   const [state, dispatch] = useEditorReudcer();
-
-  try {
-    let unibotics = props.props.unibotics;
-    if (unibotics) {
-      state.baseUrl = "";
-    }
-  } catch {}
 
   // monaco editor code change
   const handleMonacoEditorCodeChange = (code) => {
