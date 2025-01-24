@@ -7,21 +7,27 @@ function Camera() {
   const [stream, setStream] = useState(null);
   const [readyCamera, setReadyCamera] = useState(false);
   const [pauseCamera, setPauseCamera] = useState(false);
+
+  // count fps
+  const [frameRates, setFrameRates] = useState(0);
+  const [lastTime, setLastTime] = useState(performance.now());
   // Obtener el stream de la cámara
   useEffect(() => {
     if (!readyCamera) return;
 
     const startCamera = () => {
-      const frameRate = 20;
+      // configure media parameters
       const constraints = {
         video: {
-          frameRate: { ideal: frameRate, min: frameRate, max: frameRate },
+          width: { min: 640, ideal: 640, max: 640 },
+          height: { min: 480, ideal: 480, max: 480 },
+          frameRate: { ideal: 30, max: 30 },
         },
         audio: false,
       };
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices
-          .getUserMedia({ video: true, audio: false })
+          .getUserMedia(constraints)
           .then((stream) => {
             // Establecer el stream y asignarlo al video
             setStream(stream);
@@ -51,8 +57,8 @@ function Camera() {
 
     if (video && canvas && ctx) {
       // Establecer el tamaño del canvas igual al tamaño del video
-      canvas.width = 320;
-      canvas.height = 240;
+      canvas.width = 640; //320;
+      canvas.height = 480; //240;
 
       // Dibujar el frame del video en el canvas
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -68,19 +74,6 @@ function Camera() {
     }
   };
 
-  const [isInterval, setIsInterval] = useState(true);
-  // Llamar a captureFrame cada 100 ms para enviar imágenes de la cámara
-  // useEffect(() => {
-  //   if (readyCamera && !pauseCamera) {
-  //     const interval = setInterval(() => {
-  //       captureFrame();
-  //     }, 0);
-  //     return () => {
-  //       clearInterval(interval);
-  //     };
-  //   }
-  // }, [readyCamera, pauseCamera]);
-
   useEffect(() => {
     // message.data.state === "visualization_ready" ||
     const callback = (message) => {
@@ -88,11 +81,11 @@ function Camera() {
         setReadyCamera(true);
       }
       if (message.data.state === "application_running") {
-        // setReadyCamera(true);
         setPauseCamera(false);
         captureFrame();
       } else if (message.data.state === "paused") {
         setPauseCamera(true);
+        setFrameRates(0);
       }
     };
     commsManager.subscribe([commsManager.events.STATE_CHANGED], callback);
@@ -105,7 +98,7 @@ function Camera() {
   // ack (you can get response from update_gui() in GUI.py)
   useEffect(() => {
     const callback = (message) => {
-      // console.log("message ", message.data.update.ack_img);
+      // receive ack from gui.py
       if (message.data.update.ack_img === "ack") {
         captureFrame();
       }
