@@ -98,9 +98,9 @@ class GUI(MeasuringThreadingGUI):
     def getImage(self):
         if (self.frame_rgb is None):
             # TEMPORAL PARA PROBAR EL ENVIO DE IMAGENES   
-            frame_rgb = np.ones((240, 320, 3), dtype="uint8") * 255  # Blanco
+            self.frame_rgb = np.ones((240, 320, 3), dtype="uint8") * 255  # Blanco
 
-            return frame_rgb
+            return self.frame_rgb
         else:
             return self.frame_rgb
 

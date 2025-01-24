@@ -19,8 +19,8 @@ function Camera() {
       // configure media parameters
       const constraints = {
         video: {
-          width: { min: 640, ideal: 640, max: 640 },
-          height: { min: 480, ideal: 480, max: 480 },
+          width: { min: 320, ideal: 320, max: 320 },
+          height: { min: 240, ideal: 240, max: 240 },
           frameRate: { ideal: 30, max: 30 },
         },
         audio: false,
@@ -57,8 +57,8 @@ function Camera() {
 
     if (video && canvas && ctx) {
       // Establecer el tamaño del canvas igual al tamaño del video
-      canvas.width = 640; //320;
-      canvas.height = 480; //240;
+      canvas.width = 320; //320;
+      canvas.height = 240; //240;
 
       // Dibujar el frame del video en el canvas
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
