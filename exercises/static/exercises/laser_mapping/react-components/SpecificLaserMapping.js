@@ -24,18 +24,18 @@ function SpecificLaserMapping(props) {
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
-    var width = (img.clientWidth / 1012);
-    var height = (img.clientHeight / 1012);
+    var width = (img.clientWidth / 1300);
+    var height = (img.clientHeight / 770);
 
     updatePath(realTrail, setRealPath, height, width);
     updatePath(noisyTrail, setNoisyPath, height, width);
 
     if (realLastPose) {
-      setRealPose([realLastPose[1]*height,realLastPose[0]*width, -1.57 -realLastPose[2]]);
+      setRealPose([realLastPose[0]*height,realLastPose[1]*width, 3.14 -realLastPose[2]]);
     }
 
     if (noisyLastPose) {
-      setNoisyPose([noisyLastPose[1]*height,noisyLastPose[0]*width, -1.57 -noisyLastPose[2]]);
+      setNoisyPose([noisyLastPose[0]*height,noisyLastPose[1]*width, 3.14 -noisyLastPose[2]]);
     }
 
     valuesUntilValid = 0;
@@ -48,18 +48,18 @@ function SpecificLaserMapping(props) {
 
       var img = document.getElementById('gui-canvas'); 
       //or however you get a handle to the IMG
-      var width = (img.clientWidth / 1012);
-      var height = (img.clientHeight / 1012);
+      var width = (img.clientWidth / 1300);
+      var height = (img.clientHeight / 770);
 
       if (updateData.real_pose) {
         const pose = updateData.real_pose.substring(1, updateData.real_pose.length - 1);
         const content = pose.split(",").map(item => parseFloat(item));
         realLastPose = content
 
-        setRealPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
+        setRealPose([content[0]*height,content[1]*width, 3.14 -content[2]]);
         if (valuesUntilValid > timeout) {
           updatePath(realTrail, setRealPath, height, width);
-          addToPath(content[1], content[0], realTrail);
+          addToPath(content[0], content[1], realTrail);
         } else {
           valuesUntilValid = valuesUntilValid + 1;
         }
@@ -70,14 +70,14 @@ function SpecificLaserMapping(props) {
         const content = pose.split(",").map(item => parseFloat(item));
         noisyLastPose = content
 
-        setNoisyPose([content[1]*height,content[0]*width, -1.57 -content[2]]);
+        setNoisyPose([content[0]*height,content[1]*width, 3.14 -content[2]]);
         if (valuesUntilValid > timeout) {
           updatePath(noisyTrail, setNoisyPath, height, width);
-          addToPath(content[1], content[0], noisyTrail);
+          addToPath(content[0], content[1], noisyTrail);
         }
       }
 
-      if (updateData.image) {
+      if (updateData.user_map) {
         drawImage(updateData);
       }
 
@@ -136,7 +136,7 @@ function SpecificLaserMapping(props) {
       <img className="image" id="gui-canvas" style={{left: "50%"}}
         src="https://via.placeholder.com/800x600.png?text=No%20image%20received%20from%20exercise"/>
       {realPose &&
-        <div id="real-pos" style={{rotate: "z "+ realPose[2]+"rad", top: realPose[0] -10 , left: realPose[1] -5}}>
+        <div id="real-pos" style={{rotate: "z "+ realPose[2]+"rad", top: realPose[0] -10 , left: realPose[1] -10}}>
           <img src={RobotGreen} id="real-pos"/>
         </div>
       }
@@ -148,7 +148,7 @@ function SpecificLaserMapping(props) {
         </svg>
       }
       {noisyPose &&
-        <div id="noisy-pos" style={{rotate: "z "+ noisyPose[2]+"rad", top: noisyPose[0] -10 , left: noisyPose[1] -5}}>
+        <div id="noisy-pos" style={{rotate: "z "+ noisyPose[2]+"rad", top: noisyPose[0] -10 , left: noisyPose[1] -10}}>
           <img src={RobotBlue} id="noisy-pos"/>
         </div>
       }

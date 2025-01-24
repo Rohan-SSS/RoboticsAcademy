@@ -52,12 +52,12 @@ class Map:
         x = pose.x
         y = pose.y
 
-        scale_y = -85
-        offset_y = -6.88
+        scale_y = -23.53
+        offset_y = -27.7
         y = scale_y * (offset_y - y)
 
-        scale_x =  83
-        offset_x = 8
+        scale_x =  -23.58
+        offset_x = -16.12
         x = scale_x * (offset_x - x)
 
         return x, y, pose.yaw
@@ -67,12 +67,12 @@ class Map:
         x = pose.x
         y = pose.y
 
-        scale_y = -85
-        offset_y = -6.88
+        scale_y = -23.53
+        offset_y = -27.7
         y = scale_y * (offset_y - y)
 
-        scale_x =  83
-        offset_x = 8
+        scale_x =  -23.58
+        offset_x = -16.12
         x = scale_x * (offset_x - x)
 
         return x, y, pose.yaw

@@ -4,6 +4,7 @@ import base64
 import threading
 import time
 import numpy as np
+import math
 
 from map import Map
 
@@ -17,13 +18,13 @@ class GUI(MeasuringThreadingGUI):
     def __init__(self, host="ws://127.0.0.1:2303", freq=30.0):
         super().__init__(host)
 
-        self.image = None
+        self.user_map = None
         self.image_lock = threading.Lock()
 
         self.map = Map(getPose3d, getOdom)
         
         # Payload vars
-        self.payload = {"image": "", "real_pose": "","noisy_pose": ""}
+        self.payload = {"user_map": "", "real_pose": "","noisy_pose": ""}
 
         self.start()
 
@@ -37,27 +38,36 @@ class GUI(MeasuringThreadingGUI):
         n_pos_message = str(n_pos_message)
         self.payload["noisy_pose"] = n_pos_message
 
-        if np.any(self.image):
-            _, encoded_image = cv2.imencode(".JPEG", self.image)
+        if np.any(self.user_map):
+            _, encoded_image = cv2.imencode(".JPEG", self.user_map)
             b64 = base64.b64encode(encoded_image).decode("utf-8")
-            shape = self.image.shape
+            shape = self.user_map.shape
         else:
             b64 = None
             shape = 0
 
         payload_img = {
-            "image": b64,
+            "user_map": b64,
             "shape": shape,
         }
 
-        self.payload["image"] = json.dumps(payload_img)
+        self.payload["user_map"] = json.dumps(payload_img)
         message = json.dumps(self.payload)
         self.send_to_client(message)
 
-    # Functions to set the next image to be sent
-    def setImage(self, image):
+    # Function to set the next image to be sent
+    def setUserMap(self, image):
+        if image.shape[0] != 770 or image.shape[1] != 1300:
+            raise ValueError('map passed has the wrong dimensions, it has to be 770 pixels high and 1300 pixels wide')
+        processed_image = np.stack((image,) * 3, axis=-1)
         with self.image_lock:
-            self.image = image
+            self.user_map = processed_image
+    
+    def poseToMap(self, x_prime, y_prime, yaw_prime):
+        y = -23.58 * ( -16.12 - x_prime)
+        x = -23.53  * ( -27.7 - y_prime)
+        yaw = yaw_prime - math.pi/2
+        return [round(x), round(y), yaw]
 
 
 host = "ws://127.0.0.1:2303"
@@ -67,5 +77,8 @@ gui = GUI(host)
 start_console()
 
 # Expose the user functions
-def showImage(image):
-    gui.setImage(image)
+def setUserMap(image):
+    gui.setUserMap(image)
+
+def poseToMap(x_prime, y_prime, yaw_prime):
+    return gui.poseToMap(x_prime, y_prime, yaw_prime)

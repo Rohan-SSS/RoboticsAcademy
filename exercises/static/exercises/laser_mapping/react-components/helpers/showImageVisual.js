@@ -14,12 +14,12 @@ export function drawImage(data) {
   }
 
   // Parse the Image Data
-  var image_data = JSON.parse(data.image),
-    source = decode_utf8(image_data.image),
+  var image_data = JSON.parse(data.user_map),
+    source = decode_utf8(image_data.user_map),
     shape = image_data.shape;
 
   if (source != "" && shape instanceof Array) {
-    canvas.src = "data:image/jpeg;base64," + source;
+    canvas.src = "data:user_map/jpeg;base64," + source;
     canvas.width = shape[1];
     canvas.height = shape[0];
   }
