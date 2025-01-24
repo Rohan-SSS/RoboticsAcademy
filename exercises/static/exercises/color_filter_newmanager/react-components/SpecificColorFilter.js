@@ -14,11 +14,10 @@ function SpecificColorFilter(props) {
         // Start Streaming
         //startStreaming()
         const callback = (message) => {
-             console.log(message);
+            // console.log(message);
 
             if (message.data.update.image) {
                 // drawImage(message.data.update);
-		console.log("recibo showimage");
                 let image_data = JSON.parse(message.data.update.image);
                 let source = decode_utf8(image_data.image);
 
@@ -58,5 +57,11 @@ SpecificColorFilter.propTypes = {
     circuit: PropTypes.string,
 };
 
+/*setTimeout(function(){
+    console.log("START LAUNCHER");
+    //startStreaming();
+    UseCamera();
+    //declare_webrtcframe();
+}, 15000);*/
 
 export default SpecificColorFilter;

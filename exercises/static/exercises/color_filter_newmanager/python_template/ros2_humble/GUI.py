@@ -26,7 +26,7 @@ class GUI(MeasuringThreadingGUI):
         self.frame_rgb = None
 
         self.start()
-        
+
     # Process incoming messages to the GUI
     def gui_in_thread(self, ws, message):
         # In this case
@@ -38,23 +38,19 @@ class GUI(MeasuringThreadingGUI):
 
             # Decodificar la cadena base64 a bytes
             image_data = base64.b64decode(base64_buffer)
-   
+
             # Convertir los bytes a un array de numpy
             nparr = np.frombuffer(image_data, np.uint8)
-    
+
             # Decodificar la imagen (convertirla a formato OpenCV)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-            self.frame_rgb = img
-            ack = {
-                "id": "ack",  # Usamos 'id' como "ack" para identificar este mensaje
-                "command": "update",
-                "data": {
-                    "message": "Ack recibido correctamente"
-                }
-            }
 
-            self.send_to_client(json.dumps(ack))
+            with self.image_show_lock:
+                self.frame_rgb = img
+                self.image_to_be_shown_updated = True
+                ack_message = {'ack_img': 'ack'}
+                self.send_to_client(json.dumps(ack_message))
 
 
     # Prepares and sends a map to the websocket server
@@ -62,10 +58,9 @@ class GUI(MeasuringThreadingGUI):
 
         payload = self.payloadImage()
         self.payload["image"] = json.dumps(payload)  
-       
+
         message = json.dumps(self.payload)
         self.send_to_client(message)
-
 
     # Function to prepare image payload
     # Encodes the image as a JSON string and sends through the WS
@@ -81,7 +76,7 @@ class GUI(MeasuringThreadingGUI):
             return payload
 
         shape = image.shape
-        
+
         frame = cv2.imencode('.JPEG', image)[1]
         encoded_image = base64.b64encode(frame)
 
@@ -92,13 +87,12 @@ class GUI(MeasuringThreadingGUI):
             self.image_to_be_shown_updated = False
 
         return payload
-    
+
     # Function for student to call
     def showImage(self, image):
         with self.image_show_lock:
             self.image_to_be_shown = image
             self.image_to_be_shown_updated = True
-
 
 
     def getImage(self):
@@ -109,7 +103,7 @@ class GUI(MeasuringThreadingGUI):
             return frame_rgb
         else:
             return self.frame_rgb
-            
+
 host = "ws://127.0.0.1:2303"
 gui = GUI(host)
 
