@@ -12,12 +12,9 @@ function SpecificColorFilter(props) {
     React.useEffect(() => {
         console.log("TestShowScreen subscribing to ['update'] events");
         // Start Streaming
-        //startStreaming()
         const callback = (message) => {
-            // console.log(message);
 
             if (message.data.update.image) {
-                // drawImage(message.data.update);
                 let image_data = JSON.parse(message.data.update.image);
                 let source = decode_utf8(image_data.image);
 
@@ -57,11 +54,5 @@ SpecificColorFilter.propTypes = {
     circuit: PropTypes.string,
 };
 
-/*setTimeout(function(){
-    console.log("START LAUNCHER");
-    //startStreaming();
-    UseCamera();
-    //declare_webrtcframe();
-}, 15000);*/
 
 export default SpecificColorFilter;
