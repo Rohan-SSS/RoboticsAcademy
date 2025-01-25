@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
+function decode_utf8(s) {
+    return decodeURIComponent(escape(s));
+}
+
+
 function Camera() {
   const commsManager = window.RoboticsExerciseComponents.commsManager;
   const videoRef = useRef(null);
@@ -7,7 +12,8 @@ function Camera() {
   const [stream, setStream] = useState(null);
   const [readyCamera, setReadyCamera] = useState(false);
   const [pauseCamera, setPauseCamera] = useState(false);
-
+  const [image, setImage] = React.useState(null);
+  const [imageData, setImageData] = React.useState("");
   // count fps
   const [frameRates, setFrameRates] = useState(0);
   const [lastTime, setLastTime] = useState(performance.now());
@@ -98,6 +104,19 @@ function Camera() {
   // ack (you can get response from update_gui() in GUI.py)
   useEffect(() => {
     const callback = (message) => {
+    if (message.data.update.image) {
+    	if (message.data.update.image) {
+                let image_data = JSON.parse(message.data.update.image);
+                let source = decode_utf8(image_data.image);
+
+                if (source.length > 0)
+                    setImageData(`data:image/jpeg;base64,${source}`);
+            }
+
+            // Send the ACK of the msg
+            //window.RoboticsExerciseComponents.commsManager.send("gui", "ack");
+
+    }
       // receive ack from gui.py
       if (message.data.update.ack_img === "ack") {
         captureFrame();
@@ -117,11 +136,44 @@ function Camera() {
     };
   }, []);
 
-  return (
-    <div style={{ display: "flex", width: "100%", height: "100%" }}>
-      <video ref={videoRef} autoPlay></video>
+return (
+  <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%" }}>
+    {/* Contenedor de la primera imagen (video) */}
+    <div style={{ flex: 1, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <video
+        ref={videoRef}
+        autoPlay
+        style={{
+          width: "500px",
+          height: "auto", // Mantener la proporción del video
+          maxHeight: "100%", // Asegura que no se salga del contenedor
+          objectFit: "contain" // Ajusta el video sin distorsionarlo
+        }}
+      />
     </div>
-  );
+    
+    {/* Contenedor flex-container con fondo blanco */}
+    <div style={{ flex: "0 1 10px", backgroundColor: "#fff" }}>
+      {/* Este es el contenedor intermedio que separa las dos imágenes, ahora con fondo blanco */}
+    </div>
+    
+    {/* Contenedor de la segunda imagen */}
+    <div style={{ flex: 1, position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      {imageData && (
+        <img
+          src={imageData}
+          alt="Imagen"
+          style={{
+            width: "500px",
+            height: "auto", // Mantener la proporción de la imagen
+            maxHeight: "100%", // Asegura que no se salga del contenedor
+            objectFit: "contain" // Ajusta la imagen sin distorsionarla
+          }}
+        />
+      )}
+    </div>
+  </div>
+);
 }
 
 export default Camera;
