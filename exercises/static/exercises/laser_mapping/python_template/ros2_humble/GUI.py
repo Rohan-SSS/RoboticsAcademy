@@ -58,7 +58,7 @@ class GUI(MeasuringThreadingGUI):
     # Function to set the next image to be sent
     def setUserMap(self, image):
         if image.shape[0] != 970 or image.shape[1] != 1500:
-            raise ValueError('map passed has the wrong dimensions, it has to be 770 pixels high and 1300 pixels wide')
+            raise ValueError('map passed has the wrong dimensions, it has to be 970 pixels high and 1500 pixels wide')
         processed_image = np.stack((image,) * 3, axis=-1)
         with self.image_lock:
             self.user_map = processed_image
