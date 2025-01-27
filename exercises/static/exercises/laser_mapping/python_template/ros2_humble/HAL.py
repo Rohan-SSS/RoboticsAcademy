@@ -2,6 +2,7 @@ import rclpy
 import sys
 import threading
 import time
+import numpy as np
 
 from hal_interfaces.general.motors import MotorsNode
 from hal_interfaces.general.odometry import OdometryNode
@@ -50,6 +51,40 @@ def getOdom():
         return noisy_odometry_node.getPose3d()
     except Exception as e:
         print(f"Exception in hal getPose3d {repr(e)}")  
+
+def getOdom2():
+    real_pose = getPose3d()
+    noisy_pose = getOdom()
+    if real_pose.x - noisy_pose.x >= 0:
+        noisy_pose.x = noisy_pose.x - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.x = noisy_pose.x + abs(np.random.normal(0.0, 0.1) * 0.01)
+    if real_pose.y - noisy_pose.y >= 0:
+        noisy_pose.y = noisy_pose.y - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.y = noisy_pose.y + abs(np.random.normal(0.0, 0.1) * 0.01)
+    if real_pose.yaw - noisy_pose.yaw >= 0:
+        noisy_pose.yaw = noisy_pose.yaw - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.yaw = noisy_pose.yaw + abs(np.random.normal(0.0, 0.1) * 0.01)
+    return noisy_pose
+
+def getOdom3():
+    real_pose = getPose3d()
+    noisy_pose = getOdom2()
+    if real_pose.x - noisy_pose.x >= 0:
+        noisy_pose.x = noisy_pose.x - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.x = noisy_pose.x + abs(np.random.normal(0.0, 0.1) * 0.01)
+    if real_pose.y - noisy_pose.y >= 0:
+        noisy_pose.y = noisy_pose.y - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.y = noisy_pose.y + abs(np.random.normal(0.0, 0.1) * 0.01)
+    if real_pose.yaw - noisy_pose.yaw >= 0:
+        noisy_pose.yaw = noisy_pose.yaw - abs(np.random.normal(0.0, 0.1) * 0.01)
+    else:
+        noisy_pose.yaw = noisy_pose.yaw + abs(np.random.normal(0.0, 0.1) * 0.01)
+    return noisy_pose
 
 def getLaserData():
     laser_data = laser_node.getLaserData()
