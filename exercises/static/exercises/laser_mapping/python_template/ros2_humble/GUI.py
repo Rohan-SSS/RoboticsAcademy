@@ -57,15 +57,15 @@ class GUI(MeasuringThreadingGUI):
 
     # Function to set the next image to be sent
     def setUserMap(self, image):
-        if image.shape[0] != 770 or image.shape[1] != 1300:
+        if image.shape[0] != 970 or image.shape[1] != 1500:
             raise ValueError('map passed has the wrong dimensions, it has to be 770 pixels high and 1300 pixels wide')
         processed_image = np.stack((image,) * 3, axis=-1)
         with self.image_lock:
             self.user_map = processed_image
     
     def poseToMap(self, x_prime, y_prime, yaw_prime):
-        y = -23.58 * ( -16.12 - x_prime)
-        x = -23.53  * ( -27.7 - y_prime)
+        y = -23.58 * ( -20.36 - x_prime)
+        x = -23.53  * ( -31.95 - y_prime)
         yaw = yaw_prime - math.pi/2
         return [round(x), round(y), yaw]
 

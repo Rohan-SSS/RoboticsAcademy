@@ -24,8 +24,8 @@ function SpecificLaserMapping(props) {
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
-    var width = (img.clientWidth / 1300);
-    var height = (img.clientHeight / 770);
+    var width = (img.clientWidth / 1500);
+    var height = (img.clientHeight / 970);
 
     updatePath(realTrail, setRealPath, height, width);
     updatePath(noisyTrail, setNoisyPath, height, width);
@@ -48,8 +48,8 @@ function SpecificLaserMapping(props) {
 
       var img = document.getElementById('gui-canvas'); 
       //or however you get a handle to the IMG
-      var width = (img.clientWidth / 1300);
-      var height = (img.clientHeight / 770);
+      var width = (img.clientWidth / 1500);
+      var height = (img.clientHeight / 970);
 
       if (updateData.real_pose) {
         const pose = updateData.real_pose.substring(1, updateData.real_pose.length - 1);
