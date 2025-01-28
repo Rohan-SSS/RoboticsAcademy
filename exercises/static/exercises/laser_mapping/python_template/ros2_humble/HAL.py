@@ -24,12 +24,19 @@ if not rclpy.ok():
 motor_node = MotorsNode("/turtlebot3/cmd_vel", 4, 0.3)
 odometry_node = OdometryNode("/turtlebot3/odom")
 noisy_odometry_node = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node.noise_level = 0.01
+noisy_odometry_node_2 = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node_2.noise_level = 0.02
+noisy_odometry_node_3 = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node_3.noise_level = 0.04
 laser_node = LaserNode("/turtlebot3/laser/scan")
 
 # Spin nodes so that subscription callbacks load topic data
 executor = rclpy.executors.MultiThreadedExecutor()
 executor.add_node(odometry_node)
 executor.add_node(noisy_odometry_node)
+executor.add_node(noisy_odometry_node_2)
+executor.add_node(noisy_odometry_node_3)
 executor.add_node(laser_node)
 
 executor_thread = threading.Thread(target=__auto_spin, daemon=True)
@@ -53,38 +60,16 @@ def getOdom():
         print(f"Exception in hal getPose3d {repr(e)}")  
 
 def getOdom2():
-    real_pose = getPose3d()
-    noisy_pose = getOdom()
-    if real_pose.x - noisy_pose.x >= 0:
-        noisy_pose.x = noisy_pose.x - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.x = noisy_pose.x + abs(np.random.normal(0.0, 0.1) * 0.01)
-    if real_pose.y - noisy_pose.y >= 0:
-        noisy_pose.y = noisy_pose.y - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.y = noisy_pose.y + abs(np.random.normal(0.0, 0.1) * 0.01)
-    if real_pose.yaw - noisy_pose.yaw >= 0:
-        noisy_pose.yaw = noisy_pose.yaw - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.yaw = noisy_pose.yaw + abs(np.random.normal(0.0, 0.1) * 0.01)
-    return noisy_pose
+    try:
+        return noisy_odometry_node_2.getPose3d()
+    except Exception as e:
+        print(f"Exception in hal getPose3d {repr(e)}")
 
 def getOdom3():
-    real_pose = getPose3d()
-    noisy_pose = getOdom2()
-    if real_pose.x - noisy_pose.x >= 0:
-        noisy_pose.x = noisy_pose.x - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.x = noisy_pose.x + abs(np.random.normal(0.0, 0.1) * 0.01)
-    if real_pose.y - noisy_pose.y >= 0:
-        noisy_pose.y = noisy_pose.y - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.y = noisy_pose.y + abs(np.random.normal(0.0, 0.1) * 0.01)
-    if real_pose.yaw - noisy_pose.yaw >= 0:
-        noisy_pose.yaw = noisy_pose.yaw - abs(np.random.normal(0.0, 0.1) * 0.01)
-    else:
-        noisy_pose.yaw = noisy_pose.yaw + abs(np.random.normal(0.0, 0.1) * 0.01)
-    return noisy_pose
+    try:
+        return noisy_odometry_node_3.getPose3d()
+    except Exception as e:
+        print(f"Exception in hal getPose3d {repr(e)}")
 
 def getLaserData():
     laser_data = laser_node.getLaserData()
