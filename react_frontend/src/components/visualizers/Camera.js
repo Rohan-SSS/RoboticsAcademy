@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-
+import styles from "./../../styles/camera_driver/camera_driver.module.css";
+import { CameraMonitor } from "../../styles/camera_driver/CameraDriverIcons";
 function decode_utf8(s) {
   return decodeURIComponent(escape(s));
 }
@@ -18,10 +19,23 @@ function Camera() {
   const [stream, setStream] = useState(null);
   const [imageData, setImageData] = React.useState("");
 
+  // camera state
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [pauseCamera, setPauseCamera] = useState(false);
   const [isVisualReady, setIsVisualReady] = useState(false);
   const [error, setError] = useState("Connecting to media device.");
+
+  // frame statics
+  const [cameraStatics, setCameraStatics] = useState(false);
+  const [latency, setLatency] = useState(0);
+  const [avgLatency, setAvgLatency] = useState(0);
+  const [totalLatency, setTotalLatency] = useState(0);
+  const [totalFrames, setTotalFrames] = useState(0);
+
+  //TODO: FPS COUNT STATE
+  const [fps, setFps] = useState(0);
+  const [countFrames, setCountFrames] = useState(0);
+  const [startTime, setStartTime] = useState(0);
 
   // Función para capturar un fotograma del video y convertirlo en una matriz CV_8UC4
   const captureFrame = () => {
@@ -39,11 +53,15 @@ function Camera() {
 
       // Obtener los datos de la imagen (array de píxeles RGBA)
       const imageDataURL = canvas.toDataURL("image/jpeg");
+
+      // const time = Date.now().toString().padStart(15, "0");
+      const performance_t = performance.now();
+      const time = performance_t.toFixed(5).toString().padStart(20, "0");
       // Codificamos en base64
       // Enviar la matriz por WebSocket
       window.RoboticsExerciseComponents.commsManager.send(
         "gui",
-        `pick${imageDataURL}`
+        `pick${imageDataURL}${time}`
       );
     }
   };
@@ -104,6 +122,7 @@ function Camera() {
       if (message.data.state === "application_running") {
         setPauseCamera(false);
         captureFrame();
+        setStartTime(performance.now());
       } else if (message.data.state === "paused") {
         setPauseCamera(true);
       }
@@ -135,6 +154,34 @@ function Camera() {
       // receive ack from gui.py
       if (message.data.update.ack_img === "ack" && !pauseCamera) {
         captureFrame();
+
+        const prevTime = Number(message.data.update.time);
+        const currTime = performance.now();
+
+        const latency = currTime - prevTime;
+
+        // update count frames and average latency
+        setTotalFrames((prev) => prev + 1);
+        setTotalLatency((prev) => prev + latency);
+
+        //TODO test count fps
+        setCountFrames((prev) => prev + 1);
+
+        const elapsedTime = currTime - startTime;
+        if (elapsedTime >= 1000) {
+          const fps = Math.ceil(countFrames / (elapsedTime / 1000)).toFixed(0);
+          // console.log("fps ", countFrames / (elapsedTime / 1000));
+
+          setFps(fps);
+          setCountFrames(0);
+          setStartTime(currTime);
+        }
+
+        // udpate statics on front end after 500ms
+        setTimeout(() => {
+          setAvgLatency((totalLatency / totalFrames).toFixed(2));
+          setLatency(latency.toFixed(0));
+        }, 500);
       }
     };
     window.RoboticsExerciseComponents.commsManager.subscribe(
@@ -143,13 +190,24 @@ function Camera() {
     );
 
     return () => {
-      console.log("TestShowScreen unsubscribing from ['state-changed'] events");
+      // console.log("TestShowScreen unsubscribing from ['state-changed'] events");
       window.RoboticsExerciseComponents.commsManager.unsubscribe(
         [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
         callback
       );
     };
-  }, [pauseCamera, isVisualReady, isCameraReady]);
+  }, [
+    pauseCamera,
+    isVisualReady,
+    isCameraReady,
+    totalFrames,
+    avgLatency,
+    totalLatency,
+    //
+    fps,
+    startTime,
+    countFrames,
+  ]);
 
   return (
     <div
@@ -166,6 +224,7 @@ function Camera() {
           flex: 1,
           position: "relative",
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -212,27 +271,69 @@ function Camera() {
       </div>
 
       {/* Contenedor de la segunda imagen */}
-      <div
-        style={{
-          flex: 1,
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {imageData && (
-          <img
-            src={imageData}
-            alt="Imagen"
-            style={{
-              width: "500px",
-              height: "auto", // Mantener la proporción de la imagen
-              maxHeight: "100%", // Asegura que no se salga del contenedor
-              objectFit: "contain", // Ajusta la imagen sin distorsionarla
-            }}
-          />
-        )}
+      <div className={styles.camera_output_section}>
+        <div
+          className={styles.camera_static_section}
+          onClick={() => setCameraStatics((prev) => !prev)}
+        >
+          {!cameraStatics ? (
+            <CameraMonitor cssClass="icon_color" />
+          ) : (
+            <>
+              <p
+                style={{
+                  color: "#525252",
+                  marginTop: "10px",
+                  fontSize: "20px",
+                }}
+              >
+                Latency : {latency} ms
+              </p>
+              <p
+                style={{
+                  color: "#525252",
+                  marginTop: "10px",
+                  fontSize: "20px",
+                }}
+              >
+                Avg Lat: {avgLatency} ms
+              </p>
+              <p
+                style={{
+                  color: "#525252",
+                  marginTop: "10px",
+                  fontSize: "20px",
+                }}
+              >
+                fps: {fps}
+              </p>
+            </>
+          )}
+
+          {/* <p style={{ color: "#525252", marginTop: "10px", fontSize: "20px" }}>
+            Latency : {latency} ms
+          </p>
+          <p style={{ color: "#525252", marginTop: "10px", fontSize: "20px" }}>
+            Avg Lat: {avgLatency} ms
+          </p>
+          <p style={{ color: "#525252", marginTop: "10px", fontSize: "20px" }}>
+            fps: {fps}
+          </p> */}
+        </div>
+        <div>
+          {imageData && (
+            <img
+              src={imageData}
+              alt="Imagen"
+              style={{
+                width: "500px",
+                height: "auto", // Mantener la proporción de la imagen
+                maxHeight: "100%", // Asegura que no se salga del contenedor
+                objectFit: "contain", // Ajusta la imagen sin distorsionarla
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

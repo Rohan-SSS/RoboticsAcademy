@@ -31,7 +31,8 @@ class GUI(MeasuringThreadingGUI):
     def gui_in_thread(self, ws, message):
         # In this case
         if "pick" in message:
-            base64_buffer = message[4:]
+            base64_buffer = message[4:-20]
+            time = message[-20:]
 
             if base64_buffer.startswith('data:image/jpeg;base64,'):
                 base64_buffer = base64_buffer[len('data:image/jpeg;base64,'):]
@@ -49,7 +50,7 @@ class GUI(MeasuringThreadingGUI):
             with self.image_show_lock:
                 self.frame_rgb = img
                 self.image_to_be_shown_updated = True
-                ack_message = {'ack_img': 'ack'}
+                ack_message = {'ack_img': 'ack','time':time}
                 self.send_to_client(json.dumps(ack_message))
 
 

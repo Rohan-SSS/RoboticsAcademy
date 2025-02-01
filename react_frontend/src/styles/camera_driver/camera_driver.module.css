@@ -1,0 +1,23 @@
+.camera_output_section {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon_color {
+  fill: red;
+}
+
+.camera_static_section {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+  border: 1px solid red;
+  padding: 4px;
+  border-radius: 5px;
+  background: #fcc;
+}
