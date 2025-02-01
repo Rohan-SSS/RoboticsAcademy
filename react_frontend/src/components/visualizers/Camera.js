@@ -1,8 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
+import styles from "./../../styles/camera_driver/camera_driver.module.css";
+import {
+  CameraMonitorIcon,
+  CameraNotFoundIcon,
+} from "../../styles/camera_driver/CameraDriverIcons";
 
 function decode_utf8(s) {
   return decodeURIComponent(escape(s));
 }
+// webRTC error message
 const cameraErrorMessages = {
   NotAllowedError: "Camera access denied by the user.",
   OverconstrainedError:
@@ -11,17 +17,72 @@ const cameraErrorMessages = {
   DevicesNotFoundError: "No media devices found.",
 };
 
-function Camera() {
+// reducer initial state
+const initialState = {
+  isCameraReady: false,
+  isCameraPause: false,
+  isVisualReady: false,
+  showCameraStatics: false,
+
+  latency: 0,
+  fps: 0,
+  countFrames: 0,
+  startTime: 0,
+
+  msg: "Connecting to media device.",
+};
+// reducer func
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "cameraReady":
+      return { ...state, isCameraReady: action.payload };
+    case "cameraPause":
+      return { ...state, isCameraPause: action.payload };
+    case "visiualReady":
+      return { ...state, isVisualReady: action.payload };
+    case "showCameraStatics":
+      return { ...state, showCameraStatics: action.payload };
+    case "updateLatency":
+      return { ...state, latency: action.payload.latency };
+    case "updateFps":
+      return { ...state, fps: action.payload.fps };
+    case "updateCountFrames":
+      return { ...state, countFrames: action.payload.countFrames };
+    case "udpateStartTime":
+      return { ...state, startTime: action.payload.startTime };
+    case "udpateMsg":
+      return { ...state, msg: action.payload.msg };
+
+    default:
+      return state;
+  }
+};
+
+// time frame size
+const timeFrameSize = 20;
+
+// camera
+const Camera = () => {
   const commsManager = window.RoboticsExerciseComponents.commsManager;
   const videoRef = useRef(null);
   const streamRef = useRef(null); // Usamos useRef para manejar el stream
-  const [stream, setStream] = useState(null);
   const [imageData, setImageData] = React.useState("");
 
-  const [isCameraReady, setIsCameraReady] = useState(false);
-  const [pauseCamera, setPauseCamera] = useState(false);
-  const [isVisualReady, setIsVisualReady] = useState(false);
-  const [error, setError] = useState("Connecting to media device.");
+  // reducer
+  const [
+    {
+      isCameraReady,
+      isCameraPause,
+      isVisualReady,
+      showCameraStatics,
+      latency,
+      fps,
+      countFrames,
+      startTime,
+      msg,
+    },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   // Función para capturar un fotograma del video y convertirlo en una matriz CV_8UC4
   const captureFrame = () => {
@@ -31,19 +92,25 @@ function Camera() {
 
     if (video && canvas && ctx) {
       // Establecer el tamaño del canvas igual al tamaño del video
-      canvas.width = 320; //320;
-      canvas.height = 240; //240;
+      canvas.width = 320;
+      canvas.height = 240;
 
       // Dibujar el frame del video en el canvas
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       // Obtener los datos de la imagen (array de píxeles RGBA)
       const imageDataURL = canvas.toDataURL("image/jpeg");
+
+      const performance_t = performance.now();
+      const time = performance_t
+        .toFixed(5)
+        .toString()
+        .padStart(timeFrameSize, "0");
       // Codificamos en base64
       // Enviar la matriz por WebSocket
       window.RoboticsExerciseComponents.commsManager.send(
         "gui",
-        `pick${imageDataURL}`
+        `pick${imageDataURL}${time}`
       );
     }
   };
@@ -66,20 +133,25 @@ function Camera() {
         navigator.mediaDevices
           .getUserMedia(constraints)
           .then((stream) => {
-            setIsCameraReady(true);
-            setError([]);
+            dispatch({ type: "cameraReady", payload: true });
+            dispatch({ type: "udpateMsg", payload: { msg: "" } });
             // Establecer el stream y asignarlo al video
-            setStream(stream);
+
             if (videoRef.current) {
               videoRef.current.srcObject = stream;
               streamRef.current = stream; // Guardamos el stream en la referencia
             }
           })
           .catch((err) => {
-            setIsCameraReady(false);
+            dispatch({ type: "cameraReady", payload: false });
 
             const errorMessage = cameraErrorMessages[err.name];
-            setError(errorMessage ? errorMessage : `Something went wrong!`);
+            dispatch({
+              type: "udpateMsg",
+              payload: {
+                msg: errorMessage ? errorMessage : `Something went wrong!`,
+              },
+            });
 
             console.log(err);
           });
@@ -99,13 +171,24 @@ function Camera() {
   useEffect(() => {
     const callback = (message) => {
       if (message.data.state === "visualization_ready") {
-        setIsVisualReady(true);
+        dispatch({ type: "visiualReady", payload: true });
       }
       if (message.data.state === "application_running") {
-        setPauseCamera(false);
+        dispatch({ type: "cameraPause", payload: false });
         captureFrame();
+        dispatch({
+          type: "udpateStartTime",
+          payload: { startTime: performance.now() },
+        });
       } else if (message.data.state === "paused") {
-        setPauseCamera(true);
+        dispatch({ type: "cameraPause", payload: true });
+
+        dispatch({ type: "updateFps", payload: { fps: 0 } });
+
+        dispatch({
+          type: "updateCountFrames",
+          payload: { countFrames: 0 },
+        });
       }
     };
     commsManager.subscribe([commsManager.events.STATE_CHANGED], callback);
@@ -133,8 +216,48 @@ function Camera() {
         //window.RoboticsExerciseComponents.commsManager.send("gui", "ack");
       }
       // receive ack from gui.py
-      if (message.data.update.ack_img === "ack" && !pauseCamera) {
+      if (message.data.update.ack_img === "ack" && !isCameraPause) {
+        // call next frame
         captureFrame();
+
+        const prevTime = Number(message.data.update.time);
+        const currTime = performance.now();
+        const latency = currTime - prevTime;
+
+        //count frames
+        dispatch({
+          type: "updateCountFrames",
+          payload: { countFrames: countFrames + 1 },
+        });
+
+        const elapsedTime = currTime - startTime;
+        // udpate after 1s
+        if (elapsedTime >= 1000) {
+          const fps = Math.ceil(countFrames / (elapsedTime / 1000)).toFixed(0);
+
+          // udpate fps
+          dispatch({ type: "updateFps", payload: { fps } });
+
+          // reset count frames
+          dispatch({
+            type: "updateCountFrames",
+            payload: { countFrames: 0 },
+          });
+
+          // reset start time
+          dispatch({
+            type: "udpateStartTime",
+            payload: { startTime: currTime },
+          });
+        }
+
+        // udpate statics on front end after 500ms
+        setTimeout(() => {
+          dispatch({
+            type: "updateLatency",
+            payload: { latency: latency.toFixed(0) },
+          });
+        }, 500);
       }
     };
     window.RoboticsExerciseComponents.commsManager.subscribe(
@@ -143,99 +266,81 @@ function Camera() {
     );
 
     return () => {
-      console.log("TestShowScreen unsubscribing from ['state-changed'] events");
+      // console.log("TestShowScreen unsubscribing from ['state-changed'] events");
       window.RoboticsExerciseComponents.commsManager.unsubscribe(
         [window.RoboticsExerciseComponents.commsManager.events.UPDATE],
         callback
       );
     };
-  }, [pauseCamera, isVisualReady, isCameraReady]);
+  }, [
+    isCameraPause,
+    isVisualReady,
+    isCameraReady,
+    //
+    fps,
+    startTime,
+    countFrames,
+  ]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-      }}
-    >
+    <div className={styles.camera_container}>
       {/* Contenedor de la primera imagen (video) */}
-      <div
-        style={{
-          flex: 1,
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div className={styles.video_section}>
         {/* When get any error from webRtc Camera */}
         {!isCameraReady && (
-          <div
-            style={{
-              position: "absolute",
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="80px"
-              viewBox="0 -960 960 960"
-              width="80px"
-              fill="#aaa"
-            >
-              <path d="M880-275 720-435v111l-60-60v-356H304l-60-60h416q24 0 42 18t18 42v215l160-160v410ZM848-27 39-836l42-42L890-69l-42 42ZM484-560Zm-87 82ZM159-800l60 60h-79v520h520v-79l60 60v19q0 24-18 42t-42 18H140q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h19Z" />
-            </svg>
-            {error.length > 0 && <h3 style={{ color: "#FB2B36" }}>{error}</h3>}
+          <div className={styles.camera_error}>
+            <CameraNotFoundIcon />
+            {msg.length > 0 && (
+              <h3 className={styles.camera_error_msg}>{msg}</h3>
+            )}
           </div>
         )}
-        <video
-          ref={videoRef}
-          autoPlay
-          style={{
-            width: "500px",
-            height: "auto", // Mantener la proporción del video
-            maxHeight: "100%", // Asegura que no se salga del contenedor
-            objectFit: "contain", // Ajusta el video sin distorsionarlo
-          }}
-        />
+        <video ref={videoRef} autoPlay className={styles.camera_video} />
       </div>
 
       {/* Contenedor flex-container con fondo blanco */}
-      <div style={{ flex: "0 1 10px", backgroundColor: "#fff" }}>
+      <div className={styles.camera_partition}>
         {/* Este es el contenedor intermedio que separa las dos imágenes, ahora con fondo blanco */}
       </div>
 
       {/* Contenedor de la segunda imagen */}
-      <div
-        style={{
-          flex: 1,
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {imageData && (
-          <img
-            src={imageData}
-            alt="Imagen"
-            style={{
-              width: "500px",
-              height: "auto", // Mantener la proporción de la imagen
-              maxHeight: "100%", // Asegura que no se salga del contenedor
-              objectFit: "contain", // Ajusta la imagen sin distorsionarla
-            }}
-          />
-        )}
+      <div className={styles.camera_output_section}>
+        <div
+          className={styles.camera_static_section}
+          onClick={() =>
+            dispatch({ type: "showCameraStatics", payload: !showCameraStatics })
+          }
+        >
+          {!showCameraStatics ? (
+            <div className={styles.camera_static_icon}>
+              <CameraMonitorIcon cssClass="icon_color" />
+            </div>
+          ) : (
+            <div className={styles.camera_static_box}>
+              <div className={styles.camera_static_fps}>
+                <p>{fps < 10 ? (fps === 0 ? `0` : `0${fps}`) : fps}</p>
+                <span>FPS</span>
+              </div>
+              <div className={styles.camera_static_lat}>
+                <div>
+                  <p>
+                    {latency >= 1000 ? (latency / 1000).toFixed(0) : latency}
+                  </p>
+                  <span> {latency >= 1000 ? ` s` : ` ms`}</span>
+                </div>
+                <span>LAT.</span>
+              </div>
+            </div>
+          )}
+        </div>
+        <div>
+          {imageData && (
+            <img src={imageData} alt="Imagen" className={styles.output_image} />
+          )}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Camera;
