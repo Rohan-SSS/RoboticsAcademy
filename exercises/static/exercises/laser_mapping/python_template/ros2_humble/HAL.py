@@ -6,7 +6,7 @@ import numpy as np
 
 from hal_interfaces.general.motors import MotorsNode
 from hal_interfaces.general.odometry import OdometryNode
-from hal_interfaces.general.noise_odometry import NoisyOdometryNode
+from real_noise_odometry import NoisyOdometryNode
 from hal_interfaces.general.laser import LaserNode
 
 freq = 90.0
@@ -24,11 +24,11 @@ if not rclpy.ok():
 motor_node = MotorsNode("/turtlebot3/cmd_vel", 4, 0.3)
 odometry_node = OdometryNode("/turtlebot3/odom")
 noisy_odometry_node = NoisyOdometryNode("/turtlebot3/odom")
-noisy_odometry_node.noise_level = 0.01
+noisy_odometry_node.noise_level = 0.001
 noisy_odometry_node_2 = NoisyOdometryNode("/turtlebot3/odom")
-noisy_odometry_node_2.noise_level = 0.02
+noisy_odometry_node_2.noise_level = 0.03
 noisy_odometry_node_3 = NoisyOdometryNode("/turtlebot3/odom")
-noisy_odometry_node_3.noise_level = 0.04
+noisy_odometry_node_3.noise_level = 0.06
 laser_node = LaserNode("/turtlebot3/laser/scan")
 
 # Spin nodes so that subscription callbacks load topic data
