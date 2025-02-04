@@ -31,6 +31,7 @@ export {
   getMarkerSeverity,
   getHalGuiMethods,
   snippetsBuilderV2,
+  snippetKind
 } from "./helper/helpers";
 
 // text extractor helper

@@ -75,7 +75,7 @@ export const snippetKind = ({ kind, monaco }) => {
 };
 
 // hal & gui auto complete
-export const getHalGuiMethods = ({ importName }) => {
+export const getHalGuiMethods = (importName) => {
   const pathName = window.location.pathname;
   let exerciseName = pathName.split("/").filter(Boolean);
   exerciseName = exerciseName[exerciseName.length - 1];
@@ -95,12 +95,12 @@ export const getHalGuiMethods = ({ importName }) => {
   return [];
 };
 
-export const snippetsBuilderV2 = ({
+export const snippetsBuilderV2 = (
   snippetName,
   monaco,
   range,
   importName,
-}) => {
+) => {
   const snippets = [];
   let importSnippets;
 
@@ -109,7 +109,7 @@ export const snippetsBuilderV2 = ({
     importSnippets = basic_snippets;
   } else if (snippetName === "hal_gui") {
     // hal_gui
-    importSnippets = getHalGuiMethods({ importName });
+    importSnippets = getHalGuiMethods(importName);
   } else if (snippetName === "import") {
     // import
     importSnippets = importSnippetsObj[`_${importName}`];
