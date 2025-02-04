@@ -122,6 +122,7 @@ export const snippetsBuilderV2 = (
       snippets.push({
         label: snippet.label,
         kind: snippetKind({ kind: snippet.type, monaco }),
+        detail: snippet.detail,
         insertText: snippet.code,
         insertTextRules:
           monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,

@@ -56,7 +56,12 @@ export const monacoEditorSnippet = ({ monaco }) => {
         col: word.endColumn - 1,
       });
 
-      var snippets = [];
+      var snippets = snippetsBuilderV2(
+        "basic_snippets",
+        monaco,
+        range,
+        "",
+      );;
 
       const callback = (message) => {
         const data = message.data;
@@ -69,6 +74,7 @@ export const monacoEditorSnippet = ({ monaco }) => {
           snippets.push({
             label: snippet.label,
             kind: snippetKind({ kind: snippet.type, monaco }),
+            detail: snippet.detail,
             documentation: snippet.docstring,
             insertText: snippet.name_with_symbols,
             insertTextRules:
@@ -90,17 +96,14 @@ export const monacoEditorSnippet = ({ monaco }) => {
       );
 
       if (lock) await new Promise(resolve => bus.once('unlocked', resolve));
+      
+      // const suggestions = snippetsBuilderV2(
+      //   "import",
+      //   monaco,
+      //   range,
+      //   prevWord,
+      // );
 
-      return {suggestions: snippets}
-
-      // // get text until position
-      // const textUntilPosition = model.getValueInRange({
-      //   startLineNumber: 1,
-      //   startColumn: 1,
-      //   endLineNumber: position.lineNumber,
-      //   endColumn: position.column,
-      // });
-      // // get all text data in editor
       // const text = model.getValue();
 
       // // import extract
@@ -124,6 +127,12 @@ export const monacoEditorSnippet = ({ monaco }) => {
       //     );
       //     if (match) return imp;
       //   });
+      //   console.log(importMatch)
+      // }
+
+      
+      return {suggestions: snippets}
+
 
       //   // match with listed import
       //   if (importMatch) {
@@ -131,14 +140,6 @@ export const monacoEditorSnippet = ({ monaco }) => {
 
       //     // HAL & GUI
       //     if (importName === "GUI" || importName === "HAL") {
-      //       const suggestions = snippetsBuilderV2({
-      //         snippetName: "hal_gui",
-      //         monaco,
-      //         range,
-      //         importName,
-      //       });
-
-      //       return { suggestions };
       //     } else {
       //       // Other Imports (ex: Numpy, Math)
       //       const suggestions = snippetsBuilderV2({

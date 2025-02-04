@@ -57,6 +57,7 @@ export const basic_snippets = [
   {
     type: "snippet",
     label: "for",
+    detail: "For Item",
     code: "for ${1:item} in ${2:iterable}:\n\t${3:# code}",
     descriptions: "for ${1:item} in ${2:iterable}:\n\t${3:# code}",
   },
