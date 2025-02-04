@@ -36,32 +36,49 @@ export const monacoEditorSnippet = ({ monaco }) => {
         endColumn: word.endColumn,
       };
 
+      // Add basic snippets only if not prevWord
+      if (prevWord.word === "") {
+        var snippets = snippetsBuilderV2(
+          "basic_snippets",
+          monaco,
+          range,
+          "",
+        );
+      } else {
+        var snippets = []
+      }
+
+      // Snippets for HAL and GUI
       if (prevWord.word === "GUI" || prevWord.word === "HAL") {
-        var type = prevWord.word;
         const suggestions = snippetsBuilderV2(
           "hal_gui",
           monaco,
           range,
-          type,
+          prevWord.word,
         );
 
-        console.log(suggestions)
-
         return { suggestions }; 
+      } else if (prevWord.word === "cv2") {
+        const suggestions = snippetsBuilderV2(
+          "import",
+          monaco,
+          range,
+          prevWord.word,
+        );
+        snippets.concat(suggestions)
       }
 
-      window.RoboticsExerciseComponents.commsManager.code_autocomplete({
-        code: model.getValue(),
-        line: position.lineNumber,
-        col: word.endColumn - 1,
-      });
-
-      var snippets = snippetsBuilderV2(
-        "basic_snippets",
-        monaco,
-        range,
-        "",
-      );;
+      // Check if the Robotics Backend is connected
+      // Call the RAM for autocompletion
+      try {
+        window.RoboticsExerciseComponents.commsManager.code_autocomplete({
+          code: model.getValue(),
+          line: position.lineNumber,
+          col: word.endColumn - 1,
+        });
+      } catch (error) {
+        return snippets;
+      }
 
       const callback = (message) => {
         const data = message.data;
@@ -97,62 +114,7 @@ export const monacoEditorSnippet = ({ monaco }) => {
 
       if (lock) await new Promise(resolve => bus.once('unlocked', resolve));
       
-      // const suggestions = snippetsBuilderV2(
-      //   "import",
-      //   monaco,
-      //   range,
-      //   prevWord,
-      // );
-
-      // const text = model.getValue();
-
-      // // import extract
-      // const allLines = text.split("\n").filter(Boolean);
-      // const allImports = [];
-      // allLines.forEach((line) => {
-      //   const importData = extractPythonImports(line);
-
-      //   if (importData.length) {
-      //     if (listed_python_packages.includes(importData[0].importName)) {
-      //       allImports.push(importData[0]);
-      //     }
-      //   }
-      // });
-
-      // // check valid import
-      // if (allImports.length) {
-      //   const importMatch = allImports.find((imp) => {
-      //     const match = textUntilPosition.match(
-      //       new RegExp(`(${imp.alias})\\.$`)
-      //     );
-      //     if (match) return imp;
-      //   });
-      //   console.log(importMatch)
-      // }
-
-      
       return {suggestions: snippets}
-
-
-      //   // match with listed import
-      //   if (importMatch) {
-      //     const { importName } = importMatch;
-
-      //     // HAL & GUI
-      //     if (importName === "GUI" || importName === "HAL") {
-      //     } else {
-      //       // Other Imports (ex: Numpy, Math)
-      //       const suggestions = snippetsBuilderV2({
-      //         snippetName: "import",
-      //         monaco,
-      //         range,
-      //         importName,
-      //       });
-
-      //       return { suggestions };
-      //     }
-      //   }
-      // }
     },
   });
 };
