@@ -131,7 +131,7 @@ const Camera = () => {
       };
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices
-          .getUserMedia(constraints)
+          .getUserMedia({ video: true, audio: false })
           .then((stream) => {
             dispatch({ type: "cameraReady", payload: true });
             dispatch({ type: "udpateMsg", payload: { msg: "" } });
