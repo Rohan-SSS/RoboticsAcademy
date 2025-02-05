@@ -46,7 +46,6 @@ export {
   resizeList,
   monacoEditorThemeList,
   defaultEditorSourceCode,
-  listed_python_packages,
   pylint_error,
   pylint_warning,
   pylint_convention,
