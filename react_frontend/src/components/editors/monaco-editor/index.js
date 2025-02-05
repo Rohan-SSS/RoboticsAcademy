@@ -24,7 +24,6 @@ export {
 // autocomplete-snippets
 export { basic_snippets } from "./autocomplete-snippets/basic_snippets";
 export { guiAndHalAutoCompleteObj } from "./autocomplete-snippets/hal_gui_snippets";
-export { importSnippetsObj } from "./autocomplete-snippets/import_snippets";
 
 // helper
 export {

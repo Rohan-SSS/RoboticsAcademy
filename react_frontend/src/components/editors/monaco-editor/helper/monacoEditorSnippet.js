@@ -9,8 +9,6 @@ import {
   snippetKind
 } from "./../index";
 
-import { useEffect } from "react";
-
 // Main Editor Snippets
 export const monacoEditorSnippet = ({ monaco }) => {
   monaco.languages.register({ id: "python" });
@@ -58,14 +56,6 @@ export const monacoEditorSnippet = ({ monaco }) => {
         );
 
         return { suggestions }; 
-      } else if (prevWord.word === "cv2") {
-        const suggestions = snippetsBuilderV2(
-          "import",
-          monaco,
-          range,
-          prevWord.word,
-        );
-        snippets.concat(suggestions)
       }
 
       // Check if the Robotics Backend is connected

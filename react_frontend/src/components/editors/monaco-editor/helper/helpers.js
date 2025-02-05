@@ -1,7 +1,6 @@
 import {
   basic_snippets,
   guiAndHalAutoCompleteObj,
-  importSnippetsObj,
 } from "./../index";
 import {
   pylint_error,
@@ -110,9 +109,6 @@ export const snippetsBuilderV2 = (
   } else if (snippetName === "hal_gui") {
     // hal_gui
     importSnippets = getHalGuiMethods(importName);
-  } else if (snippetName === "import") {
-    // import
-    importSnippets = importSnippetsObj[`_${importName}`];
   }
 
   if (!importSnippets || !importSnippets.length) return [];
