@@ -72,7 +72,7 @@ export const monacoEditorSnippet = ({ monaco }) => {
             kind: snippetKind({ kind: snippet.type, monaco }),
             detail: snippet.detail,
             documentation: snippet.docstring,
-            insertText: snippet.name_with_symbols,
+            insertText: snippet.code,
             insertTextRules:
               monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             range: range,
