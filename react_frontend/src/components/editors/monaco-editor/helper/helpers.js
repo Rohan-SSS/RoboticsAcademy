@@ -1,7 +1,4 @@
-import {
-  basic_snippets,
-  guiAndHalAutoCompleteObj,
-} from "./../index";
+import { basic_snippets, guiAndHalAutoCompleteObj } from "./../index";
 import {
   pylint_error,
   pylint_warning,
@@ -60,6 +57,20 @@ export const snippetKind = ({ kind, monaco }) => {
   switch (kind) {
     case "variable":
       return monaco.languages.CompletionItemKind.Variable;
+    case "class":
+      return monaco.languages.CompletionItemKind.Class;
+    case "param":
+      return monaco.languages.CompletionItemKind.TypeParameter;
+    case "path":
+      return monaco.languages.CompletionItemKind.File;
+    case "property":
+      return monaco.languages.CompletionItemKind.Property;
+    case "statement":
+      return monaco.languages.CompletionItemKind.Function;
+    case "instance":
+      return monaco.languages.CompletionItemKind.Class;
+    case "module":
+      return monaco.languages.CompletionItemKind.Module;
     case "method":
       return monaco.languages.CompletionItemKind.Method;
     case "snippet":
@@ -94,12 +105,7 @@ export const getHalGuiMethods = (importName) => {
   return [];
 };
 
-export const snippetsBuilderV2 = (
-  snippetName,
-  monaco,
-  range,
-  importName,
-) => {
+export const snippetsBuilderV2 = (snippetName, monaco, range, importName) => {
   const snippets = [];
   let importSnippets;
 
