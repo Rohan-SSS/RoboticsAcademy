@@ -28,9 +28,6 @@ export { guiAndHalAutoCompleteObj } from "./autocomplete-snippets/hal_gui_snippe
 // helper
 export {
   getMarkerSeverity,
-  getHalGuiMethods,
-  snippetsBuilderV2,
-  snippetKind
 } from "./helper/helpers";
 
 // text extractor helper

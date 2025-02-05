@@ -1,4 +1,3 @@
-import { basic_snippets, guiAndHalAutoCompleteObj } from "./../index";
 import {
   pylint_error,
   pylint_warning,
@@ -50,90 +49,6 @@ export const getMarkerSeverity = ({ type, monaco }) => {
     default:
       return monaco.MarkerSeverity.Error;
   }
-};
-
-// Snippets Builder
-export const snippetKind = ({ kind, monaco }) => {
-  switch (kind) {
-    case "variable":
-      return monaco.languages.CompletionItemKind.Variable;
-    case "class":
-      return monaco.languages.CompletionItemKind.Class;
-    case "param":
-      return monaco.languages.CompletionItemKind.TypeParameter;
-    case "path":
-      return monaco.languages.CompletionItemKind.File;
-    case "property":
-      return monaco.languages.CompletionItemKind.Property;
-    case "statement":
-      return monaco.languages.CompletionItemKind.Function;
-    case "instance":
-      return monaco.languages.CompletionItemKind.Class;
-    case "module":
-      return monaco.languages.CompletionItemKind.Module;
-    case "method":
-      return monaco.languages.CompletionItemKind.Method;
-    case "snippet":
-      return monaco.languages.CompletionItemKind.Snippet;
-    case "keyword":
-      return monaco.languages.CompletionItemKind.Keyword;
-    case "function":
-      return monaco.languages.CompletionItemKind.Function;
-    default:
-      return monaco.languages.CompletionItemKind.Variable;
-  }
-};
-
-// hal & gui auto complete
-export const getHalGuiMethods = (importName) => {
-  const pathName = window.location.pathname;
-  let exerciseName = pathName.split("/").filter(Boolean);
-  exerciseName = exerciseName[exerciseName.length - 1];
-  exerciseName = `_${exerciseName}`;
-
-  // if no object found by exercise name
-  if (!guiAndHalAutoCompleteObj[exerciseName]) {
-    return [];
-  }
-
-  if (importName === "GUI") {
-    return guiAndHalAutoCompleteObj[exerciseName].gui;
-  } else if (importName === "HAL") {
-    return guiAndHalAutoCompleteObj[exerciseName].hal;
-  }
-
-  return [];
-};
-
-export const snippetsBuilderV2 = (snippetName, monaco, range, importName) => {
-  const snippets = [];
-  let importSnippets;
-
-  // basic_snippets
-  if (snippetName === "basic_snippets") {
-    importSnippets = basic_snippets;
-  } else if (snippetName === "hal_gui") {
-    // hal_gui
-    importSnippets = getHalGuiMethods(importName);
-  }
-
-  if (!importSnippets || !importSnippets.length) return [];
-
-  importSnippets.forEach((snippet) => {
-    if (snippet.label && snippet.code) {
-      snippets.push({
-        label: snippet.label,
-        kind: snippetKind({ kind: snippet.type, monaco }),
-        detail: snippet.detail,
-        insertText: snippet.code,
-        insertTextRules:
-          monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        range: range,
-      });
-    }
-  });
-
-  return snippets;
 };
 
 // local storage data
