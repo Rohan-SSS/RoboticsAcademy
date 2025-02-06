@@ -136,6 +136,7 @@ const CommsManager = (address) => {
     INTROSPECTION: "introspection",
     CODE_FORMAT: "code-format",
     CODE_ANALYSIS: "code-analysis",
+    CODE_AUTOCOMPLETE: "code-autocomplete",
   };
 
   const commands = {
@@ -155,6 +156,7 @@ const CommsManager = (address) => {
     style_check: (code) => send("style_check", code),
     code_format: (code) => send("code_format", code),
     code_analysis: (data) => send("code_analysis", data),
+    code_autocomplete: (data) => send("code_autocomplete", data),
   };
 
   return {
