@@ -41,46 +41,6 @@ export const fetchFormatCode = async ({
   }
 };
 
-// post and response code analysis
-export const fetchAnalysisCode = async ({
-  baseUrl,
-  monacoEditorSourceCode,
-  controller,
-}) => {
-  try {
-    const response = await fetch(`${baseUrl}/api/v1/analysis/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": context.csrf,
-      },
-      body: JSON.stringify({
-        code: monacoEditorSourceCode,
-        disable_errors: [
-          ...pylint_error,
-          ...pylint_warning,
-          ...pylint_convention,
-          ...pylint_refactor,
-          ...pylint_fatal,
-        ],
-      }),
-      signal: controller.signal,
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      return data;
-    } else {
-      console.error("Error formatting code:", data.error);
-    }
-  } catch (error) {
-    if (error.name !== "AbortError") {
-      console.log(error);
-    }
-  }
-};
-
 export const getMarkerSeverity = ({ type, monaco }) => {
   switch (type) {
     case "refactor":

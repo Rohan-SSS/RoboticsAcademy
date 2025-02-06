@@ -1,6 +1,6 @@
 import json
-#import math
-#import matplotlib.pyplot as plt
+import math
+import matplotlib.pyplot as plt
 import threading
 import cv2
 import base64
@@ -114,6 +114,24 @@ class GUI(MeasuringThreadingGUI):
         else:
             self.particles = []
     
+    def getMap(self, url):
+        return plt.imread(url)
+    
+    def getBGRMap(self, url):
+        return cv2.imread(url)
+    
+    def poseToMap(self, x_prime, y_prime, yaw_prime):
+        x = 101.1 * ( 4.2 + y_prime)
+        y = 101.1  * ( 5.7 - x_prime)
+        yaw = yaw_prime - math.pi/2
+        return [round(x), round(y), yaw]
+    
+    def mapToPose(self, map_x, map_y, map_yaw):
+        x = (map_y - 576.27) / -101.1
+        y = (map_x - 424.62) /  101.1
+        yaw = map_yaw + math.pi/2
+        return [x, y, yaw]
+    
     # Function to set the next image to be sent
     def setImage(self, image):
         with self.image_lock:
@@ -135,3 +153,15 @@ def showPosition(x, y, angle):
 
 def showParticles(particles):
     gui.showParticles(particles)
+
+def getMap(url):
+    return gui.getMap(url)
+
+def getBGRMap(url):
+    return gui.getBGRMap(url)
+
+def poseToMap(x_prime, y_prime, yaw_prime):
+    return gui.poseToMap(x_prime, y_prime, yaw_prime)
+
+def mapToPose(x, y, yaw):
+    return gui.mapToPose(x, y, yaw)

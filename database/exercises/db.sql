@@ -97,7 +97,8 @@ COPY public.exercises (id, exercise_id, name, description, tags, status, templat
 11	montecarlo_laser_loc	Montecarlo Laser Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_laser_loc/python_template/
 12	montecarlo_visual_loc	Montecarlo Visual Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_visual_loc/python_template/
 13	marker_visual_loc	Marker Visual Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/marker_visual_loc/python_template/
-14	color_filter_newmanager	Color Filter	Color Filter exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/color_filter_newmanager/python_template/
+14	laser_mapping	Laser Mapping	Build a map based on sensor readings	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/laser_mapping/python_template/
+15	color_filter_newmanager	Color Filter	Color Filter exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/color_filter_newmanager/python_template/
 \.
 
 
@@ -134,7 +135,8 @@ COPY public.exercises_universes (id, exercise_id, universe_id) FROM stdin;
 26	1	25
 27	12	27
 28	13	29
-29	14	3
+29	14	30
+30	15	3
 \.
 
 

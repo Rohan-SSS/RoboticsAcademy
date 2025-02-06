@@ -148,9 +148,9 @@
 }
 
 .arrow-user:after {
-  color:rgb(0, 0, 255);
+  color:rgb(0, 255, 0);
 }
 
 .arrow-user:before {
-  color:rgb(0, 0, 255);
+  color:rgb(0, 255, 0);
 }
