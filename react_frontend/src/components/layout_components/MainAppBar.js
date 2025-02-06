@@ -40,14 +40,18 @@ function MainAppBar(props) {
           document.getElementById("exercise-config").textContent
         );
         window.RoboticsExerciseComponents.commsManager
-          .launchWorld(config[0])
+          .launchWorld(config[0].world)
           .then(() => {
             window.RoboticsExerciseComponents.commsManager
-            .prepareVisualization(config[0].visualization).then(() => {
-              RoboticsReactComponents.MessageSystem.Loading.hideLoading();
-              RoboticsReactComponents.MessageSystem.Alert.showAlert(
-                "Exercise loaded successfully.", "success"
-              );
+            .launchRobot(config[0].robot)
+            .then(() => {
+              window.RoboticsExerciseComponents.commsManager
+              .prepareVisualization(config[0].world.visualization).then(() => {
+                RoboticsReactComponents.MessageSystem.Loading.hideLoading();
+                RoboticsReactComponents.MessageSystem.Alert.showAlert(
+                  "Exercise loaded successfully.", "success"
+                );
+              })
             })
      
           })
