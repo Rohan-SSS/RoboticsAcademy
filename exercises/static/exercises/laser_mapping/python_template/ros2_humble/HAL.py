@@ -2,12 +2,12 @@ import rclpy
 import sys
 import threading
 import time
+import numpy as np
 
 from hal_interfaces.general.motors import MotorsNode
 from hal_interfaces.general.odometry import OdometryNode
-from hal_interfaces.general.noise_odometry import NoisyOdometryNode
+from real_noise_odometry import NoisyOdometryNode
 from hal_interfaces.general.laser import LaserNode
-from hal_interfaces.general.camera import CameraNode
 
 freq = 90.0
 
@@ -22,17 +22,22 @@ if not rclpy.ok():
 
 ### HAL INIT ###
 motor_node = MotorsNode("/turtlebot3/cmd_vel", 4, 0.3)
-camera_node = CameraNode("/turtlebot3/camera/image_raw")
 odometry_node = OdometryNode("/turtlebot3/odom")
-laser_node = LaserNode("/turtlebot3/laser/scan")
 noisy_odometry_node = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node.noise_level = 0.001
+noisy_odometry_node_2 = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node_2.noise_level = 0.03
+noisy_odometry_node_3 = NoisyOdometryNode("/turtlebot3/odom")
+noisy_odometry_node_3.noise_level = 0.06
+laser_node = LaserNode("/turtlebot3/laser/scan")
 
 # Spin nodes so that subscription callbacks load topic data
 executor = rclpy.executors.MultiThreadedExecutor()
-executor.add_node(camera_node)
 executor.add_node(odometry_node)
-executor.add_node(laser_node)
 executor.add_node(noisy_odometry_node)
+executor.add_node(noisy_odometry_node_2)
+executor.add_node(noisy_odometry_node_3)
+executor.add_node(laser_node)
 
 executor_thread = threading.Thread(target=__auto_spin, daemon=True)
 executor_thread.start()
@@ -54,19 +59,24 @@ def getOdom():
     except Exception as e:
         print(f"Exception in hal getPose3d {repr(e)}")  
 
-# Camera
-def getImage():
-    image = camera_node.getImage()
-    while image == None:
-        image = camera_node.getImage()
-    return image.data
+def getOdom2():
+    try:
+        return noisy_odometry_node_2.getPose3d()
+    except Exception as e:
+        print(f"Exception in hal getPose3d {repr(e)}")
 
-# Laser
+def getOdom3():
+    try:
+        return noisy_odometry_node_3.getPose3d()
+    except Exception as e:
+        print(f"Exception in hal getPose3d {repr(e)}")
+
 def getLaserData():
     laser_data = laser_node.getLaserData()
     while len(laser_data.values) == 0:
         laser_data = laser_node.getLaserData()
     return laser_data
+
 
 ### SETTERS ###
 

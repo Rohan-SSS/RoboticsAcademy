@@ -1,6 +1,6 @@
 import numpy as np
 from rclpy.node import Node
-from math import asin, atan2, pi
+import math
 import nav_msgs.msg
 
 ### AUXILIARY FUNCTIONS ###
@@ -53,7 +53,7 @@ def quat2Yaw(qw, qx, qy, qz):
     rotateZa1 = qw * qw + qx * qx - qy * qy - qz * qz
     rotateZ = 0.0
     if rotateZa0 != 0.0 and rotateZa1 != 0.0:
-        rotateZ = atan2(rotateZa0, rotateZa1)
+        rotateZ = math.atan2(rotateZa0, rotateZa1)
 
     return rotateZ
 
@@ -69,11 +69,11 @@ def quat2Pitch(qw, qx, qy, qz):
     rotateYa0 = -2.0 * (qx * qz - qw * qy)
     rotateY = 0.0
     if rotateYa0 >= 1.0:
-        rotateY = pi / 2.0
+        rotateY = math.pi / 2.0
     elif rotateYa0 <= -1.0:
-        rotateY = -pi / 2.0
+        rotateY = -math.pi / 2.0
     else:
-        rotateY = asin(rotateYa0)
+        rotateY = math.asin(rotateYa0)
 
     return rotateY
 
@@ -90,7 +90,7 @@ def quat2Roll(qw, qx, qy, qz):
     rotateX = 0.0
 
     if rotateXa0 != 0.0 and rotateXa1 != 0.0:
-        rotateX = atan2(rotateXa0, rotateXa1)
+        rotateX = math.atan2(rotateXa0, rotateXa1)
     return rotateX
 
 def euler2quat(yaw, pitch, roll):
@@ -141,6 +141,8 @@ def add_noise(last_pose, new_pose, base_odom, noise_level):
     mov_x = new_pose.pose.pose.position.x - last_pose.pose.pose.position.x
     mov_y = new_pose.pose.pose.position.y - last_pose.pose.pose.position.y
     mov_z = new_pose.pose.pose.position.z - last_pose.pose.pose.position.z
+    dist = math.sqrt(math.pow(mov_x, 2) + math.pow(mov_y, 2))
+
 
     new_ori = new_pose.pose.pose.orientation
     old_ori = last_pose.pose.pose.orientation
@@ -150,8 +152,7 @@ def add_noise(last_pose, new_pose, base_odom, noise_level):
     mov_roll = quat2Roll(new_ori.w, new_ori.x, new_ori.y, new_ori.z) - quat2Roll(old_ori.w, old_ori.x, old_ori.y, old_ori.z)
 
     # Add noise
-    mov_x = gaussian_noise(mov_x, noise_level = noise_level)
-    mov_y = gaussian_noise(mov_y, noise_level = noise_level)
+    dist = gaussian_noise(dist, noise_level = noise_level)
     mov_yaw = gaussian_noise(mov_yaw, noise_level = noise_level)
 
     # Get new odom angle
@@ -165,8 +166,8 @@ def add_noise(last_pose, new_pose, base_odom, noise_level):
     # Generate new odom
     new_odom = nav_msgs.msg.Odometry()
     
-    new_odom.pose.pose.position.x = base_odom.pose.pose.position.x + mov_x
-    new_odom.pose.pose.position.y = base_odom.pose.pose.position.y + mov_y
+    new_odom.pose.pose.position.x = base_odom.pose.pose.position.x + (dist * math.cos(new_yaw))
+    new_odom.pose.pose.position.y = base_odom.pose.pose.position.y + (dist * math.sin(new_yaw))
     new_odom.pose.pose.position.z = base_odom.pose.pose.position.z + mov_z
     new_odom.pose.pose.orientation.x = new_ori[0]
     new_odom.pose.pose.orientation.y = new_ori[1]

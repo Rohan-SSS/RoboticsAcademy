@@ -1,6 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import houseMap from "../resources/images/mapgrannyannie.png";
+import houseMap from "../resources/images/GUI_mapgrannyannie.png";
 import Vacuum from "../resources/images/vacuum.svg";
 import { drawImage } from "./helpers/showImageMontecarlo"
 

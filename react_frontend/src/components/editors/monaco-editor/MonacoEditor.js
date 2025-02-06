@@ -34,7 +34,6 @@ const MonacoEditor = ({
     isLoading,
     monacoEditorTheme,
     editorOptions,
-    baseUrl,
     editorSettings,
   } = state;
   // USE STATE
@@ -90,7 +89,6 @@ const MonacoEditor = ({
   });
   // code analysis (pylint)
   useMonacoEditorCodeAnalysisEffect({
-    baseUrl,
     monacoRef,
     editorRef,
     monacoEditorSourceCode,
@@ -99,7 +97,6 @@ const MonacoEditor = ({
   // Code format (black)
   useMonacoEditorCodeFormatEffect({
     editorRef,
-    baseUrl,
     monacoEditorSourceCode,
     setMonacoEditorSourceCode,
     setUpdateGlyphs,
