@@ -93,11 +93,11 @@ class World(models.Model):
 
 class Universe(models.Model):
     """
-    Modelo Universe para RoboticsCademy
+    Modelo Universe para Robotics Academy
     """
     name = models.CharField(max_length=100, blank=False, unique=True)
-    world = models.OneToOneField(World, default=None, on_delete=models.CASCADE)
-    robot = models.OneToOneField(Robot, default=None, on_delete=models.CASCADE)
+    world = models.OneToOneField(World, default=None, on_delete=models.CASCADE, db_column='"world_id"')
+    robot = models.OneToOneField(Robot, default=None, on_delete=models.CASCADE, db_column='"robot_id"')
 
     def __str__(self):
         return str(self.name)
@@ -110,7 +110,7 @@ class Universe(models.Model):
 
 class Exercise(models.Model):
     """
-    RoboticsCademy Exercise model
+    Robotics Academy Exercise model
     """
     exercise_id = models.CharField(max_length=40, blank=False, unique=True)
     name = models.CharField(max_length=40, blank=False, unique=True)
@@ -146,6 +146,23 @@ class Exercise(models.Model):
 
         for universe in self.universes.all():
             if universe.world.ros_version == ros_version:
+                print(universe.robot, universe.world.available_robots.all())
+                if universe.robot in universe.world.available_robots.all():
+                    robot_config = {
+                        "name": universe.robot.name,
+                        "launch_file_path": universe.robot.launch_file_path,
+                        "ros_version": universe.robot.ros_version,
+                        "visualization": universe.robot.visualization,
+                        "type": universe.robot.type
+                    }
+                else:
+                    robot_config = {
+                        "name": None,
+                        "launch_file_path": None,
+                        "ros_version": None,
+                        "visualization": "console",
+                        "type": None
+                    }
                 config = {
                     "name": universe.name,
                     "world": {
@@ -155,13 +172,7 @@ class Exercise(models.Model):
                         "visualization": universe.world.visualization,
                         "world": universe.world.world
                     },    
-                    "robot": {
-                        "name": universe.robot.name,
-                        "launch_file_path": universe.robot.launch_file_path,
-                        "ros_version": universe.robot.ros_version,
-                        "visualization": universe.robot.visualization,
-                        "type": universe.robot.type
-                    },
+                    "robot": robot_config,
                     "template": self.template,
                     "exercise_id":self.exercise_id
                 }
