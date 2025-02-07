@@ -31,8 +31,10 @@ UniverseType = (
 )
 
 RosVersion = (
+    ('ROS', "ROS"),
     ('ROS2', "ROS2")
 )
+
 
 class Robot(models.Model):
     """
