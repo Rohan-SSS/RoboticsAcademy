@@ -51,7 +51,7 @@ export default function WorldSelector(props) {
               "Launching Universe"
             );
             window.RoboticsExerciseComponents.commsManager
-              .launchWorld(config)
+              .launchWorld({ world: config[0].world, robot: config[0].robot })
               .then(() => {
                 window.RoboticsExerciseComponents.commsManager
                 .prepareVisualization(config.visualization)

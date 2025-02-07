@@ -41,20 +41,6 @@ class Robot(models.Model):
     """
     name = models.CharField(max_length=100, blank=False, unique=True)
     launch_file_path = models.CharField(max_length=200, blank=False)
-    ros_version = models.CharField(
-        max_length=4, choices=RosVersion, default="none")
-    visualization = models.CharField(
-        max_length=50,
-        choices=VisualizationType,
-        default="none",
-        blank=False
-    )
-    type = models.CharField(
-        max_length=50,
-        choices=UniverseType,
-        default="none",
-        blank=False
-    )
 
     def __str__(self):
         return str(self.name)
@@ -83,7 +69,6 @@ class World(models.Model):
         default="none",
         blank=False
     )
-    available_robots = models.ManyToManyField(Robot, default=None, db_table='"worlds_robots"')
 
     def __str__(self):
         return str(self.name)
@@ -145,24 +130,24 @@ class Exercise(models.Model):
             ros_version = 'ROS2'
 
         for universe in self.universes.all():
-            if universe.world.ros_version == ros_version:
-                print(universe.robot, universe.world.available_robots.all())
-                if universe.robot in universe.world.available_robots.all():
+            if universe.world.ros_version == ros_version and universe.world.name != 'None':
+                if universe.robot.name != 'None' :
                     robot_config = {
                         "name": universe.robot.name,
                         "launch_file_path": universe.robot.launch_file_path,
-                        "ros_version": universe.robot.ros_version,
-                        "visualization": universe.robot.visualization,
-                        "type": universe.robot.type
+                        "ros_version": universe.world.ros_version,
+                        "visualization": universe.world.visualization,
+                        "world": universe.world.world
                     }
                 else:
                     robot_config = {
                         "name": None,
                         "launch_file_path": None,
                         "ros_version": None,
-                        "visualization": "console",
-                        "type": None
+                        "visualization": None,
+                        "world": None
                     }
+
                 config = {
                     "name": universe.name,
                     "world": {
@@ -194,8 +179,8 @@ class Exercise(models.Model):
                     "name": None,
                     "launch_file_path": None,
                     "ros_version": None,
-                    "visualization": "console",
-                    "type": None
+                    "visualization": None,
+                    "world": None
                 },
                 "template": self.template,
                 "exercise_id":self.exercise_id
