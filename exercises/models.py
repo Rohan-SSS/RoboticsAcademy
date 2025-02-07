@@ -31,7 +31,6 @@ UniverseType = (
 )
 
 RosVersion = (
-    ('ROS1', "ROS1"),
     ('ROS2', "ROS2")
 )
 
@@ -124,10 +123,10 @@ class Exercise(models.Model):
 
         output = subprocess.check_output(['bash', '-c', 'echo $ROS_VERSION'])
         output_str = output.decode('utf-8')
-        if output_str.strip() == '1':
-            ros_version = 'ROS1'
-        else:
+        if output_str.strip() == '2':
             ros_version = 'ROS2'
+        else:
+            ros_version = 'ROS'
 
         for universe in self.universes.all():
             if universe.world.ros_version == ros_version and universe.world.name != 'None':

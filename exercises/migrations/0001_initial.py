@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 (
                     "ros_version",
                     models.CharField(
-                        choices=[("ROS1", "ROS1"), ("ROS2", "ROS2")],
+                        choices=[("ROS2", "ROS2")],
                         default="none",
                         max_length=4,
                     ),
