@@ -91,6 +91,7 @@ const PlayPause = (props) => {
         var base64data = reader.result;
         window.RoboticsExerciseComponents.commsManager
           .run({
+            type: "robotics-academy",
             code: base64data
           })
           .then(() => {})
@@ -146,6 +147,7 @@ const PlayPause = (props) => {
           .then(() => {
             window.RoboticsExerciseComponents.commsManager
               .run({
+                type: "robotics-academy",
                 code: base64data
               })
               .then(() => {})
