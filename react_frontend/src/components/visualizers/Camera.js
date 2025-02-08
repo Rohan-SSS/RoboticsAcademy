@@ -122,16 +122,12 @@ const Camera = () => {
     const startCamera = () => {
       // configure media parameters
       const constraints = {
-        video: {
-          width: { min: 320, ideal: 320, max: 320 },
-          height: { min: 240, ideal: 240, max: 240 },
-          frameRate: { ideal: 30, max: 30 },
-        },
+        video: true,
         audio: false,
       };
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices
-          .getUserMedia({ video: true, audio: false })
+          .getUserMedia(constraints)
           .then((stream) => {
             dispatch({ type: "cameraReady", payload: true });
             dispatch({ type: "udpateMsg", payload: { msg: "" } });
