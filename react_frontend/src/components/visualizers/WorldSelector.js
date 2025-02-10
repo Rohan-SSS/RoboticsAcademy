@@ -34,29 +34,42 @@ export default function WorldSelector(props) {
     };
   }, []);
 
-  const handleUniverse = async (config) => {
+  const handleUniverse = (config) => {
     context.mapSelected = config.name;
     setSelectedUniverse(config);
     console.log(config.visualization);
 
-    await window.RoboticsExerciseComponents.commsManager.terminate_application();
-    await window.RoboticsExerciseComponents.commsManager.terminate_visualization();
-    await window.RoboticsExerciseComponents.commsManager.terminate_universe();
-    window.RoboticsReactComponents.MessageSystem.Loading.showLoading(
-      "Launching Universe"
-    );
-    await window.RoboticsExerciseComponents.commsManager.launchWorld({
-      world: config[0].world,
-      robot: config[0].robot,
-    });
-    await window.RoboticsExerciseComponents.commsManager.prepareVisualization(
-      config.visualization
-    );
-    RoboticsReactComponents.MessageSystem.Loading.hideLoading();
-    RoboticsReactComponents.MessageSystem.Alert.showAlert(
-      "Exercise loaded successfully.",
-      "success"
-    );
+    window.RoboticsExerciseComponents.commsManager
+      .terminate_application()
+      .then(() => {
+        window.RoboticsExerciseComponents.commsManager
+          .terminate_visualization()
+          .then(() => {
+            window.RoboticsExerciseComponents.commsManager
+              .terminate_universe()
+              .then(() => {
+                window.RoboticsReactComponents.MessageSystem.Loading.showLoading(
+                  "Launching Universe"
+                );
+                window.RoboticsExerciseComponents.commsManager
+                  .launchWorld({
+                    world: config[0].world,
+                    robot: config[0].robot,
+                  })
+                  .then(() => {
+                    window.RoboticsExerciseComponents.commsManager
+                      .prepareVisualization(config.visualization)
+                      .then(() => {
+                        RoboticsReactComponents.MessageSystem.Loading.hideLoading();
+                        RoboticsReactComponents.MessageSystem.Alert.showAlert(
+                          "Exercise loaded successfully.",
+                          "success"
+                        );
+                      });
+                  });
+              });
+          });
+      });
   };
 
   return exerciseConfig.length > 0 ? (
