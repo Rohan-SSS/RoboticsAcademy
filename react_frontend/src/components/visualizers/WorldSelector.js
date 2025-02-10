@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { FormControl, InputLabel, Select, Box } from "@mui/material";
-
 export default function WorldSelector(props) {
   const exerciseConfig = JSON.parse(
     document.getElementById("exercise-config").textContent
   );
   const [disabled, setDisabled] = useState(true);
-  const [selectedUniverse, setSelectedUniverse] = useState(exerciseConfig[0]);
+  const [selectedCircuit, setSelectedCircuit] = useState(exerciseConfig[0]);
   const [configurations, setConfigurations] = useState(exerciseConfig);
 
   useEffect(() => {
     context.mapSelected = exerciseConfig[0].name;
-
     const callback = (message) => {
       if (message.data.state !== "connected") {
         setDisabled(false);
@@ -20,12 +18,10 @@ export default function WorldSelector(props) {
         setDisabled(true);
       }
     };
-
     window.RoboticsExerciseComponents.commsManager.subscribe(
       [window.RoboticsExerciseComponents.commsManager.events.STATE_CHANGED],
       callback
     );
-
     return () => {
       window.RoboticsExerciseComponents.commsManager.unsubscribe(
         [window.RoboticsExerciseComponents.commsManager.events.STATE_CHANGED],
@@ -34,11 +30,10 @@ export default function WorldSelector(props) {
     };
   }, []);
 
-  const handleUniverse = (config) => {
+  const handleCircuitChange = (config) => {
     context.mapSelected = config.name;
-    setSelectedUniverse(config);
+    setSelectedCircuit(config);
     console.log(config.visualization);
-
     window.RoboticsExerciseComponents.commsManager
       .terminate_application()
       .then(() => {
@@ -84,15 +79,15 @@ export default function WorldSelector(props) {
         }}
         size="small"
       >
-        <InputLabel id={"universe-selector-label"}>Universe</InputLabel>
+        <InputLabel id={"circuit-selector-label"}>Universe</InputLabel>
         <Select
           disabled={disabled}
-          value={selectedUniverse}
-          labelId="universe-selector-label"
-          id={"universe-selector"}
-          label={"Universe"}
+          value={selectedCircuit}
+          labelId="circuit-selector-label"
+          id={"circuit-selector"}
+          label={"Circuit"}
           onChange={(e) => {
-            handleUniverse(e.target.value);
+            handleCircuitChange(e.target.value);
           }}
         >
           {configurations.map((option) => (
