@@ -56,7 +56,6 @@ def index(request):
 
 def load_exercise(request, exercise_id):
     exercise = Exercise.objects.get(exercise_id=exercise_id)
-    print(exercise.worlds)
     return render(request, 'exercises/' + exercise_id + '/exercise.html', exercise.context)
 
 
