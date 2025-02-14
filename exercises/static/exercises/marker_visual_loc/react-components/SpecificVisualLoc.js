@@ -7,7 +7,7 @@ import RobotBlue from "../resources/images/robot_blue.svg";
 
 import house from "../resources/images/map.png";
 
-import "./css/GUICanvas.css"
+import "./css/GUICanvas.css";
 function SpecificVisualLoc(props) {
   const [realPose, setRealPose] = React.useState(null)
   const [noisyPose, setNoisyPose] = React.useState(null)
@@ -15,6 +15,7 @@ function SpecificVisualLoc(props) {
   const [realPath, setRealPath] = React.useState("")
   const [noisyPath, setNoisyPath] = React.useState("")
   const [userPath, setUserPath] = React.useState("")
+  const [resizedBeacons, setResizedBeacons] = React.useState({})
   var realTrail = [];
   var noisyTrail = [];
   var userTrail = [];
@@ -25,11 +26,29 @@ function SpecificVisualLoc(props) {
 
   const timeout = 40;
 
+  const beacons = [
+    { id: "tag_0", x: 518.75, y: 270.325, type: "hor" },
+    { id: "tag_1", x: 481.4, y: 810.775, type: "hor" },
+    { id: "tag_2", x: 196.395, y: 339.15, type: "vert" },
+    { id: "tag_3", x: 400.89, y: 79.9, type: "hor" },
+    { id: "tag_4", x: 844.94, y: 712.3, type: "vert" },
+    { id: "tag_5", x: 295.03, y: 499.8, type: "vert" },
+    { id: "tag_6", x: 730.4, y: 350.55, type: "hor" },
+    { id: "tag_7", x: 499.66, y: 140.25, type: "vert" },
+  ];
+
   const resizeObserver = new ResizeObserver((entries) => {
     var img = entries[0].target; 
     //or however you get a handle to the IMG
     var width = (img.clientWidth / 1012);
     var height = (img.clientHeight / 1012);
+
+    setResizedBeacons(beacons.map(beacon => ({
+      id: beacon.id,
+      x: beacon.x * width,
+      y: beacon.y * height,
+      type: beacon.type,
+    })))
 
     updatePath(realTrail, setRealPath, height, width);
     updatePath(noisyTrail, setNoisyPath, height, width);
@@ -135,6 +154,17 @@ function SpecificVisualLoc(props) {
           realTrail=[]
           noisyTrail=[]
           userTrail=[]
+
+          var img = document.getElementById('gui-canvas'); 
+          //or however you get a handle to the IMG
+          var width = (img.clientWidth / 1012);
+          var height = (img.clientHeight / 1012);
+          setResizedBeacons(beacons.map(beacon => ({
+            id: beacon.id,
+            x: beacon.x * width,
+            y: beacon.y * height,
+            type: beacon.type,
+          })))
         } catch (error) {
         }
       }
@@ -195,12 +225,26 @@ function SpecificVisualLoc(props) {
           />
         </svg>
       }
+      {Object.values(resizedBeacons).map((beacon) => {
+        return(
+        <div
+          key={beacon.id}
+          className={`beacon ${beacon.type}`}
+          style={{
+            top: `${beacon.y}px`,
+            left: `${beacon.x}px`,
+            position: "absolute",
+            border: "2px solid rgb(255, 255, 255)",
+            cursor: "pointer",
+            zIndex: "5",
+            width: `${(beacon.type == "vert") ? 0 : 20}px`,
+            height: `${(beacon.type == "hor") ? 0 : 20}px`,
+          }}
+          title={`ID: ${beacon.id}`}
+        />
+      )})}
     </div>
   );
 }
-
-SpecificVisualLoc.propTypes = {
-  circuit: PropTypes.string,
-};
 
 export default SpecificVisualLoc;
