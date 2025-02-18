@@ -82,9 +82,8 @@ def user_code_zip(request, exercise_id):
 
     try:
         for x in os.listdir(exercise_path):
-            if x.endswith(".py"):
-                with open(os.path.join(exercise_path, x)) as f:
-                    files.append({"name": x, "content": f.read()})
+            with open(os.path.join(exercise_path, x)) as f:
+                files.append({"name": x, "content": f.read()})
 
         return JsonResponse({"success": True, "files": files})
 
