@@ -44,6 +44,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=100, unique=True)),
                 ("launch_file_path", models.CharField(max_length=200)),
+                ("visualization_config_path", models.CharField(max_length=200)),
                 (
                     "ros_version",
                     models.CharField(

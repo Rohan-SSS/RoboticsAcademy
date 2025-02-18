@@ -57,6 +57,7 @@ class World(models.Model):
     """
     name = models.CharField(max_length=100, blank=False, unique=True)
     launch_file_path = models.CharField(max_length=200, blank=False)
+    visualization_config_path = models.CharField(max_length=200, blank=False)
     ros_version = models.CharField(
         max_length=4, choices=RosVersion, default="none")
     visualization = models.CharField(
@@ -138,7 +139,6 @@ class Exercise(models.Model):
                         "name": universe.robot.name,
                         "launch_file_path": universe.robot.launch_file_path,
                         "ros_version": universe.world.ros_version,
-                        "visualization": universe.world.visualization,
                         "world": universe.world.world
                     }
                 else:
@@ -146,7 +146,6 @@ class Exercise(models.Model):
                         "name": None,
                         "launch_file_path": None,
                         "ros_version": None,
-                        "visualization": None,
                         "world": None
                     }
 
@@ -156,9 +155,10 @@ class Exercise(models.Model):
                         "name": universe.world.name,
                         "launch_file_path": universe.world.launch_file_path,
                         "ros_version": universe.world.ros_version,
-                        "visualization": universe.world.visualization,
                         "world": universe.world.world
                     },    
+                    "visualization": universe.world.visualization,
+                    "visualization_config_path": universe.world.visualization_config_path,
                     "robot": robot_config,
                     "template": self.template,
                     "exercise_id":self.exercise_id
@@ -174,16 +174,16 @@ class Exercise(models.Model):
                     "name": None,
                     "launch_file_path": None,
                     "ros_version": None,
-                    "visualization": "console",
                     "world": None
                 },    
                 "robot": {
                     "name": None,
                     "launch_file_path": None,
                     "ros_version": None,
-                    "visualization": None,
                     "world": None
                 },
+                "visualization": "console",
+                "visualization_config_path": None,
                 "template": self.template,
                 "exercise_id":self.exercise_id
             }
