@@ -1,4 +1,5 @@
 import json
+import subprocess
 import cv2
 import base64
 import threading
@@ -93,3 +94,26 @@ def showEstimatedPose(pose):
     transformed_pose = (x, y, yaw)
     
     gui.setEstimatedRobotPose(transformed_pose)
+
+def followRobot():
+    # Execute Later: gz topic -t /gui/track -m gz.msgs.CameraTrack -p 'track_mode:2' to trigger the camera tracker
+    for i in range(10):
+        subprocess.call(
+            "gz topic -t /gui/track -m gz.msgs.CameraTrack -p 'track_mode:2'",
+            shell=True,
+            stderr=subprocess.STDOUT,
+            bufsize=1024,
+            universal_newlines=True,
+        )
+
+# TODO: if we add the ability to unfollow, then we need to put the robot name here
+# def unfollowRobot():
+#     # Execute Later: gz topic -t /gui/track -m gz.msgs.CameraTrack -p 'track_mode:2' to trigger the camera tracker
+#     for i in range(10):
+#         subprocess.call(
+#             "gz topic -t /gui/track -m gz.msgs.CameraTrack -p 'track_mode:0'",
+#             shell=True,
+#             stderr=subprocess.STDOUT,
+#             bufsize=1024,
+#             universal_newlines=True,
+#         )
