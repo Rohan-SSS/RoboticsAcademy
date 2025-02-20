@@ -5,6 +5,8 @@ import rclpy
 import threading
 import time
 import websocket
+from threading import Timer
+
 
 import sys
 
@@ -13,7 +15,7 @@ sys.path.insert(0, '/RoboticsApplicationManager')
 from manager.ram_logging.log_manager import LogManager
 
 
-class MeasuringThreadingGUI:
+class MeasuringThreadingGUIH:
     """ GUI interface using threading and measuring RTF data:
         
         self.start() needs to be called at the end of the init method\n
@@ -68,12 +70,60 @@ class MeasuringThreadingGUI:
         """Continuously calculates the real-time factor."""
         while self.running:
             time.sleep(2)
+            
+            real_time_factor = None
+
             args = ["gz", "stats", "-p"]
-            stats_process = subprocess.Popen(args, stdout=subprocess.PIPE)
+            stats_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
             with stats_process.stdout:
                 for line in iter(stats_process.stdout.readline, b''):
                     stats_list = [x.strip() for x in line.split(b',')]
-                    self.real_time_factor = stats_list[0].decode("utf-8")
+                    if stats_list:
+                        try:
+                            value = float(stats_list[0].decode("utf-8"))
+                            if 0 <= value <= 2:
+                                real_time_factor = value
+                                break
+                        except ValueError:
+                            continue
+
+            if real_time_factor is None:
+                args = ["ign", "topic", "-e", "-t", "/world/default/stats"]
+                real_time_factor = None
+
+                try:
+                    harmonic_process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+                    # timer
+                    timeout_seconds = 1
+                    timer = Timer(timeout_seconds, harmonic_process.kill)
+                    timer.start()
+                    
+                    for line in iter(harmonic_process.stdout.readline, b''):
+                        print(line)
+                        line_decoded = line.decode("utf-8")
+                        if "real_time_factor" in line_decoded:
+                            match = re.search(r"real_time_factor:\s*([\d\.]+)", line_decoded)
+                            if match:
+                                try:
+                                    value = float(match.group(1))
+                                    if 0 <= value <= 2:
+                                        real_time_factor = value
+                                        break
+                                except ValueError:
+                                    continue
+
+                    timer.cancel()
+
+                except Exception as e:
+                    print(f"Error: {e}")
+                finally:
+                    if harmonic_process.poll() is None:
+                        harmonic_process.kill()
+
+            if real_time_factor is not None:
+                self.real_time_factor = real_time_factor
 
     def measure_and_send_frequency(self):
         """Measures and sends the frequency of GUI updates and brain cycles."""
