@@ -16,7 +16,7 @@ sys.path.insert(0, '/RoboticsApplicationManager')
 from manager.ram_logging.log_manager import LogManager
 
 
-class MeasuringThreadingGUIH:
+class MeasuringThreadingGUI:
     """ GUI interface using threading and measuring RTF data:
         
         self.start() needs to be called at the end of the init method\n
