@@ -50,7 +50,7 @@ export default function WorldSelector(props) {
       robot: config.robot,
     });
     await window.RoboticsExerciseComponents.commsManager.prepareVisualization(
-      config.world.visualization
+      {type: config.visualization, file: config.visualization_config_path}
     );
     RoboticsReactComponents.MessageSystem.Loading.hideLoading();
     RoboticsReactComponents.MessageSystem.Alert.showAlert(
