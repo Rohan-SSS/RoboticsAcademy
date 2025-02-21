@@ -5,7 +5,7 @@ import threading
 import time
 import numpy as np
 
-from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
+from gui_interfaces.general.measuring_threading_gui_harmonic import MeasuringThreadingGUI
 from console_interfaces.general.console import start_console
 
 class GUI(MeasuringThreadingGUI):
@@ -22,6 +22,8 @@ class GUI(MeasuringThreadingGUI):
         self.ack_lock = threading.Lock()
         self.running = True
 
+        self.world_name = "empty"
+
         self.host = host
         self.msg = {"image_right": "", "image_left": ""}
 
@@ -36,6 +38,7 @@ class GUI(MeasuringThreadingGUI):
     def gui_out_thread(self):
         while self.running:
             start_time = time.time()
+            self.iteration_counter += 1
 
             # Check if a new image should be sent
             with self.ack_lock:
