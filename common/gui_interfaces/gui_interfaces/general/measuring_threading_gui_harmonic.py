@@ -23,7 +23,7 @@ class MeasuringThreadingGUI:
         The update_gui(self) method needs to be implemented
     """
 
-    def __init__(self, host="ws://127.0.0.1:2303", freq=30.0):
+    def __init__(self, host="ws://127.0.0.1:2303", freq=30.0, world_name="default"):
 
         # ROS 2 init
         if not rclpy.ok():
@@ -45,6 +45,8 @@ class MeasuringThreadingGUI:
 
         self.host = host
         self.node = rclpy.create_node("node")
+
+        self.world_name = world_name
     
     def start(self):
         # Initialize and start the WebSocket client thread
@@ -72,7 +74,7 @@ class MeasuringThreadingGUI:
         while self.running:
             time.sleep(2)
         
-            args = ["gz", "topic", "-e", "-t", "/world/default/stats"]
+            args = ["gz", "topic", "-e", "-t", f"/world/{self.world_name}/stats"]
             real_time_factor = None
 
             try:
