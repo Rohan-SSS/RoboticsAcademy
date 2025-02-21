@@ -1,9 +1,9 @@
 import * as React from "react";
 import {Fragment} from "react";
 
-import "./css/FollowRoad.css";
+import "./css/followRoadRR.css";
 
-const FollowRoad = (props) => {
+const FollowRoadRR = (props) => {
   return (
     <Fragment>
     {props.children}
@@ -11,4 +11,4 @@ const FollowRoad = (props) => {
   );
 };
 
-export default FollowRoad;
+export default FollowRoadRR;
