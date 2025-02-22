@@ -98,7 +98,7 @@ COPY public.exercises (id, exercise_id, name, description, tags, status, templat
 12	montecarlo_visual_loc	Montecarlo Visual Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/montecarlo_visual_loc/python_template/
 13	marker_visual_loc	Marker Visual Loc	Calculate the position of the robot based on the	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/marker_visual_loc/python_template/
 14	laser_mapping	Laser Mapping	Build a map based on sensor readings	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/laser_mapping/python_template/
-15	color_filter_newmanager	Color Filter	Color Filter exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/color_filter_newmanager/python_template/
+15	basic_computer_vision	Basic Computer Vision	Basic Computer Vision exercise using React and RAM	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/basic_computer_vision/python_template/
 \.
 -- 16	rescue_people_classic	Rescue People Old	Rescue People exercise With Gazebo Classic	{"tags": "ROS2"}	ACTIVE	RoboticsAcademy/exercises/static/exercises/rescue_people_classic/python_template/
 
