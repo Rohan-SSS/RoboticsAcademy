@@ -1,9 +1,9 @@
 import * as React from "react";
 import {Fragment} from "react";
 
-import "./css/ColorFilterRR.css";
+import "./css/BasicComputerVisionRR.css";
 
-const ColorFilterRR = (props) => {
+const BasicComputerVisionRR = (props) => {
   return (
     <Fragment>
     {props.children}
@@ -11,4 +11,4 @@ const ColorFilterRR = (props) => {
   );
 };
 
-export default ColorFilterRR;
+export default BasicComputerVisionRR;
