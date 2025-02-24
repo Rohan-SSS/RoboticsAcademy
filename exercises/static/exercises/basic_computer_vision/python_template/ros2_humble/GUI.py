@@ -5,8 +5,7 @@ import threading
 import time
 
 from gui_interfaces.general.measuring_threading_gui import MeasuringThreadingGUI
-from src.manager.ram_logging.log_manager import LogManager
-from console import start_console
+from console_interfaces.general.console import start_console
 import numpy as np
 
 
