@@ -83,6 +83,23 @@ Another way to solve it is to try to delete the generated image and do it again,
 
 ### Using Docker run
 
+If you are launching Robotics Academy this way you need to manually create the commons zip, that will be used to pass those files to the Robotics Backend.
+
+```
+# Prepare the commons zip file
+cd common
+cd console_interfaces
+zip -r ../common.zip console_interfaces/
+cd ..
+cd gui_interfaces
+zip -r -u ../common.zip gui_interfaces/
+cd ..
+cd hal_interfaces
+zip -r -u ../common.zip hal_interfaces/
+cd ../..
+mv common/common.zip react_frontend/src/common.zip
+```
+
 You have 2 ways of launching Robotics Academy with docker run:
 
 * Creating a new RADI. To see how to do it read [how to generate a RADI][].
