@@ -5,7 +5,8 @@ import RobotRed from "../resources/images/robot_red.svg";
 import RobotGreen from "../resources/images/robot_green.svg";
 import RobotBlue from "../resources/images/robot_blue.svg";
 
-import house from "../resources/images/map.png";
+import warehouse from "../resources/images/map.png";
+import smallWarehouse from "../resources/images/small_map.png";
 
 import "./css/GUICanvas.css"
 function SpecificLaserMapping(props) {
@@ -13,6 +14,7 @@ function SpecificLaserMapping(props) {
   const [noisyPose, setNoisyPose] = React.useState(null)
   const [realPath, setRealPath] = React.useState("")
   const [noisyPath, setNoisyPath] = React.useState("")
+  const [mapImg, setMapImg] = React.useState(warehouse);
   var realTrail = [];
   var noisyTrail = [];
   var realLastPose = undefined;
@@ -113,6 +115,14 @@ function SpecificLaserMapping(props) {
           noisyTrail=[]
         } catch (error) {
         }
+        switch (context.mapSelected) {
+          case "Laser Mapping Warehouse":
+            setMapImg(warehouse);
+            break;
+          case "Small Laser Mapping Warehouse":
+            setMapImg(smallWarehouse);
+            break;
+        }
       }
       valuesUntilValid = 0;
     }
@@ -132,7 +142,7 @@ function SpecificLaserMapping(props) {
 
   return (
     <div style={{display: "flex", width: "100%", height: "100%", position:"relative"}}>
-      <img src={house} alt="" className="exercise-canvas" id="exercise-img"/>
+      <img src={mapImg} alt="" className="exercise-canvas" id="exercise-img"/>
       <img className="image" id="gui-canvas" style={{left: "50%"}}
         src="https://via.placeholder.com/800x600.png?text=No%20image%20received%20from%20exercise"/>
       {realPose &&
