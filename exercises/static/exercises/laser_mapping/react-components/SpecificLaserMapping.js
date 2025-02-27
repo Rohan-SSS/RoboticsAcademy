@@ -14,7 +14,7 @@ function SpecificLaserMapping(props) {
   const [noisyPose, setNoisyPose] = React.useState(null)
   const [realPath, setRealPath] = React.useState("")
   const [noisyPath, setNoisyPath] = React.useState("")
-  const [mapImg, setMapImg] = React.useState(warehouse);
+  const [mapImg, setMapImg] = React.useState(smallWarehouse);
   var realTrail = [];
   var noisyTrail = [];
   var realLastPose = undefined;
