@@ -4,6 +4,7 @@ import { drawImage, updatePath, addToPath } from "./helpers/showImageVisual";
 import RobotRed from "../resources/images/robot_red.svg";
 import RobotGreen from "../resources/images/robot_green.svg";
 import RobotBlue from "../resources/images/robot_blue.svg";
+import noImage from "../../assets/img/noImage.png";
 
 import warehouse from "../resources/images/map.png";
 import smallWarehouse from "../resources/images/small_map.png";
@@ -144,7 +145,7 @@ function SpecificLaserMapping(props) {
     <div style={{display: "flex", width: "100%", height: "100%", position:"relative"}}>
       <img src={mapImg} alt="" className="exercise-canvas" id="exercise-img"/>
       <img className="image" id="gui-canvas" style={{left: "50%"}}
-        src="https://via.placeholder.com/800x600.png?text=No%20image%20received%20from%20exercise"/>
+        src={noImage}/>
       {realPose &&
         <div id="real-pos" style={{rotate: "z "+ realPose[2]+"rad", top: realPose[0] -10 , left: realPose[1] -10}}>
           <img src={RobotGreen} id="real-pos"/>

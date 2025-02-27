@@ -75,12 +75,30 @@ cd /RoboticsAcademy
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 nvm install 17
 nvm use 17
+npm install --global yarn
 cd react_frontend/ && yarn install && yarn run dev
 ```
 
 Another way to solve it is to try to delete the generated image and do it again, you can follow the instructions in: [How to generate a radi](https://github.com/JdeRobot/RoboticsAcademy/blob/humble-devel/docs/generate_a_radi.md).
 
 ### Using Docker run
+
+If you are launching Robotics Academy this way you need to manually create the commons zip, that will be used to pass those files to the Robotics Backend.
+
+```
+# Prepare the commons zip file
+cd common
+cd console_interfaces
+zip -r ../common.zip console_interfaces/
+cd ..
+cd gui_interfaces
+zip -r -u ../common.zip gui_interfaces/
+cd ..
+cd hal_interfaces
+zip -r -u ../common.zip hal_interfaces/
+cd ../..
+mv common/common.zip react_frontend/src/common.zip
+```
 
 You have 2 ways of launching Robotics Academy with docker run:
 
@@ -153,6 +171,7 @@ For the moment, the RAM folder MUST be called src, and the previous command take
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 nvm install 17
 nvm use 17
+npm install --global yarn
 cd react_frontend/ && yarn install && yarn run dev
 ```
 
