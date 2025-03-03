@@ -68,7 +68,7 @@ class MeasuringThreadingGUI:
         """Continuously calculates the real-time factor."""
         while self.running:
             time.sleep(2)
-            args = ["gz", "stats", "-p"]
+            args = ["gz11", "stats", "-p"]
             stats_process = subprocess.Popen(args, stdout=subprocess.PIPE)
             with stats_process.stdout:
                 for line in iter(stats_process.stdout.readline, b''):
